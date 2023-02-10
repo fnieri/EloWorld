@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Block {
     String id;
-    String previousLocation;
-    Block previousBlock;
+    String previousLocation = null;
+    Block previousBlock = null;
     LocalDate timeStamp;
     List<String> referees = new ArrayList<>();
 
@@ -16,6 +16,20 @@ public class Block {
     int playerOneKey;
     int playerTwoKey;
     int refereeKey;
+
+    public String getPreviousLocation(){
+        return previousLocation;
+    }
+    public void setPreviousLocation(String newPreviousLocation){
+        previousLocation = newPreviousLocation;
+    }
+
+    public Block getPreviousBlock(){
+        return previousBlock;
+    }
+    public void setPreviousBlock(Block newBlock){
+        previousBlock = newBlock;
+    }
 
     public void parseEntry(String entry){
         //agit un peu comme un constructeur, ou au moins a cette vocation.
