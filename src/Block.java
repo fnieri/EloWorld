@@ -33,6 +33,7 @@ public class Block {
 
     public void parseEntry(String entry){
         //agit un peu comme un constructeur, ou au moins a cette vocation.
+        //creation dans referee.java
         String[] parsedEntry = entry.split(" ");
         eloPlayer1 = Float.parseFloat(parsedEntry[0]);
         eloPlayer2 = Float.parseFloat(parsedEntry[1]);
@@ -48,25 +49,6 @@ public class Block {
         if (referees.contains(Integer.toString(refereeKey))){
             referees.add(Integer.toString(refereeKey));
         }
-    }
-
-    public String createEntry(float eloPlayer1, float eloPlayer2, float refereeScore,
-                              int playerOneKey, int playerTwoKey, int refereeKey,
-                              LocalDate timeStamp){
-        //Ca servira au cas ou, c'est une fonction qui créé une String d'initialisation de block
-        String newEntry = "";
-        newEntry += Float.toString(eloPlayer1);
-        newEntry += Float.toString(eloPlayer2);
-        newEntry += Float.toString(refereeScore);
-        newEntry += Integer.toString(playerOneKey);
-        newEntry += Integer.toString(playerTwoKey);
-        newEntry += Integer.toString(refereeKey);
-
-        //partie reservée au timeStamp :
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        newEntry += timeStamp.format(formatter);
-
-        return newEntry;
     }
 
     public int blocScore(){
