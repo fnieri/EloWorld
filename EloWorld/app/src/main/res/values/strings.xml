@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EloWorld</string>
+    <string name="title_activity_bottom_nav">BottomNav</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_leaderboard">Leaderboard</string>
+    <string name="title_settings">Settings</string>
+
+</resources>
