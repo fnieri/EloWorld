@@ -1,7 +1,9 @@
 public class User {
 
+    String publicKey;
+    int ELO;
     String id;
-    String userName;
+    String username;
     String password; // ca va falloir voir a le crypter
 
     void register(){}
@@ -10,4 +12,14 @@ public class User {
 
     void calculateElo(){}
 
+    public String getPublicKey() {
+        return publicKey;
+    }
+    public int getELO() {
+        return ELO;
+    }
+
+    public String asString() {
+        return getPublicKey() + ":" + Integer.toString(getELO());
+    }
 }

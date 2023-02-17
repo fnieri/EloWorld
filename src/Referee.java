@@ -4,6 +4,9 @@ public class Referee extends User{
 
     int score = 150;
 
+    public int getRefereeScore() {
+        return score;
+    }
     public String createEntry(int eloPlayer1, int eloPlayer2,
                               int playerOneKey, int playerTwoKey,
                               LocalTime timeStamp){
@@ -19,6 +22,10 @@ public class Referee extends User{
         newEntry += timeStamp;
 
         return newEntry;
+    }
+    @Override
+    public String asString(){
+        return getPublicKey() + ":" + Integer.toString(getRefereeScore());
     }
 
     public static void main(String[] args){
