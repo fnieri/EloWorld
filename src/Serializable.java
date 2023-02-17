@@ -1,0 +1,10 @@
+/**
+ * Abstract class representing a class that can be serialized towards a json
+ * Author: Francesco Nieri
+ * Date: 17/02/2023
+ */
+
+public interface Serializable {
+
+    public void asJson();
+}

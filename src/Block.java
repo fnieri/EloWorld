@@ -1,68 +1,68 @@
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+/**
+ * Class representing a block in the blockchain
+ * Author: Francesco Nieri
+ * Date: 17/02/2023
+ */
+
 import java.util.List;
+import java.util.Comparator;
 
-public class Block {
-    String id;
-    String previousLocation = null;
-    Block previousBlock = null;
-    LocalDate timeStamp;
-    List<String> referees = new ArrayList<>();
+class Block {
+    String blockHash;
+    String previousBlockHash;
+    String data;
+    List<BlockEntry> entries;
 
-    float eloPlayer1;
-    float eloPlayer2;
-    float refereeScore;
-    int playerOneKey;
-    int playerTwoKey;
-    int refereeKey;
-
-    public String getPreviousLocation(){
-        return previousLocation;
-    }
-    public void setPreviousLocation(String newPreviousLocation){
-        previousLocation = newPreviousLocation;
+    public Block(String blockHash, String previousBlockHash, String data) {
+        this.blockHash = blockHash;
+        this.previousBlockHash = previousBlockHash;
+        this.data = data;
+        this.entries = getEntriesFromData();
     }
 
-    public Block getPreviousBlock(){
-        return previousBlock;
-    }
-    public void setPreviousBlock(Block newBlock){
-        previousBlock = newBlock;
-    }
-
-    public void parseEntry(String entry){
-        //agit un peu comme un constructeur, ou au moins a cette vocation.
-        //creation dans referee.java
-        String[] parsedEntry = entry.split(" ");
-        eloPlayer1 = Float.parseFloat(parsedEntry[0]);
-        eloPlayer2 = Float.parseFloat(parsedEntry[1]);
-        refereeScore = Float.parseFloat(parsedEntry[2]);
-        playerOneKey = Integer.parseInt(parsedEntry[3]);
-        playerTwoKey = Integer.parseInt(parsedEntry[4]);
-        refereeKey = Integer.parseInt(parsedEntry[5]);
-
-        //partie pour le timeStamp :
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        timeStamp = LocalDate.parse(parsedEntry[6], formatter);
-
-        if (referees.contains(Integer.toString(refereeKey))){
-            referees.add(Integer.toString(refereeKey));
+    /**
+     * Calculate the score of a block
+     * The score of a block is defined as the sum on all entries of the referee scores
+     * @return score: The score of the block
+     */
+    public int calculateScore() {
+        int score = 0;
+        for (BlockEntry entry : entries) {
+            score += entry.getEntryScore();
         }
+        return score;
     }
 
-    public int blocScore(){
-        return referees.size();
+    public int getScore() {
+        return calculateScore();
     }
 
+    public String getPreviousBlockHash() {
+        return previousBlockHash;
+    }
 
+    public String getBlockHash() {
+        return blockHash;
+    }
 
-    public void retrieveAllScore(String player){}
+    /**
+     * Sort block entries by their id in the list of entries
+     */
+    private void sortEntriesByID() {
+        entries.sort(Comparator.comparing(BlockEntry::getEntryID));
+    }
 
-    public void retrieveClubScore(String player, String club){}
+    /**
+     * Sort block entries by their timestamp
+     */
+    private void sortEntriesByTimestamp() {
+        entries.sort(Comparator.comparing(BlockEntry::getTimestamp));
+    }
 
-    public void retrieveLeaderbord(String club){}
-
-    public void retrieveFriends(String player){}
-
+    /**
+     * Return a list of blockEntries from block data
+     */
+    private List<BlockEntry> getEntriesFromData() {
+        return EntryParser.createEntries(data);
+    }
 }

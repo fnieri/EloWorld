@@ -15,11 +15,9 @@ public class User {
     public String getPublicKey() {
         return publicKey;
     }
+
     public int getELO() {
         return ELO;
     }
 
-    public String asString() {
-        return getPublicKey() + ":" + Integer.toString(getELO());
-    }
 }
