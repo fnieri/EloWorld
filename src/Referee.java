@@ -14,7 +14,7 @@ public class Referee extends User{
         String newEntry = "";
         newEntry += eloPlayer1 + " ";
         newEntry += eloPlayer2 + " ";
-        newEntry += this.score + " ";
+
         newEntry += playerOneKey + " ";
         newEntry += playerTwoKey + " ";
         newEntry += this.id + " ";

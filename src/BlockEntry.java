@@ -2,8 +2,8 @@ public class BlockEntry {
     int timestamp;
     Referee referee;
     User[] players;
+    String signature;
 
-    User entrySigner;
     private String getPlayersString(User[] players) {
         StringBuilder usersString = new StringBuilder();
         for (User player: players) {
@@ -20,13 +20,14 @@ public class BlockEntry {
         return "timestamp:" + Integer.toString(timestamp) + "\n";
     }
 
-    private String getSignatureString(User entrySigner) {
-        return "signature:" + entrySigner.getPublicKey() + "\n";
+    private String getSignatureString(String signature) {
+        return "signature:" + signature + "\n";
     }
-    public String createEntryStrings() {
+
+    public String createEntryString() {
         return getTimestampString(timestamp) +
                 getPlayersString(players) +
                 getRefereeString(referee) +
-                getSignatureString(entrySigner);
+                getSignatureString(signature);
     }
 }
