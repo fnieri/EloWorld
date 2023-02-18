@@ -1,6 +1,6 @@
-import java.time.LocalTime;
+import org.json.JSONObject;
 
-public class Referee extends User{
+public class Referee extends User implements Serializable {
 
     int score;
 
@@ -10,6 +10,13 @@ public class Referee extends User{
 
     public int getRefereeScore() {
         return score;
+    }
+
+    @Override
+    public JSONObject asJson() {
+        JSONObject refereeJson =  new JSONObject();
+        refereeJson.put(getPublicKey(), getRefereeScore());
+        return refereeJson;
     }
 
 

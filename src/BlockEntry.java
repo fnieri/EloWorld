@@ -5,12 +5,11 @@
  */
 
 import Exceptions.UserNotInEntry;
+import org.json.JSONObject;
 import java.util.Objects;
 
 public class BlockEntry implements Serializable {
-    int entryID;
     int timestamp;
-    String parentBlockHash;
     String refereeKey;
     int refereeScore;
     String player1PublicKey;
@@ -18,18 +17,14 @@ public class BlockEntry implements Serializable {
     String player2PublicKey;
     int player2ELO;
 
-    public BlockEntry(int entryID,
-                      int timestamp,
-                      String parentBlockHash,
+    public BlockEntry(int timestamp,
                       String refereeKey,
                       int refereeScore,
                       String player1PublicKey,
                       int player1ELO,
                       String player2PublicKey,
                       int player2ELO) {
-        this.entryID = entryID;
         this.timestamp = timestamp;
-        this.parentBlockHash = parentBlockHash;
         this.refereeKey = refereeKey;
         this.refereeScore = refereeScore;
         this.player1PublicKey = player1PublicKey;
@@ -48,13 +43,27 @@ public class BlockEntry implements Serializable {
         else if (Objects.equals(player2PublicKey, playerPublicKey)) return player2ELO;
 
         else {
-            String exceptionMessage = "Key " + playerPublicKey + " not found for entry " + entryID + " of block " + parentBlockHash;
+            String exceptionMessage = "Key " + playerPublicKey + " not found for entry";
             throw new UserNotInEntry(exceptionMessage);
         }
     }
 
+    /**
+     *
+     * @return BlockEntry as JSONObject
+     */
     @Override
-    public void asJson() {}
+    public JSONObject asJson() {
+        JSONObject serializedEntry  = new JSONObject();
+        serializedEntry.put(JsonStrings.TIMESTAMP, timestamp);
+        serializedEntry.put(JsonStrings.REFEREE_KEY, refereeKey);
+        serializedEntry.put(JsonStrings.REFEREE_SCORE, refereeScore);
+        serializedEntry.put(JsonStrings.PLAYER_1_KEY, player1PublicKey);
+        serializedEntry.put(JsonStrings.PLAYER_1_ELO, player1ELO);
+        serializedEntry.put(JsonStrings.PLAYER_2_KEY, player2PublicKey);
+        serializedEntry.put(JsonStrings.PLAYER_2_ELO, player2ELO);
+        return serializedEntry;
+    }
 
     public String getRefereeKey() {
         return refereeKey;
@@ -62,10 +71,6 @@ public class BlockEntry implements Serializable {
 
     public int getTimestamp() {
         return timestamp;
-    }
-
-    public int getEntryID() {
-        return entryID;
     }
 
     public int getEntryScore() {

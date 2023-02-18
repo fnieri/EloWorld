@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 /**
  * Abstract class representing a class that can be serialized towards a json
  * Author: Francesco Nieri
@@ -6,5 +8,5 @@
 
 public interface Serializable {
 
-    public void asJson();
+    public JSONObject asJson();
 }

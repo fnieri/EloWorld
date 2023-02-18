@@ -1,6 +1,9 @@
+import java.util.List;
+
 public class BlockChain {
     Block lastBlock;
     String lastblockId;
+    List<Block> blocks;
 
     public int getScore(Block currentBlock, int currentScore) {
         return 0;

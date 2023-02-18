@@ -1,0 +1,1 @@
+public record PlayerSearch(boolean found, int ELO, String previousBlock) {}

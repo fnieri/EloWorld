@@ -1,10 +1,10 @@
+import org.json.JSONObject;
+
 public class User {
 
+    String username;
     String publicKey;
     int ELO;
-    String id;
-    String username;
-    String password; // ca va falloir voir a le crypter
 
     void register(){}
 
@@ -19,5 +19,4 @@ public class User {
     public int getELO() {
         return ELO;
     }
-
 }
