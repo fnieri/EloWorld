@@ -9,7 +9,7 @@ class Server {
 
         try {
 
-            // server is listening on port 1234
+            // server is listening on port 8080
             server = new ServerSocket(8080);
             server.setReuseAddress(true);
 
@@ -50,7 +50,6 @@ class Server {
             }
         }
     }
-
     // ClientHandler class
     private static class ClientHandler implements Runnable {
         private final Socket clientSocket;
