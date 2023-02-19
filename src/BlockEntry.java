@@ -9,13 +9,13 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 public class BlockEntry implements Serializable {
-    int timestamp;
-    String refereeKey;
-    int refereeScore;
-    String player1PublicKey;
-    int player1ELO;
-    String player2PublicKey;
-    int player2ELO;
+    private final int timestamp;
+    private final String refereeKey;
+    private final int refereeScore;
+    private final String player1PublicKey;
+    private final int player1ELO;
+    private final String player2PublicKey;
+    private final int player2ELO;
 
     public BlockEntry(int timestamp,
                       String refereeKey,
@@ -67,6 +67,26 @@ public class BlockEntry implements Serializable {
 
     public String getRefereeKey() {
         return refereeKey;
+    }
+
+    public int getRefereeScore() {
+        return refereeScore;
+    }
+
+    public String getPlayer1PublicKey() {
+        return player1PublicKey;
+    }
+
+    public int getPlayer1ELO() {
+        return player1ELO;
+    }
+
+    public String getPlayer2PublicKey() {
+        return player2PublicKey;
+    }
+
+    public int getPlayer2ELO() {
+        return player2ELO;
     }
 
     public int getTimestamp() {

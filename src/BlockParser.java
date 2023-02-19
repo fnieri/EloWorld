@@ -25,7 +25,7 @@ public class BlockParser {
         try {
             jsonObject = new JSONObject(data);
         }catch (JSONException err){
-            throw new IllegalArgumentException("Wrong file format");
+            throw new IllegalArgumentException("Wrong json file format");
         }
     }
 
@@ -40,7 +40,7 @@ public class BlockParser {
 
         List<BlockEntry> blockEntries = new ArrayList<>();
 
-        JSONArray entries = getEntries(jsonObject);
+        JSONArray entries = getJsonEntries();
         for (int i = 0; i < entries.length(); i++) {
             JSONObject entry = entries.getJSONObject(i);
             blockEntries.add(getEntryFromJsonObject(entry));
@@ -53,7 +53,7 @@ public class BlockParser {
      * @param entry JSONArray entry
      * @return Block entry containing the parameters of a JSONObject
      */
-    private BlockEntry getEntryFromJsonObject(JSONObject entry) {
+    public BlockEntry getEntryFromJsonObject(JSONObject entry) {
         return new BlockEntry(
                 entry.getInt(JsonStrings.TIMESTAMP),
                 entry.getString(JsonStrings.REFEREE_KEY),
@@ -83,8 +83,7 @@ public class BlockParser {
 
     /**
      * Return an array of entries from a block's JSONObject
-     * @param object JSONObject beign queried
-     * @return Array of entries
+     * @return Array of json entries
      */
-    private JSONArray getEntries(JSONObject object) {return object.getJSONArray(JsonStrings.ENTRIES);}
+    public JSONArray getJsonEntries() {return jsonObject.getJSONArray(JsonStrings.ENTRIES);}
 }

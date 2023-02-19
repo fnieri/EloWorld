@@ -24,7 +24,6 @@ class Block implements Serializable {
      * @param data Json File
      */
     public Block(String data) {
-
         this.data = data;
         this.hasData = true;
         parser = new BlockParser(data);
