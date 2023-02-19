@@ -1,6 +1,5 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,13 +67,13 @@ public class BlockParserTest {
         JSONArray entries = parser.getJsonEntries();
         JSONObject firstEntry = entries.getJSONObject(0);
         BlockEntry entryAsBlock = parser.getEntryFromJsonObject(firstEntry);
-        assertEquals(entryAsBlock.getTimestamp(),1);
-        assertEquals(entryAsBlock.getRefereeKey(), "fran11");
-        assertEquals(entryAsBlock.getRefereeScore(), 11);
-        assertEquals(entryAsBlock.getPlayer1PublicKey(), "emile11");
-        assertEquals(entryAsBlock.getPlayer1ELO(), 140);
-        assertEquals(entryAsBlock.getPlayer2PublicKey(), "theo11");
-        assertEquals(entryAsBlock.getPlayer2ELO(), 150);
+        assertEquals(entryAsBlock.timestamp(),1);
+        assertEquals(entryAsBlock.refereeKey(), "fran11");
+        assertEquals(entryAsBlock.refereeScore(), 11);
+        assertEquals(entryAsBlock.player1PublicKey(), "emile11");
+        assertEquals(entryAsBlock.player1ELO(), 140);
+        assertEquals(entryAsBlock.player2PublicKey(), "theo11");
+        assertEquals(entryAsBlock.player2ELO(), 150);
     }
 
 }

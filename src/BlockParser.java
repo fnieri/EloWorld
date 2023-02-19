@@ -13,8 +13,8 @@ import java.util.List;
 
 public class BlockParser {
 
-    JSONObject jsonObject;
-    String data;
+    private JSONObject jsonObject;
+    private final String data;
 
     public BlockParser(String data) {
         this.data = data;

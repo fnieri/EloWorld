@@ -8,36 +8,15 @@ import Exceptions.UserNotInEntry;
 import org.json.JSONObject;
 import java.util.Objects;
 
-public class BlockEntry implements Serializable {
-    private final int timestamp;
-    private final String refereeKey;
-    private final int refereeScore;
-    private final String player1PublicKey;
-    private final int player1ELO;
-    private final String player2PublicKey;
-    private final int player2ELO;
-
-    public BlockEntry(int timestamp,
-                      String refereeKey,
-                      int refereeScore,
-                      String player1PublicKey,
-                      int player1ELO,
-                      String player2PublicKey,
-                      int player2ELO) {
-        this.timestamp = timestamp;
-        this.refereeKey = refereeKey;
-        this.refereeScore = refereeScore;
-        this.player1PublicKey = player1PublicKey;
-        this.player1ELO = player1ELO;
-        this.player2PublicKey = player2PublicKey;
-        this.player2ELO = player2ELO;
-    }
+public record BlockEntry(int timestamp, String refereeKey, int refereeScore, String player1PublicKey, int player1ELO,
+                         String player2PublicKey, int player2ELO) implements Serializable {
 
     /**
-    * Returns the ELO of a searched player, if the public key of said player is in the current entry
-    @param playerPublicKey Public key of currently sought player
-    @throws UserNotInEntry If user is not in the current entry
-    */
+     * Returns the ELO of a searched player, if the public key of said player is in the current entry
+     *
+     * @param playerPublicKey Public key of currently sought player
+     * @throws UserNotInEntry If user is not in the current entry
+     */
     public int getPlayerELO(String playerPublicKey) throws UserNotInEntry {
         if (Objects.equals(player1PublicKey, playerPublicKey)) return player1ELO;
         else if (Objects.equals(player2PublicKey, playerPublicKey)) return player2ELO;
@@ -49,12 +28,11 @@ public class BlockEntry implements Serializable {
     }
 
     /**
-     *
      * @return BlockEntry as JSONObject
      */
     @Override
     public JSONObject asJson() {
-        JSONObject serializedEntry  = new JSONObject();
+        JSONObject serializedEntry = new JSONObject();
         serializedEntry.put(JsonStrings.TIMESTAMP, timestamp);
         serializedEntry.put(JsonStrings.REFEREE_KEY, refereeKey);
         serializedEntry.put(JsonStrings.REFEREE_SCORE, refereeScore);
@@ -65,35 +43,4 @@ public class BlockEntry implements Serializable {
         return serializedEntry;
     }
 
-    public String getRefereeKey() {
-        return refereeKey;
-    }
-
-    public int getRefereeScore() {
-        return refereeScore;
-    }
-
-    public String getPlayer1PublicKey() {
-        return player1PublicKey;
-    }
-
-    public int getPlayer1ELO() {
-        return player1ELO;
-    }
-
-    public String getPlayer2PublicKey() {
-        return player2PublicKey;
-    }
-
-    public int getPlayer2ELO() {
-        return player2ELO;
-    }
-
-    public int getTimestamp() {
-        return timestamp;
-    }
-
-    public int getEntryScore() {
-        return refereeScore;
-    }
 }
