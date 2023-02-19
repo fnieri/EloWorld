@@ -1,9 +1,15 @@
 public class BlockChain {
     Block lastBlock;
-    String lastblockId;
+    public int getScore() {
+        int numEntries = 0;
+        int numBlock = 0;
+        Block nextBlock;
+        // Data Count
+        while () {
 
-    public int getScore(Block currentBlock, int currentScore) {
-        return 0;
+        }
+        int score = numEntries/numBlock;
+        return score;
     }
 
     public void getLeaderboard(String club){}
@@ -13,5 +19,9 @@ public class BlockChain {
     public void getClubScore(String player, String club){}
 
     public void getFriend(String player){}
+
+    public void convertFileIntoString() {
+
+    }
 
 }
