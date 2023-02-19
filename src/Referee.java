@@ -14,7 +14,6 @@ public class Referee extends User{
         newEntry += this.score + " ";
         newEntry += playerOneKey + " ";
         newEntry += playerTwoKey + " ";
-        newEntry += this.id + " ";
 
         newEntry += timeStamp;
 

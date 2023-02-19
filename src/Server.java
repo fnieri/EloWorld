@@ -8,8 +8,7 @@ class Server {
         ServerSocket server = null;
 
         try {
-
-            // server is listening on port 1234
+            // server is listening on port 8080
             server = new ServerSocket(8080);
             server.setReuseAddress(true);
 
@@ -55,6 +54,8 @@ class Server {
     private static class ClientHandler implements Runnable {
         private final Socket clientSocket;
 
+        static User user = new User();
+
         // Constructor
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
@@ -74,23 +75,24 @@ class Server {
                         new InputStreamReader(
                                 clientSocket.getInputStream()));
 
+                loginHandler(out, in);
+
                 String line;
                 while ((line = in.readLine()) != null) {
-                    if (line.charAt(0) == '/'){
-                        System.out.printf(" Sent from the client: %s\n", commandHandler(line.charAt(1)));
+                    if (line.charAt(0) == '/') {
+                        System.out.printf("Sent from " + user.userName + " : %s\n", commandHandler(line.charAt(1)));
                         out.println("[" + LocalTime.now() + "] : " + commandHandler(line.charAt(1)));
                     } else {
                         // writing the received message from
                         // client
-                        System.out.printf(" Sent from the client: %s\n", line);
+                        System.out.printf("Sent from " + user.userName + " : %s\n", line);
                         out.println("[" + LocalTime.now() + "] : " + line);
                     }
                 }
             }
             catch (IOException e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 try {
                     if (out != null) {
                         out.close();
@@ -112,5 +114,15 @@ class Server {
             }
             return "Au revoir";
         }
+
+        public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException {
+            user.userName = in.readLine();
+            while (!user.userName.equals("Theo")) { //nom déjà utilisé ou non (voir Quieries)
+                out.println("N");
+                user.userName = in.readLine();
+                }
+            out.println("Y");
+            user.password = in.readLine();
+            }
+        }
     }
-}
