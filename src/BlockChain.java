@@ -1,3 +1,4 @@
+import Exceptions.UserNotInEntry;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -16,20 +17,28 @@ public class BlockChain {
         lastBlock = new Block(getLastBlockID());
     }
     public int getScore() {
-        int numEntries = 0;
-        int numBlock = 0;
         Block currBlock = lastBlock;
+        int numBlock = 1;
+        int numEntries = currBlock.getScore();
         // Data Count
-        do {
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+            currBlock = new Block(currBlock.getPreviousBlockHash());
             numBlock += 1;
             numEntries += currBlock.getScore();
-            currBlock = new Block(currBlock.getPreviousBlockHash());
-        } while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash));
+        }
         return numEntries/numBlock;
     }
 
-    public int getELO(String playerName) {
-
+    public int getELO(String userPublicKey) {
+        Block currBlock = lastBlock;
+        PlayerSearch playerELO = currBlock.getELO(userPublicKey);
+        if (playerELO.found()) {return playerELO.ELO();}
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+            currBlock = new Block(currBlock.getPreviousBlockHash());
+            playerELO = currBlock.getELO(userPublicKey);
+            if (playerELO.found()) {return playerELO.ELO();}
+        }
+        return Util.BASE_ELO;
     }
 
     public void getLeaderboard(String club) {}
