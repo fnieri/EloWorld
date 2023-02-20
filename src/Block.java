@@ -13,7 +13,7 @@ import java.util.Comparator;
 class Block implements Serializable {
     private final String blockHash;
     private final String previousBlockHash;
-    private List<BlockEntry> entries;
+    private final List<BlockEntry> entries;
     private boolean hasData = false;
     private boolean hasEntries = false;
     private BlockParser parser = null;
