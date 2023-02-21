@@ -2,7 +2,7 @@ import java.time.LocalTime;
 
 public class Referee extends User{
 
-    int score = 150;
+    BlockChain chain = new BlockChain();
 
     public String createEntry(int eloPlayer1, int eloPlayer2,
                               int playerOneKey, int playerTwoKey,
@@ -11,13 +11,18 @@ public class Referee extends User{
         String newEntry = "";
         newEntry += eloPlayer1 + " ";
         newEntry += eloPlayer2 + " ";
-        newEntry += this.score + " ";
+        newEntry += this.getScore() + " ";
         newEntry += playerOneKey + " ";
         newEntry += playerTwoKey + " ";
 
         newEntry += timeStamp;
 
         return newEntry;
+    }
+
+    int getScore() {
+        return chain.getScore(chain.lastBlock, 0); //ancienne version de blockchain, a modifier apres
+                                                              // le push d'Emile
     }
 
     public static void main(String[] args){
