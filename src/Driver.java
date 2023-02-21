@@ -93,4 +93,12 @@ public class Driver {
             System.out.println(rs.getString("score"));
         }
     }
+
+    public static Boolean isNameAlreadyTaken(String username, Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        String getLeaderBoardQuery = "SELECT * FROM users WHERE username =" + username;
+
+        ResultSet rs = statement.executeQuery(getLeaderBoardQuery);
+        return !rs.next();
+    }
 }
