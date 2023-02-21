@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * Inspired from the Projet d'année MainModel class (from Boris Petrov)
  */
@@ -5,6 +7,8 @@
 public class Model extends Subject {
     private String username;
     private String memberSince;
+
+    List<String> friends;
 
     boolean isLoggedIn = false;
 
@@ -32,5 +36,7 @@ public class Model extends Subject {
     public void logsOut() {
         isLoggedIn = false;
     }
+
+    public void addFriend(String username) { }
 }
 
