@@ -11,25 +11,25 @@ import java.util.List;
 import java.util.Comparator;
 
 class Block implements Serializable {
-    String blockHash;
-    String previousBlockHash;
-    String data;
-    List<BlockEntry> entries;
-    boolean hasData = false;
-    boolean hasEntries = false;
-    BlockParser parser = null;
+    private final String blockHash;
+    private final String previousBlockHash;
+    private List<BlockEntry> entries;
+    private boolean hasData = false;
+    private boolean hasEntries = false;
+    private BlockParser parser = null;
+    private final int score;
 
     /**
      * Constructor used when instantiating from a JSON file
      * @param data Json File
      */
     public Block(String data) {
-        this.data = data;
         this.hasData = true;
         parser = new BlockParser(data);
         this.blockHash = parser.getBlockHash();
         this.previousBlockHash = parser.getPreviousBlockHash();
         this.entries = getEntriesFromData();
+        this.score = entries.size();
     }
 
     /**
@@ -43,21 +43,14 @@ class Block implements Serializable {
         this.previousBlockHash = previousBlockHash;
         this.entries = entries;
         this.hasEntries = true;
-    }
-
-    /**
-     * Calculate the score of a block
-     * @return score: The score of the block
-     */
-    public int calculateScore() {
-        return entries.size();
+        this.score = entries.size();
     }
 
     /**
      * Sort block entries by their timestamp
      */
     private void sortEntriesByTimestamp() {
-        entries.sort(Comparator.comparing(BlockEntry::getTimestamp));
+        entries.sort(Comparator.comparing(BlockEntry::timestamp));
     }
 
     /**
@@ -123,7 +116,7 @@ class Block implements Serializable {
     }
 
     public int getScore() {
-        return calculateScore();
+        return score;
     }
 
     public String getPreviousBlockHash() {
