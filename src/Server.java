@@ -80,8 +80,8 @@ class Server {
                 String line;
                 while ((line = in.readLine()) != null) {
                     if (line.charAt(0) == '/') {
-                        System.out.printf("Sent from " + user.userName + " : %s\n", commandHandler(line.charAt(1)));
-                        out.println("[" + LocalTime.now() + "] : " + commandHandler(line.charAt(1)));
+                        System.out.printf("Sent from " + user.userName + " : %s\n", commandHandler(line.charAt(1), line));
+                        out.println("[" + LocalTime.now() + "] : " + commandHandler(line.charAt(1), line));
                     } else {
                         // writing the received message from
                         // client
@@ -108,11 +108,30 @@ class Server {
             }
         }
 
-        String commandHandler(char command){
-            if(command == 't'){
-                return "Bonjour";
+        String commandHandler(char command, String message){
+            String[] users = message.split(" "); //(users[0] = la commande cad /i)
+            if(command == 'i'){ //invite (a une partie)
+                //database.invite(users[1], users[2])
+                return "invitation envoyée";
             }
-            return "Au revoir";
+            if(command == 'a'){ //accept
+                //database.accept(users[1], users[2])
+                return "rencontre acceptée";
+            }
+            if(command == 'f'){ //friend
+                //if(database.friendRequest(users[1]){
+                //    database.addFriend(users[1])
+                //    return "ami ajouté";
+                //}
+                return "invitation envoyée";
+            }
+            if(command == 'e') { //entry
+                //if(user.getclass == Referee){
+                //    user.createEntry(tout le tintouin, ca devrait etre facilement accessible)
+                //}
+                return "entrée générée";
+            }
+            return "Commande non reconnue";
         }
 
         public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException {
