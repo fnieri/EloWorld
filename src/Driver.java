@@ -1,7 +1,7 @@
-// import java.sql.*;
 import java.sql.*;
 
 public class Driver {
+    private static Connection connection;
 
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/blockchainappdb";
@@ -10,9 +10,9 @@ public class Driver {
 
         try { // if the connection failed
 
-            Connection connection = DriverManager.getConnection(url, user, password);
-            updatePassword("Elliot", "6666", connection);
-            updateUsername("FNIERI", 2, connection);
+            connection = DriverManager.getConnection(url, user, password);
+            updatePassword("Elliot", "6666");
+            updateUsername("FNIERI", 2);
             //addUser("Nieri", "1111", connection);
             //getScore("Theo", connection);
 
@@ -24,25 +24,25 @@ public class Driver {
     }
 
 
-    public static String stringToSql(String string) {
+    private static String stringToSql(String string) {
         // function to add simple quote to a Java String for MySql strings.
         String sqlString = "'" + string + "'";
         return sqlString;
     }
 
-    public static void updatePassword(String username, String password, Connection connection) throws SQLException{
+    public static void updatePassword(String username, String password) throws SQLException{
         Statement statement = connection.createStatement();
         String updatePasswordQuery = "UPDATE users SET password =" + stringToSql(password) + "WHERE username =" + stringToSql(username);
         statement.executeUpdate(updatePasswordQuery);
     }
 
-    public static void updateUsername(String username, Integer userid, Connection connection) throws SQLException{
+    public static void updateUsername(String username, Integer userid) throws SQLException {
         Statement statement = connection.createStatement();
-        String updateUsername = "UPDATE users SET username =" + stringToSql(username) + "WHERE password =" + userid;
+        String updateUsername = "UPDATE users SET username =" + stringToSql(username) + "WHERE userid =" + userid;
         statement.executeUpdate(updateUsername);
     }
 
-    public static void addUser(String username, String password, Connection connection) throws SQLException {
+    public static void addUser(String username, String password) throws SQLException {
         Statement statement = connection.createStatement();
         String addUserQuery = "INSERT INTO `blockchainappdb`.`users` (`username`, `password`) VALUES (" + stringToSql(username) + ", "+ stringToSql(password) + ")" + ";";
         System.out.println(addUserQuery);
@@ -58,7 +58,7 @@ public class Driver {
 
     }
 
-    public static void getScore(String username, Connection connection) throws SQLException {
+    public static void getScore(String username) throws SQLException {
         Statement statement = connection.createStatement();
         String getScoreQuery = "SELECT score FROM scores WHERE username =" + stringToSql(username);
 
@@ -69,7 +69,7 @@ public class Driver {
         }
     }
 
-    public static void deleteScore(String username, Connection connection) throws  SQLException{
+    public static void deleteScore(String username) throws  SQLException{
         Statement statement = connection.createStatement();
         String deleteScoreQuery = "DELETE FROM scores WHERE username =" + stringToSql(username);
 
@@ -83,7 +83,7 @@ public class Driver {
         }
     }
 
-    public static void getLeaderboard(Connection connection) throws  SQLException{
+    public static void getLeaderboard() throws  SQLException{
         Statement statement = connection.createStatement();
         String getLeaderBoardQuery = "SELECT score FROM scores ORDER BY score LIMIT 10";
 
