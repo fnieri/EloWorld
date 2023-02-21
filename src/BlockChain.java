@@ -18,12 +18,13 @@ public class BlockChain {
         this.lastBlockData = lastBlockData;
         lastBlock = new Block(getLastBlockID());
     }
+
     public int getScore() {
         Block currBlock = lastBlock;
         int numBlock = 1;
         int numEntries = currBlock.getScore();
         // Data Count
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             currBlock = new Block(currBlock.getPreviousBlockHash());
             numBlock += 1;
             numEntries += currBlock.getScore();
@@ -35,7 +36,7 @@ public class BlockChain {
         Block currBlock = lastBlock;
         PlayerSearch playerELO = currBlock.getELO(userPublicKey);
         if (playerELO.found()) {return playerELO.ELO();}
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             currBlock = new Block(currBlock.getPreviousBlockHash());
             playerELO = currBlock.getELO(userPublicKey);
             if (playerELO.found()) {return playerELO.ELO();}
@@ -46,9 +47,9 @@ public class BlockChain {
     public Hashtable<String, Integer> getLeaderboard() throws UserNotInEntry {
         Block currBlock = lastBlock;
         Hashtable<String, Integer> leaderboard = new Hashtable<>();
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             for (BlockEntry entry: currBlock.getEntries()) {
-                String[] players = {entry.getPlayer1PublicKey(), entry.getPlayer2PublicKey()};
+                String[] players = {entry.player1PublicKey(), entry.player2PublicKey()};
                 for (String player: players) {
                     if (!leaderboard.containsKey(player)) {
                         leaderboard.put(player, entry.getPlayerELO(player));
