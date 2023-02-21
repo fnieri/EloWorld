@@ -83,7 +83,7 @@ public class Driver {
         }
     }
 
-    public static void getLeaderboard() throws  SQLException{
+    public static void getLeaderboard() throws SQLException{
         Statement statement = connection.createStatement();
         String getLeaderBoardQuery = "SELECT score FROM scores ORDER BY score LIMIT 10";
 
@@ -94,9 +94,17 @@ public class Driver {
         }
     }
 
-    public static Boolean isNameAlreadyTaken(String username, Connection connection) throws SQLException {
+    public static Boolean isNameAlreadyTaken(String username) throws SQLException {
+        try { // if the connection failed
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/blockchainappdb",
+                                                    "root",
+                                                "1234");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         Statement statement = connection.createStatement();
-        String getLeaderBoardQuery = "SELECT * FROM users WHERE username =" + username;
+        String getLeaderBoardQuery = "SELECT * FROM users WHERE username = " + username;
 
         ResultSet rs = statement.executeQuery(getLeaderBoardQuery);
         return !rs.next();

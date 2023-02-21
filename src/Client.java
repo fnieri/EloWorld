@@ -59,6 +59,8 @@ class Client {
         out.println(user.userName);
         String answer = in.readLine();
 
+        System.out.println(answer);
+
         while(!answer.equals("Y")){
             System.out.println("Username already taken, please enter another one");
             user.userName = input.nextLine();

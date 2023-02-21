@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.sql.SQLException;
 import java.time.LocalTime;
 
 // Server class
@@ -55,6 +56,7 @@ class Server {
         private final Socket clientSocket;
 
         static User user = new User();
+        static Driver driver = new Driver();
 
         // Constructor
         public ClientHandler(Socket socket) {
@@ -90,7 +92,7 @@ class Server {
                     }
                 }
             }
-            catch (IOException e) {
+            catch (IOException | SQLException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -134,14 +136,17 @@ class Server {
             return "Commande non reconnue";
         }
 
-        public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException {
+        public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException, SQLException {
             user.userName = in.readLine();
-            while (!user.userName.equals("Theo")) { //nom déjà utilisé ou non (voir Quieries)
+            while (driver.isNameAlreadyTaken(user.userName)) { //nom déjà utilisé ou non (voir Quieries)
+                System.out.println("test");
                 out.println("N");
                 user.userName = in.readLine();
                 }
             out.println("Y");
             user.password = in.readLine();
+
+            Driver.addUser(user.userName, user.password);
             }
         }
     }
