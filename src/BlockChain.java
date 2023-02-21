@@ -21,7 +21,7 @@ public class BlockChain {
         int numBlock = 1;
         int numEntries = currBlock.getScore();
         // Data Count
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             currBlock = new Block(currBlock.getPreviousBlockHash());
             numBlock += 1;
             numEntries += currBlock.getScore();
@@ -33,7 +33,7 @@ public class BlockChain {
         Block currBlock = lastBlock;
         PlayerSearch playerELO = currBlock.getELO(userPublicKey);
         if (playerELO.found()) {return playerELO.ELO();}
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.blockHash)) {
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             currBlock = new Block(currBlock.getPreviousBlockHash());
             playerELO = currBlock.getELO(userPublicKey);
             if (playerELO.found()) {return playerELO.ELO();}

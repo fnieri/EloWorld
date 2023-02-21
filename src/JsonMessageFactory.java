@@ -19,6 +19,14 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
+    public static JSONObject friendRequestMessage(String sender, String receiver, FriendReqActions friendAction) {
+        JSONObject messageJson = new JSONObject();
+        messageJson.put(MessageStrings.ACTION, MessageStrings.FRIEND_REQUEST);
+        messageJson.put(MessageStrings.FRIEND_ACTION, friendAction.serialized());
+        messageJson.put(MessageStrings.SENDER, sender);
+        messageJson.put(MessageStrings.RECEIVER, receiver);
+        return messageJson;
+    }
     public static JSONObject encodeEntryMessage(String refereeKey, String player1Key, String player1ELO, String player2Key, String player2ELO) {
         JSONObject messageJSON = new JSONObject();
         messageJSON.put(MessageStrings.ACTION, MessageStrings.SEND_ENTRY);
@@ -29,4 +37,6 @@ public class JsonMessageFactory {
         messageJSON.put(JsonStrings.PLAYER_2_ELO, player2Key);
         return messageJSON;
     }
+
+
 }

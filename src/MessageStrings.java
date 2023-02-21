@@ -6,4 +6,8 @@ public class MessageStrings {
     static public String STATUS = "status";
     static public String SEND_ENTRY = "send_entry";
     static public String SERVER_RESPONSE = "server_response";
+    static public String FRIEND_REQUEST = "friend_request";
+    static public String FRIEND_ACTION = "friend_action";
+    static public String SENDER = "sender";
+    static public String RECEIVER = "receiver";
 }
