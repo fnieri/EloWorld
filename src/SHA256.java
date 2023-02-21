@@ -8,7 +8,15 @@ Taken from https://www.javatpoint.com/messagedigest-in-java
 import java.security.MessageDigest;
 
 public class SHA256 {
-    public SHA256() throws Exception {}   
+    private static SHA256 instance = null;
+    private SHA256() {}
+
+    public SHA256 getInstance() {
+        if (instance == null) {
+            instance = new SHA256();
+        }
+        return instance;
+    }
 
     private String hash(String inputToHash) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");

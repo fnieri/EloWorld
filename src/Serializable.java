@@ -8,5 +8,5 @@ import org.json.JSONObject;
 
 public interface Serializable {
 
-    public JSONObject asJson();
+    JSONObject asJson();
 }

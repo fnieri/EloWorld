@@ -3,7 +3,17 @@ import Enum.*;
 
 public class JsonMessageFactory {
 
-    public static JSONObject encodeAuthMessage(String username, String password, AuthActions authAction) {
+    private static JsonMessageFactory instance = null;
+    private JsonMessageFactory() {}
+
+    public JsonMessageFactory getInstance() {
+        if (instance == null) {
+            instance = new JsonMessageFactory();
+        }
+        return instance;
+    }
+
+    public JSONObject encodeAuthMessage(String username, String password, AuthActions authAction) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.ACTION, authAction.serialized());
         messageJson.put(MessageStrings.USERNAME, username);
@@ -11,7 +21,7 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
-    public static JSONObject authServerAnswer(String username, AuthActions clientAuthAction, AuthActions serverResponse) {
+    public JSONObject authServerAnswer(String username, AuthActions clientAuthAction, AuthActions serverResponse) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.ACTION, clientAuthAction.serialized());
         messageJson.put(MessageStrings.USERNAME, username);
@@ -19,7 +29,7 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
-    public static JSONObject friendRequestMessage(String sender, String receiver, FriendReqActions friendAction) {
+    public JSONObject friendRequestMessage(String sender, String receiver, FriendReqActions friendAction) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.ACTION, MessageStrings.FRIEND_REQUEST);
         messageJson.put(MessageStrings.FRIEND_ACTION, friendAction.serialized());
@@ -27,7 +37,7 @@ public class JsonMessageFactory {
         messageJson.put(MessageStrings.RECEIVER, receiver);
         return messageJson;
     }
-    public static JSONObject encodeEntryMessage(String refereeKey, String player1Key, String player1ELO, String player2Key, String player2ELO) {
+    public JSONObject encodeEntryMessage(String refereeKey, String player1Key, String player1ELO, String player2Key, String player2ELO) {
         JSONObject messageJSON = new JSONObject();
         messageJSON.put(MessageStrings.ACTION, MessageStrings.SEND_ENTRY);
         messageJSON.put(JsonStrings.REFEREE_KEY, refereeKey);

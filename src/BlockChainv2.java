@@ -10,8 +10,8 @@ import java.util.Objects;
 public class BlockChainv2 {
     private List<Block> blocks;
 
-    Block lastBlock;
-    String lastBlockData;
+    private Block lastBlock;
+    private String lastBlockData;
 
 
 
