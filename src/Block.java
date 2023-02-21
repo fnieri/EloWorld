@@ -134,4 +134,6 @@ class Block implements Serializable {
         return blockHash;
     }
 
+    public List<BlockEntry> getEntries() {return this.entries;}
+
 }
