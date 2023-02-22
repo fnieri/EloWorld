@@ -13,10 +13,11 @@ public class JsonMessageFactory {
         return instance;
     }
 
-    public JSONObject encodeAuthMessage(String username, String password, AuthActions authAction) {
+    public JSONObject encodeAuthMessage(String username, String password, AuthActions authAction, UserRoles role) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.AUTH);
         messageJson.put(MessageStrings.ACTION, authAction.serialized());
+        messageJson.put(MessageStrings.ROLE, role.serialized());
         messageJson.put(MessageStrings.USERNAME, username);
         messageJson.put(MessageStrings.PASSWORD, password);
         return messageJson;
@@ -34,8 +35,7 @@ public class JsonMessageFactory {
     public JSONObject friendRequestMessage(String sender, String receiver, FriendReqActions friendAction) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.FRIEND);
-        messageJson.put(MessageStrings.ACTION, MessageStrings.FRIEND_REQUEST);
-        messageJson.put(MessageStrings.FRIEND_ACTION, friendAction.serialized());
+        messageJson.put(MessageStrings.ACTION, friendAction.serialized());
         messageJson.put(MessageStrings.SENDER, sender);
         messageJson.put(MessageStrings.RECEIVER, receiver);
         return messageJson;

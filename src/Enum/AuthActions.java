@@ -1,7 +1,5 @@
 package Enum;
 
-import java.io.Serializable;
-
 public enum  AuthActions {
     REGISTER,
     LOGIN,
