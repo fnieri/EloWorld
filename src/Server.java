@@ -112,20 +112,18 @@ class Server {
 
         String commandHandler(char command, String message){
             String[] users = message.split(" "); //(users[0] = la commande cad /i)
-            if(command == 'i'){ //invite (a une partie)
-                //database.invite(users[1], users[2])
-                return "invitation envoyée";
-            }
-            if(command == 'a'){ //accept
-                //database.accept(users[1], users[2])
-                return "rencontre acceptée";
+            if(command == 'l'){ //accept
+                //database.getLeaderboard()
+                return "leaderBoard Global";
             }
             if(command == 'f'){ //friend
-                //if(database.friendRequest(users[1]){
-                //    database.addFriend(users[1])
-                //    return "ami ajouté";
+                //database.addFriend(users[1])
                 //}
                 return "invitation envoyée";
+            }
+            if(command == 'j'){ //friend
+            //    database.friendLeaderBoard()
+                return "leaderBoard des amis";
             }
             if(command == 'e') { //entry
                 //if(user.getclass == Referee){
@@ -138,14 +136,14 @@ class Server {
 
         public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException, SQLException {
             user.username = in.readLine();
-            while (!user.username.equals("Theo")) {//(driver.isNameAlreadyTaken(user.username)) {
+            while (!user.username.equals("Theo")) { //(driver.nameExists(user.username)) {
                 out.println("N");
                 user.username = in.readLine();
                 }
             out.println("Y");
             String password = in.readLine();
 
-            Driver.addUser(user.username, password);
+            driver.addUser(user.username, password);
             }
         }
     }
