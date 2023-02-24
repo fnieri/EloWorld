@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,7 +20,7 @@ public class BlockParserTest {
 
 
     public static String getBlock1() throws Exception {
-        String block1Path = System.getProperty("user.dir") + "\\test\\Block1.json";
+        String block1Path = System.getProperty("user.dir") + File.separator + "test" + File.separator + "Block1.json";
         return fileSetUp(block1Path);
     }
 
@@ -31,7 +32,7 @@ public class BlockParserTest {
 
     @Test
     public void testWrongFile() throws Exception {
-        String badFile = System.getProperty("user.dir") + "\\test\\MisformatedBlock.json";
+        String badFile = System.getProperty("user.dir") + File.separator + "test" + File.separator + "MisformatedBlock.json";
         String file = fileSetUp(badFile);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> new BlockParser(file));

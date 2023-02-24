@@ -3,6 +3,7 @@ import org.json.JSONObject;
 public class Referee extends User implements Serializable {
 
     int score;
+    BlockChain blockchain;
 
     public Referee(int refereeScore) {
         score = refereeScore;
@@ -30,6 +31,7 @@ public class Referee extends User implements Serializable {
     public void createBlock() {
 
     }
+
 
     @Override
     public JSONObject asJson() {
