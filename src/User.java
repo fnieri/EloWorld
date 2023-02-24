@@ -1,6 +1,6 @@
 public class User {
 
-    String userName;
+    String username;
     String password; // ca va falloir voir a le crypter
 
     void register(){}

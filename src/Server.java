@@ -82,12 +82,12 @@ class Server {
                 String line;
                 while ((line = in.readLine()) != null) {
                     if (line.charAt(0) == '/') {
-                        System.out.printf("Sent from " + user.userName + " : %s\n", commandHandler(line.charAt(1), line));
+                        System.out.printf("Sent from " + user.username + " : %s\n", commandHandler(line.charAt(1), line));
                         out.println("[" + LocalTime.now() + "] : " + commandHandler(line.charAt(1), line));
                     } else {
                         // writing the received message from
                         // client
-                        System.out.printf("Sent from " + user.userName + " : %s\n", line);
+                        System.out.printf("Sent from " + user.username + " : %s\n", line);
                         out.println("[" + LocalTime.now() + "] : " + line);
                     }
                 }
@@ -137,16 +137,15 @@ class Server {
         }
 
         public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException, SQLException {
-            user.userName = in.readLine();
-            while (driver.isNameAlreadyTaken(user.userName)) { //nom déjà utilisé ou non (voir Quieries)
-                System.out.println("test");
+            user.username = in.readLine();
+            while (!user.username.equals("Theo")) {//(driver.isNameAlreadyTaken(user.username)) {
                 out.println("N");
-                user.userName = in.readLine();
+                user.username = in.readLine();
                 }
             out.println("Y");
-            user.password = in.readLine();
+            String password = in.readLine();
 
-            Driver.addUser(user.userName, user.password);
+            Driver.addUser(user.username, password);
             }
         }
     }
