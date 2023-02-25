@@ -16,8 +16,7 @@ public class Model extends Subject {
     private int refereeScore;
     private List<String> friends;
     private List<Map.Entry<Integer, String>> leaderboard;
-    private boolean isReferee = false;
-    private boolean isSuperUser = false;
+    private UserRoles role;
     private boolean isLoggedIn = false;
 
     public String getUsername() {
@@ -36,27 +35,31 @@ public class Model extends Subject {
         this.memberSince = memberSince;
     }
 
-    public void logsIn(String username, String role) throws IllegalArgumentException {
+    public void logsIn(String username) throws IllegalArgumentException {
         isLoggedIn = true;
         setUsername(username);
-        if (Objects.equals(role, UserRoles.USER.serialized())) {}
-        else if (Objects.equals(role, UserRoles.REFEREE.serialized())) isReferee = true;
-        else if (Objects.equals(role, UserRoles.SUPER_USER.serialized())) isSuperUser = true;
-        else throw new IllegalArgumentException("Illegal role passed");
     }
 
+
+    public void setUp(String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore) {
+        setMemberSince(memberSince);
+        setFriendList(friends);
+        setRole(role);
+        setELO(elo);
+        setRefereeScore(refereeScore);
+
+    }
     /**
      * Method called upon log out, clear all attributes
      */
     public void logsOut() {
-        username = null;
-        memberSince = null;
-        elo = Util.BASE_ELO;
-        refereeScore = 0;
-        friends.clear();
+        setUsername(null);
+        setMemberSince(null);
+        setELO(Util.BASE_ELO);
+        setRefereeScore(0);
+        clearFriends();
         isLoggedIn = false;
-        isReferee = false;
-        isSuperUser = false;
+        setRole(UserRoles.NOT_LOGGED_IN);
     }
 
     public void addFriend(String friend) throws IllegalArgumentException {
@@ -67,6 +70,11 @@ public class Model extends Subject {
     public void removeFriend(String friend) {
         friends.remove(friend);
     }
+
+    public void setFriendList(List<String> newFriends) {friends = newFriends;}
+
+    public void clearFriends() {friends.clear();}
+
     public int getRefereeScore() {
         return refereeScore;
     }
@@ -83,5 +91,18 @@ public class Model extends Subject {
         elo = newELO;
         notifyObservers();
     }
+
+    public void setRole(UserRoles newRole) {
+        role = newRole;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public UserRoles getRole() {
+        return role;
+    }
+
 }
 
