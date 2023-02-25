@@ -11,25 +11,30 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 
 
 public class BlockChain {
-    Block lastBlock;
-    String lastBlockData;
-    JSONObject lastBlockDataObjects;
-    String headPointer = System.getProperty("user.dir") + File.separator + "test" + File.separator + "HEAD.json";
+    public Block lastBlock;
+    public int blockCount;
 
     /**
      * Constructor used when a Referee class is created
      * @param lastBlockData Path to HEAD.json file needed to direct the blockchain to its last created block
      */
-    public void Blockchain(String lastBlockData) {
-        this.lastBlockData = lastBlockData;
-        this.lastBlockDataObjects = new JSONObject(lastBlockData);
-        this.lastBlock = new Block(getLastBlockID());
+    public BlockChain(String lastBlockData) {
+        try {
+            JSONObject jsonData = new JSONObject(new String(Files.readAllBytes(Paths.get(lastBlockData))));
+            String lastBlockPath = Util.PATH_TO_BLOCKCHAIN_FOLDER + jsonData.getString(JsonStrings.LAST_BLOCK) + ".json";
+            blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
+            this.lastBlock = new Block(new String(Files.readAllBytes(Paths.get(lastBlockPath))));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getScore() {
@@ -50,7 +55,7 @@ public class BlockChain {
         PlayerSearch playerELO = currBlock.getELO(userPublicKey);
         if (playerELO.found()) {return playerELO.ELO();}
         while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
-            currBlock = new Block(currBlock.getPreviousBlockHash());
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
             playerELO = currBlock.getELO(userPublicKey);
             if (playerELO.found()) {return playerELO.ELO();}
         }
@@ -77,14 +82,14 @@ public class BlockChain {
 
     public void addBlock(List<BlockEntry> entries) {
         JSONObject futureBlock = new JSONObject();
-        int block_no = lastBlockDataObjects.getInt(JsonStrings.BLOCK_NO) + 1;
+        int block_no = blockCount + 1;
 
         // block id
         String id = "Block" + block_no;
         futureBlock.put(JsonStrings.BLOCK_HASH, id);
 
         // previous_block id
-        futureBlock.put(JsonStrings.PARENT_BLOCK_HASH, lastBlockDataObjects.getString(JsonStrings.LAST_BLOCK));
+        futureBlock.put(JsonStrings.PARENT_BLOCK_HASH, lastBlock.getBlockHash());
 
         // Entries
         JSONArray jsonEntries = new JSONArray();
@@ -102,8 +107,6 @@ public class BlockChain {
         }
 
     }
-
-    public String getLastBlockID() {return lastBlockDataObjects.getString(JsonStrings.LAST_BLOCK);}
 
 }
 

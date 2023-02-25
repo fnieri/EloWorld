@@ -1,6 +1,7 @@
 {
   "id": "Block1",
   "parent": "Block1",
+  "timestamp": 4,
   "entries": [
     {
       "entry" : 1,
