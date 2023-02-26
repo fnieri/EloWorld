@@ -1,4 +1,5 @@
 import org.json.JSONObject;
+import java.time.LocalTime;
 
 public class Referee extends User implements Serializable {
 
@@ -13,7 +14,7 @@ public class Referee extends User implements Serializable {
         String newEntry = "";
         newEntry += eloPlayer1 + " ";
         newEntry += eloPlayer2 + " ";
-        newEntry += this.getScore() + " ";
+        newEntry += this.getRefereeScore() + " ";
         newEntry += playerOneKey + " ";
         newEntry += playerTwoKey + " ";
         newEntry += LocalTime.now();
