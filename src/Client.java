@@ -28,9 +28,6 @@ class Client {
             Scanner sc = new Scanner(System.in);
             String line = null;
 
-            out.println(user.username);
-            out.println(user.password);
-
             while (!"exit".equalsIgnoreCase(line)) {
 
                 // reading from user
@@ -55,14 +52,14 @@ class Client {
         System.out.println("Enter username");
         Scanner input = new Scanner(System.in);
 
-        user.username = input.nextLine();
-        out.println(user.username);
+        user.publicKey = input.nextLine();
+        out.println(user.publicKey);
         String answer = in.readLine();
 
         while(!answer.equals("Y")){
             System.out.println("username already taken, please enter another one");
-            user.username = input.nextLine();
-            out.println(user.username);
+            user.publicKey = input.nextLine();
+            out.println(user.publicKey);
             answer = in.readLine();
         }
 

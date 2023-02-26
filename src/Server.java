@@ -82,12 +82,12 @@ class Server {
                 String line;
                 while ((line = in.readLine()) != null) {
                     if (line.charAt(0) == '/') {
-                        System.out.printf("Sent from " + user.username + " : %s\n", commandHandler(line.charAt(1), line));
+                        System.out.printf("Sent from " + user.publicKey + " : %s\n", commandHandler(line.charAt(1), line));
                         out.println("[" + LocalTime.now() + "] : " + commandHandler(line.charAt(1), line));
                     } else {
                         // writing the received message from
                         // client
-                        System.out.printf("Sent from " + user.username + " : %s\n", line);
+                        System.out.printf("Sent from " + user.publicKey + " : %s\n", line);
                         out.println("[" + LocalTime.now() + "] : " + line);
                     }
                 }
@@ -135,15 +135,15 @@ class Server {
         }
 
         public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException, SQLException {
-            user.username = in.readLine();
-            while (!user.username.equals("Theo")) { //(driver.nameExists(user.username)) {
+            user.publicKey = in.readLine();
+            while (!user.publicKey.equals("Theo")) { //(driver.nameExists(user.username)) {
                 out.println("N");
-                user.username = in.readLine();
+                user.publicKey = in.readLine();
                 }
             out.println("Y");
             String password = in.readLine();
 
-            driver.addUser(user.username, password);
+            driver.addUser(user.publicKey, password);
             }
         }
     }
