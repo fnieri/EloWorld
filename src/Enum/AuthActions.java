@@ -12,6 +12,7 @@ public enum  AuthActions {
             case LOGIN -> "login";
             case CLIENT_OK_AUTH -> "client_ok_auth";
             case CLIENT_BAD_AUTH -> "client_bad_auth";
+
         };
     }
 }
