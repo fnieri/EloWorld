@@ -1,7 +1,10 @@
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import Enum.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Controller {
@@ -20,39 +23,42 @@ public class Controller {
 
         String domain = jsonReq.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {processAuth(jsonReq);}
-        else if (Objects.equals(domain, Domain.FRIEND.serialized())) {processFriendReq(jsonReq);}
-        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {processEntryCreation(jsonReq);}
+        else if (Objects.equals(domain, Domain.RESOURCE.serialized())) {processSetUp(jsonReq);}
     }
 
     public void processAuth(JSONObject jsonReq) {
         String serverResponse = jsonReq.getString(MessageStrings.SERVER_RESPONSE);
         if (Objects.equals(serverResponse, AuthActions.CLIENT_OK_AUTH.serialized())) {
             String username = jsonReq.getString(MessageStrings.USERNAME);
-            String role = jsonReq.getString(MessageStrings.ROLE);
-            model.logsIn(username, role);
-            //TODO Maybe add elo and member since
+            model.logsIn(username);
         }
         else {
             //TODO Send log in faulty message
         }
     }
 
-    public void processFriendReq(JSONObject jsonReq) {
-        String action = jsonReq.getString(MessageStrings.ACTION);
-        if (Objects.equals(action, FriendReqActions.SEND_REQUEST.serialized())) {}//TODO serv controller
 
-        else if (Objects.equals(action, FriendReqActions.ACCEPT_REQUEST.serialized())) {
-            String newFriend = jsonReq.getString(MessageStrings.SENDER);
-            model.addFriend(newFriend);
+    public void processSetUp(JSONObject jsonReq) {
+        String username = jsonReq.getString(MessageStrings.USERNAME);
+        JSONArray friends = jsonReq.getJSONArray(MessageStrings.FRIEND);
+
+        List<String> friendsList = new ArrayList<>();
+        for (int i = 0; i < friends.length(); i ++) {
+            String friend = friends.getJSONObject(i).getString(MessageStrings.FRIEND);
+            friendsList.add(friend);
         }
 
-        else if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
-            String oldFriend = jsonReq.getString(MessageStrings.SENDER);
-            model.removeFriend(oldFriend);
-        }
-        else {}
+        String memberSince = jsonReq.getString(MessageStrings.MEMBER_SINCE);
+        int elo = jsonReq.getInt(MessageStrings.ELO);
+        int refereeScore = jsonReq.getInt(MessageStrings.REFEREE_SCORE);
+        String serializedRole = jsonReq.getString(MessageStrings.ROLE);
+
+        UserRoles role = null;
+        if (Objects.equals(serializedRole, UserRoles.USER.serialized())) { role = UserRoles.USER;}
+        else if (Objects.equals(serializedRole, UserRoles.REFEREE.serialized())) { role = UserRoles.REFEREE;}
+        else if (Objects.equals(serializedRole, UserRoles.SUPER_USER.serialized())) { role = UserRoles.SUPER_USER;}
+
+        model.setUp(memberSince, friendsList, role, elo, refereeScore);
+
     }
-
-    public void processEntryCreation(JSONObject jsonReq) {}
-    //TODO send to server
 }
