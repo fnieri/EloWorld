@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 // ClientHandler class
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
     private final Socket clientSocket;
     ArrayList<ClientHandler> allClients;
     PrintWriter out = null;
@@ -41,7 +41,6 @@ public class ClientHandler implements Runnable {
             while ((line = in.readLine()) != null) {
                 if (line.charAt(0) == '/') {
                     commandHandler(line.charAt(1), line);
-                    out.println("commande recue");
                 } else {
                     // writing the received message from client
                     System.out.printf("Sent from " + user.publicKey + " : %s\n", line);
@@ -86,16 +85,15 @@ public class ClientHandler implements Runnable {
             //}
         }
         if(command == 'a') { // all
-            for(ClientHandler cH: allClients){
-                //cH.out.println("getElo");
-                System.out.println(user.publicKey);
+            for(ClientHandler cH: allClients) {
+                cH.out.println("getElo");
             }
         }
     }
 
     public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException, SQLException {
         user.publicKey = in.readLine();
-        while (!user.publicKey.equals("Theo")) { //(driver.nameExists(user.username)) {
+        while (user.publicKey.equals("Theo")) { //(driver.nameExists(user.username)) {
             out.println("N");
             user.publicKey = in.readLine();
         }

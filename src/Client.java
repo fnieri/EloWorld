@@ -24,20 +24,20 @@ class Client {
 
             getUserInfo(out, in);
 
+            ClientListener listener = new ClientListener(socket);
+
+            new Thread(listener).start();
+
             // object of scanner class
             Scanner sc = new Scanner(System.in);
-            String line = null;
+            String input = null;
 
-            while (!"exit".equalsIgnoreCase(line)) {
-
+            while (!"exit".equalsIgnoreCase(input)) {
                 // reading from user
-                line = sc.nextLine();
+                input = sc.nextLine();
 
                 // sending the user input to server
-                out.println(line);
-
-                // displaying server reply
-                System.out.println("Server replied " + in.readLine());
+                out.println(input);
             }
 
             // closing the scanner object
@@ -67,4 +67,29 @@ class Client {
         String password = input.nextLine();
         out.println(password);
     }
+
+    private static class ClientListener extends Thread {
+        private final Socket clientSocket;
+        BufferedReader in = null;
+
+        public ClientListener(Socket socket) { this.clientSocket = socket;}
+        public void run() {
+            try {
+                in = new BufferedReader(
+                        new InputStreamReader(
+                                clientSocket.getInputStream()));
+
+                String line;
+
+                while((line = in.readLine()) != null) {
+                    System.out.print(line + "\n");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }

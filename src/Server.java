@@ -28,8 +28,7 @@ class Server {
                         .getHostAddress());
 
                 // create a new thread object
-                ClientHandler clientSock
-                        = new ClientHandler(client, connectedClients);
+                ClientHandler clientSock = new ClientHandler(client, connectedClients);
 
                 connectedClients.add(clientSock);
 
