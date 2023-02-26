@@ -8,13 +8,9 @@ import Exceptions.UserNotInEntry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -27,60 +23,73 @@ public class BlockChain {
      * @param lastBlockData Path to HEAD.json file needed to direct the blockchain to its last created block
      */
     public BlockChain(String lastBlockData) {
-        try {
-            JSONObject jsonData = new JSONObject(new String(Files.readAllBytes(Paths.get(lastBlockData))));
-            String lastBlockPath = Util.PATH_TO_BLOCKCHAIN_FOLDER + jsonData.getString(JsonStrings.LAST_BLOCK) + ".json";
-            blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
-            this.lastBlock = new Block(new String(Files.readAllBytes(Paths.get(lastBlockPath))));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        JSONObject jsonData = Util.convertJsonFileToJSONObject(lastBlockData);
+        this.lastBlock = Util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK));
+        blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }
 
     public int getScore() {
         Block currBlock = lastBlock;
-        int numBlock = 1;
-        int numEntries = currBlock.getScore();
+        int numBlock = 0;
+        int numEntries = 0;
         // Data Count
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
-            currBlock = new Block(currBlock.getPreviousBlockHash());
+        boolean endNotReached = true;
+        while (endNotReached) {
+            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
+                endNotReached = false;
+            }
+
             numBlock += 1;
             numEntries += currBlock.getScore();
+
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
         return numEntries/numBlock;
     }
 
     public int getELO(String userPublicKey) {
         Block currBlock = lastBlock;
-        PlayerSearch playerELO = currBlock.getELO(userPublicKey);
-        if (playerELO.found()) {return playerELO.ELO();}
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+        PlayerSearch playerELO;
+        boolean endNotReached = true;
+        while (endNotReached) {
+            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
+                endNotReached = false;
+            }
+
             playerELO = currBlock.getELO(userPublicKey);
             if (playerELO.found()) {return playerELO.ELO();}
+
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
         return Util.BASE_ELO;
     }
 
-    public Hashtable<String, Integer> getLeaderboard() throws UserNotInEntry {
+    public JSONObject getLeaderboard() throws UserNotInEntry {
         Block currBlock = lastBlock;
-        Hashtable<String, Integer> leaderboard = new Hashtable<>();
-        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
+        JSONObject leaderboard = new JSONObject();
+
+        boolean endNotReached = true;
+        while (endNotReached) {
+            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
+                endNotReached = false;
+            }
+
             for (BlockEntry entry: currBlock.getEntries()) {
                 String[] players = {entry.player1PublicKey(), entry.player2PublicKey()};
                 for (String player: players) {
-                    if (!leaderboard.containsKey(player)) {
+                    if (!leaderboard.has(player)) {
                         leaderboard.put(player, entry.getPlayerELO(player));
                     }
                 }
             }
-            currBlock = new Block(currBlock.getPreviousBlockHash());
+
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
 
         }
         return leaderboard;
     }
 
-    public void addBlock(List<BlockEntry> entries) {
+    public void addBlock(ArrayList<BlockEntry> entries) {
         JSONObject futureBlock = new JSONObject();
         int block_no = blockCount + 1;
 
@@ -99,12 +108,28 @@ public class BlockChain {
         futureBlock.put(JsonStrings.ENTRIES, jsonEntries);
 
         // Write new Block as .json file
-        String filename = id + ".json";
+        String filename = Util.PATH_TO_BLOCKCHAIN_FOLDER + id + ".json";
         try (FileWriter file = new FileWriter(filename)) {
             file.write(futureBlock.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Update with new information
+        lastBlock = Util.convertJsonFileToBlock(id);
+        blockCount = block_no;
+
+
+        JSONObject updateHead = new JSONObject();
+        updateHead.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
+        updateHead.put(JsonStrings.BLOCK_NO, blockCount);
+        String headFile = Util.PATH_TO_BLOCKCHAIN_FOLDER + "HEAD.json";
+        try (FileWriter file = new FileWriter(headFile)) {
+            file.write(updateHead.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
