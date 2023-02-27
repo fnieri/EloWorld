@@ -1,0 +1,26 @@
+{
+  "id": "Block1"
+  "previous_block": "Block1"
+  "timestamp": 123,
+  "entries": [
+    {
+      "entry" : 1,
+      "referee": "fran1",
+      "referee_score": 11,
+      "player_1_key": "emile1",
+      "player_1_elo": 140,
+      "player_2_key": "theo1",
+      "player_2_elo": 150
+    },
+    {
+      "entry" : 2,
+      "referee": "fran2",
+      "referee_score": 15,
+      "player_1_key": "emile2",
+      "player_1_elo": 142,
+      "player_2_key": "theo2",
+      "player_2_elo": 152
+    }
+
+  ]
+}

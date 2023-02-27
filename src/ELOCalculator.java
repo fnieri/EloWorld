@@ -9,14 +9,14 @@ import java.lang.Math;
 
 public class ELOCalculator{
 
-    float[] startingELOs;
-    float[] transformedScores = new float[2];
-    float[] expectedScores = new float[2];
-    int[] finalELOs = new int[2];
-    boolean[] hasWon;
+    private final float[] startingELOs;
+    private final float[] transformedScores = new float[2];
+    private final float[] expectedScores = new float[2];
+    private final int[] finalELOs = new int[2];
+    private final boolean[] hasWon;
 
-    int KFactor = 32;
-    int NoOfPlayers = 2;
+    private final int KFactor = 32;
+    private final int NoOfPlayers = 2;
 
     public ELOCalculator(float[] startingELOs, boolean[] hasWon) throws Exception {
         int ELOLength = startingELOs.length;
