@@ -20,10 +20,9 @@ public class BlockChain {
 
     /**
      * Constructor used when a Referee class is created
-     * @param lastBlockData Path to HEAD.json file needed to direct the blockchain to its last created block
      */
-    public BlockChain(String lastBlockData) {
-        JSONObject jsonData = Util.convertJsonFileToJSONObject(lastBlockData);
+    public BlockChain() {
+        JSONObject jsonData = Util.convertJsonFileToJSONObject(Util.BLOCKCHAIN_HEAD);
         this.lastBlock = Util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK));
         blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }

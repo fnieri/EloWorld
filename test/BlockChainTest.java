@@ -7,24 +7,22 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BlockChainTest {
-    String headPointer = "HEAD";
-
     @Test
     void blockchain() {
-        BlockChain blockchain = new BlockChain(headPointer);
+        BlockChain blockchain = new BlockChain();
 
         assertEquals(3, blockchain.blockCount);
     }
     @Test
     void getScore() {
-        BlockChain blockchain = new BlockChain(headPointer);
+        BlockChain blockchain = new BlockChain();
 
         assertEquals(2, blockchain.getScore());
     }
 
     @Test
     void getELO() {
-        BlockChain blockchain = new BlockChain(headPointer);
+        BlockChain blockchain = new BlockChain();
 
         assertEquals(150, blockchain.getELO("theo12"));
         assertEquals(140, blockchain.getELO("emile11"));
@@ -32,7 +30,7 @@ class BlockChainTest {
 
     @Test
     void getLeaderboard() throws UserNotInEntry {
-        BlockChain blockchain = new BlockChain(headPointer);
+        BlockChain blockchain = new BlockChain();
 
         JSONObject leaderboard = blockchain.getLeaderboard();
         assertFalse(leaderboard.has("fran11"));
@@ -43,7 +41,7 @@ class BlockChainTest {
 
     @Test
     void addBlock() {
-        BlockChain blockchain = new BlockChain(headPointer);
+        BlockChain blockchain = new BlockChain();
         ArrayList<BlockEntry> entries = new ArrayList<>();
         entries.add(new BlockEntry(4, "fran31", 1, "emile31", 160, "theo31", 149));
         entries.add(new BlockEntry(6, "elliot32", 1, "emile32", 130, "theo32", 189));
