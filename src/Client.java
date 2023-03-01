@@ -24,23 +24,20 @@ class Client {
 
             getUserInfo(out, in);
 
+            ClientListener listener = new ClientListener(socket);
+
+            new Thread(listener).start();
+
             // object of scanner class
             Scanner sc = new Scanner(System.in);
-            String line = null;
+            String input = null;
 
-            out.println(user.userName);
-            out.println(user.password);
-
-            while (!"exit".equalsIgnoreCase(line)) {
-
+            while (!"exit".equalsIgnoreCase(input)) {
                 // reading from user
-                line = sc.nextLine();
+                input = sc.nextLine();
 
                 // sending the user input to server
-                out.println(line);
-
-                // displaying server reply
-                System.out.println("Server replied " + in.readLine());
+                out.println(input);
             }
 
             // closing the scanner object
@@ -55,19 +52,44 @@ class Client {
         System.out.println("Enter username");
         Scanner input = new Scanner(System.in);
 
-        user.userName = input.nextLine();
-        out.println(user.userName);
+        user.publicKey = input.nextLine();
+        out.println(user.publicKey);
         String answer = in.readLine();
 
         while(!answer.equals("Y")){
-            System.out.println("Username already taken, please enter another one");
-            user.userName = input.nextLine();
-            out.println(user.userName);
+            System.out.println("username already taken, please enter another one");
+            user.publicKey = input.nextLine();
+            out.println(user.publicKey);
             answer = in.readLine();
         }
 
         System.out.println("Enter password");
-        user.password = input.nextLine();
-        out.println(user.password);
+        String password = input.nextLine();
+        out.println(password);
     }
+
+    private static class ClientListener extends Thread {
+        private final Socket clientSocket;
+        BufferedReader in = null;
+
+        public ClientListener(Socket socket) { this.clientSocket = socket;}
+        public void run() {
+            try {
+                in = new BufferedReader(
+                        new InputStreamReader(
+                                clientSocket.getInputStream()));
+
+                String line;
+
+                while((line = in.readLine()) != null) {
+                    System.out.print(line + "\n");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }

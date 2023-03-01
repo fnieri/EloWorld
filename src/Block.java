@@ -1,68 +1,132 @@
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+/**
+ * Class representing a block in the blockchain
+ * Author: Francesco Nieri
+ * Date: 17/02/2023
+ */
+
+import Exceptions.UserNotInEntry;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.util.List;
+import java.util.Comparator;
 
-public class Block {
-    String id;
-    String previousLocation = null;
-    Block previousBlock = null;
-    LocalDate timeStamp;
-    List<String> referees = new ArrayList<>();
+class Block implements Serializable {
+    private final String blockHash;
+    private final String previousBlockHash;
+    private final List<BlockEntry> entries;
+    private boolean hasData = false;
+    private boolean hasEntries = false;
+    private BlockParser parser = null;
+    private final int score;
 
-    float eloPlayer1;
-    float eloPlayer2;
-    float refereeScore;
-    int playerOneKey;
-    int playerTwoKey;
-    int refereeKey;
-
-    public String getPreviousLocation(){
-        return previousLocation;
-    }
-    public void setPreviousLocation(String newPreviousLocation){
-        previousLocation = newPreviousLocation;
-    }
-
-    public Block getPreviousBlock(){
-        return previousBlock;
-    }
-    public void setPreviousBlock(Block newBlock){
-        previousBlock = newBlock;
+    /**
+     * Constructor used when instantiating from a JSON file
+     * @param data Json File
+     */
+    public Block(String data) {
+        this.hasData = true;
+        parser = new BlockParser(data);
+        this.blockHash = parser.getBlockHash();
+        this.previousBlockHash = parser.getPreviousBlockHash();
+        this.entries = getEntriesFromData();
+        this.score = entries.size();
     }
 
-    public void parseEntry(String entry){
-        //agit un peu comme un constructeur, ou au moins a cette vocation.
-        //creation dans referee.java
-        String[] parsedEntry = entry.split(" ");
-        eloPlayer1 = Float.parseFloat(parsedEntry[0]);
-        eloPlayer2 = Float.parseFloat(parsedEntry[1]);
-        refereeScore = Float.parseFloat(parsedEntry[2]);
-        playerOneKey = Integer.parseInt(parsedEntry[3]);
-        playerTwoKey = Integer.parseInt(parsedEntry[4]);
-        refereeKey = Integer.parseInt(parsedEntry[5]);
+    /**
+     * Constructor used for testing
+     * @param blockHash Hash of current block
+     * @param previousBlockHash Hash of parent
+     * @param entries   List of BlockEntry
+     */
+    public Block(String blockHash, String previousBlockHash, List<BlockEntry> entries) {
+        this.blockHash = blockHash;
+        this.previousBlockHash = previousBlockHash;
+        this.entries = entries;
+        this.hasEntries = true;
+        this.score = entries.size();
+    }
 
-        //partie pour le timeStamp :
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        timeStamp = LocalDate.parse(parsedEntry[6], formatter);
+    /**
+     * Sort block entries by their timestamp
+     */
+    private void sortEntriesByTimestamp() {
+        entries.sort(Comparator.comparing(BlockEntry::timestamp));
+    }
 
-        if (referees.contains(Integer.toString(refereeKey))){
-            referees.add(Integer.toString(refereeKey));
+    /**
+     * Return a list of blockEntries from block data
+     */
+    private List<BlockEntry> getEntriesFromData() throws UnsupportedOperationException {
+        if (!hasData) throw new UnsupportedOperationException("Entry creation from data called without loading data");
+        hasEntries = true;
+        return parser.getBlockEntries();
+    }
+
+    /**
+     *
+     * @return Block object as a JSONObject
+     */
+    @Override
+    public JSONObject asJson() {
+        JSONObject block = new JSONObject();
+
+        block.put(JsonStrings.BLOCK_HASH, blockHash);
+        block.put(JsonStrings.PARENT_BLOCK_HASH, previousBlockHash);
+        JSONArray entriesArray = entriesAsJson();
+        block.put(JsonStrings.ENTRIES, entriesArray);
+        return block;
+    }
+
+    /**
+     * Return a JSONArray containing all entries as JSON
+     * @return Entries as a JSONArray
+     * @throws UnsupportedOperationException If no entries are found
+     */
+    private JSONArray entriesAsJson() throws UnsupportedOperationException {
+        if (entries.size() == 0) throw new UnsupportedOperationException("Cannot convert empty entry list to JSON");
+
+        JSONArray jsonArray = new JSONArray();
+        int entryCounter = 0;
+
+        for (BlockEntry entry: entries)  {
+            JSONObject jsonEntry = entry.asJson();
+            jsonEntry.put(JsonStrings.ENTRY, entryCounter);
+            jsonArray.put(jsonEntry);
+            entryCounter += 1;
         }
+        return jsonArray;
     }
 
-    public int blocScore(){
-        return referees.size();
+    /**
+     * Find ELO of a player on the blocks entries using its public key
+     * @param userPublicKey Public key of a Player
+     * @return PlayerSearch : record indicating whether the Player was found among all entries along with its ELO, if the player was not found, return previousBlocksID
+     *
+     */
+    public PlayerSearch getELO(String userPublicKey) {
+        for (BlockEntry entry: entries) {
+            try {
+                int userELO = entry.getPlayerELO(userPublicKey);
+                return new PlayerSearch(true, userELO, "");
+            }
+            catch (UserNotInEntry ignored) {
+            }
+        }
+        return new PlayerSearch(false, 0, previousBlockHash);
     }
 
+    public int getScore() {
+        return score;
+    }
 
+    public String getPreviousBlockHash() {
+        return previousBlockHash;
+    }
 
-    public void retrieveAllScore(String player){}
+    public String getBlockHash() {
+        return blockHash;
+    }
 
-    public void retrieveClubScore(String player, String club){}
-
-    public void retrieveLeaderbord(String club){}
-
-    public void retrieveFriends(String player){}
+    public List<BlockEntry> getEntries() {return this.entries;}
 
 }

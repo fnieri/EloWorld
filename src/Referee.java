@@ -1,34 +1,35 @@
+import org.json.JSONObject;
 import java.time.LocalTime;
 
-public class Referee extends User{
+public class Referee extends User implements Serializable {
 
-    BlockChain chain = new BlockChain();
+    int score;
+    BlockChain blockchain;
+    
+    //TODO Constructeur
+    public Referee() {}
 
-    public String createEntry(int eloPlayer1, int eloPlayer2,
-                              int playerOneKey, int playerTwoKey,
-                              LocalTime timeStamp){
+    public String createEntry(int eloPlayer1, int eloPlayer2, int playerOneKey, int playerTwoKey) {
         //parsing dans Block.java
         String newEntry = "";
         newEntry += eloPlayer1 + " ";
         newEntry += eloPlayer2 + " ";
-        newEntry += this.getScore() + " ";
+        newEntry += this.getRefereeScore() + " ";
         newEntry += playerOneKey + " ";
         newEntry += playerTwoKey + " ";
-
-        newEntry += timeStamp;
-
+        newEntry += LocalTime.now();
         return newEntry;
     }
 
-    int getScore() {
-        return chain.getScore(chain.lastBlock, 0); //ancienne version de blockchain, a modifier apres
-                                                              // le push d'Emile
+    public int getRefereeScore() {
+        return blockchain.getScore();
     }
 
-    public static void main(String[] args){
-        Referee ref = new Referee();
-        String testEntry = ref.createEntry(720,1200,1515,1212, LocalTime.now());
-        System.out.println(testEntry);
+    @Override
+    public JSONObject asJson() {
+        JSONObject refereeJson =  new JSONObject();
+        refereeJson.put(getPublicKey(), getRefereeScore());
+        return refereeJson;
     }
 
 }

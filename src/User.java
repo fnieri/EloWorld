@@ -1,12 +1,13 @@
+import org.json.JSONObject;
+
 public class User {
 
-    String userName;
-    String password; // ca va falloir voir a le crypter
+    String publicKey;
 
-    void register(){}
+    public void User(String publicKey) {this.publicKey = publicKey;}
 
-    void logIn(){}
-
-    void calculateElo(){}
-
+    public String getPublicKey() {return publicKey;}
+    
+    //TODO fetch elo from DB leaderboard
+    public int getELO() {return 0;}
 }
