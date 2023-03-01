@@ -4,15 +4,15 @@ public class Driver {
     private static Connection connection;
 
     public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:3306/blockchainappdb";
-        String user = "root";
-        String password = "1234";
+        String url = "jdbc:mysql://ba8e1fd7c94605:443cb91d@eu-cdbr-west-03.cleardb.net/heroku_76cef2360ddfe66?reconnect=true";
+        String user = "ba8e1fd7c94605";
+        String password = "443cb91d";
 
         try { // if the connection failed
 
             connection = DriverManager.getConnection(url, user, password);
-            updatePassword("Elliot", "6666");
-            updateUsername("FNIERI", 2);
+            //updatePassword("Elliot", "6666");
+            //updateUsername("FNIERI", 2);
             //addUser("Nieri", "1111", connection);
             //getScore("Theo", connection);
 
