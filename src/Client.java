@@ -68,13 +68,19 @@ class Client {
         out.println(password);
     }
 
+
+
     private static class ClientListener extends Thread {
         private final Socket clientSocket;
+        PrintWriter out = null;
         BufferedReader in = null;
 
         public ClientListener(Socket socket) { this.clientSocket = socket;}
         public void run() {
             try {
+                PrintWriter out = new PrintWriter(
+                        clientSocket.getOutputStream(), true);
+
                 in = new BufferedReader(
                         new InputStreamReader(
                                 clientSocket.getInputStream()));
@@ -82,7 +88,14 @@ class Client {
                 String line;
 
                 while((line = in.readLine()) != null) {
-                    System.out.print(line + "\n");
+                    if (line.charAt(0) == '/') {
+                        if(user instanceof Referee) {
+                            System.out.println("Referee");
+                            //out.println(user.getLeaderboard);
+                        }
+                    } else {
+                        System.out.print(line + "\n");
+                    }
                 }
 
             } catch (IOException e) {

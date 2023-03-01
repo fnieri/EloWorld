@@ -6,11 +6,13 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.math.*;
 
 // ClientHandler class
 public class ClientHandler extends Thread {
     private final Socket clientSocket;
     ArrayList<ClientHandler> allClients;
+    int entryCounter;
     PrintWriter out = null;
     BufferedReader in = null;
 
@@ -18,9 +20,10 @@ public class ClientHandler extends Thread {
     //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
+        this.entryCounter = entryCounter;
     }
 
     public void run() {
@@ -80,14 +83,13 @@ public class ClientHandler extends Thread {
             //    database.friendLeaderBoard()
         }
         if(command == 'e') { //entry
-            //if(user.getclass == Referee){
+            entryCounter += 1 % Math.log10(allClients.size());
+            if(entryCounter == 0) {
+                fetchLeaderboard();
+            }
+            //if(user instanceof Referee){
             //    user.createEntry(tout le tintouin, ca devrait etre facilement accessible)
             //}
-        }
-        if(command == 'a') { // all
-            for(ClientHandler cH: allClients) {
-                cH.out.println("getElo");
-            }
         }
     }
 
@@ -102,4 +104,11 @@ public class ClientHandler extends Thread {
 
         //driver.addUser(user.publicKey, password);
     }
+
+    public void fetchLeaderboard(){
+            for(ClientHandler cH: allClients) {
+                cH.out.println("getElo");
+            }
+    }
+
 }

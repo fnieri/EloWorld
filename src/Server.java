@@ -5,6 +5,7 @@ import java.util.ArrayList;
 // Server class
 class Server {
     public static void main(String[] args) {
+        int entryCounter = 0;
         ServerSocket server = null;
         ArrayList<ClientHandler> connectedClients = new ArrayList<>();
 
@@ -28,7 +29,7 @@ class Server {
                         .getHostAddress());
 
                 // create a new thread object
-                ClientHandler clientSock = new ClientHandler(client, connectedClients);
+                ClientHandler clientSock = new ClientHandler(client, connectedClients, entryCounter);
 
                 connectedClients.add(clientSock);
 
