@@ -1,5 +1,6 @@
 import Exceptions.UserNotInEntry;
 import org.json.JSONObject;
+import java.time.LocalTime;
 
 import java.io.File;
 import java.io.FileWriter;
