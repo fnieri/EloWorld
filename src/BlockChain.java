@@ -27,9 +27,14 @@ public class BlockChain {
         blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }
 
+    /**
+     * returns the score of the blockchain, calculated as the number of entries. A more complex calculation to ensure
+     * blocks are at max capacity is required.
+     *
+     * @return The score of the blockchain
+     */
     public int getScore() {
         Block currBlock = lastBlock;
-        int numBlock = 0;
         int numEntries = 0;
         // Data Count
         boolean endNotReached = true;
@@ -38,14 +43,19 @@ public class BlockChain {
                 endNotReached = false;
             }
 
-            numBlock += 1;
             numEntries += currBlock.getScore();
 
             currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
-        return numEntries/numBlock;
+        return numEntries;
     }
 
+    /**
+     * return the ELO of the given username, or a default value if that player is not a part of the blockchain yet.
+     *
+     * @param userPublicKey name of the user we need to find the elo of
+     * @return player's elo found in the blockchain's most recent blocks or the base value if the player doesn't exist.
+     */
     public int getELO(String userPublicKey) {
         Block currBlock = lastBlock;
         PlayerSearch playerELO;
@@ -63,6 +73,12 @@ public class BlockChain {
         return Util.BASE_ELO;
     }
 
+    /**
+     * formats the blockchain into a leaderboard listing all players and their most recent ELO recorded in the blockchain.
+     *
+     * @return JSONObject format of a leaderboard parsed from the Blockchain
+     * @throws UserNotInEntry in case a player's name is incorrectly written in the files
+     */
     public JSONObject getLeaderboard() throws UserNotInEntry {
         Block currBlock = lastBlock;
         JSONObject leaderboard = new JSONObject();
@@ -88,6 +104,11 @@ public class BlockChain {
         return leaderboard;
     }
 
+    /**
+     * creates a new block from a list of entries and add it to the blockchain
+     *
+     * @param entries
+     */
     public void addBlock(ArrayList<BlockEntry> entries) {
         JSONObject futureBlock = new JSONObject();
         int block_no = blockCount + 1;
