@@ -5,7 +5,7 @@ import java.util.*;
 // Client class
 class Client {
 
-    static User user = new User();
+    static User user = null;
 
     // driver code
     public static void main(String[] args) {
@@ -52,7 +52,7 @@ class Client {
         System.out.println("Enter username");
         Scanner input = new Scanner(System.in);
 
-        user.publicKey = input.nextLine();
+        user = new User(input.nextLine());
         out.println(user.publicKey);
         String answer = in.readLine();
 
@@ -68,13 +68,19 @@ class Client {
         out.println(password);
     }
 
+
+
     private static class ClientListener extends Thread {
         private final Socket clientSocket;
+        PrintWriter out = null;
         BufferedReader in = null;
 
         public ClientListener(Socket socket) { this.clientSocket = socket;}
         public void run() {
             try {
+                PrintWriter out = new PrintWriter(
+                        clientSocket.getOutputStream(), true);
+
                 in = new BufferedReader(
                         new InputStreamReader(
                                 clientSocket.getInputStream()));
@@ -82,14 +88,19 @@ class Client {
                 String line;
 
                 while((line = in.readLine()) != null) {
-                    System.out.print(line + "\n");
+                    if (line.charAt(0) == '/') {
+                        if(user instanceof Referee) {
+                            System.out.println("Referee");
+                            //out.println(user.getLeaderboard);
+                        }
+                    } else {
+                        System.out.print(line + "\n");
+                    }
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
     }
-
 }

@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,21 +8,24 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.math.*;
 
 // ClientHandler class
 public class ClientHandler extends Thread {
     private final Socket clientSocket;
     ArrayList<ClientHandler> allClients;
+    int entryCounter;
     PrintWriter out = null;
     BufferedReader in = null;
 
-    static User user = new User();
+    static User user = null;
     //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
+        this.entryCounter = entryCounter;
     }
 
     public void run() {
@@ -37,15 +42,10 @@ public class ClientHandler extends Thread {
 
             loginHandler(out, in);
 
-            String line;
-            while ((line = in.readLine()) != null) {
-                if (line.charAt(0) == '/') {
-                    commandHandler(line.charAt(1), line);
-                } else {
-                    // writing the received message from client
-                    System.out.printf("Sent from " + user.publicKey + " : %s\n", line);
-                    out.println("[" + LocalTime.now() + "] : " + line);
-                }
+            String packet;
+            while ((packet = in.readLine()) != null) {
+                JSONObject jsonPacket = new JSONObject(packet);
+
             }
         }
         catch (IOException | SQLException e) {
@@ -67,7 +67,7 @@ public class ClientHandler extends Thread {
         }
     }
 
-    void commandHandler(char command, String message){
+    void parsePacket(char command, String message){
         String[] users = message.split(" "); //(users[0] = la commande cad /i)
         if(command == 'l'){ //accept
             //database.getLeaderboard()
@@ -80,14 +80,13 @@ public class ClientHandler extends Thread {
             //    database.friendLeaderBoard()
         }
         if(command == 'e') { //entry
-            //if(user.getclass == Referee){
+            entryCounter += 1 % Math.log10(allClients.size());
+            if(entryCounter == 0) {
+                fetchLeaderboard();
+            }
+            //if(user instanceof Referee){
             //    user.createEntry(tout le tintouin, ca devrait etre facilement accessible)
             //}
-        }
-        if(command == 'a') { // all
-            for(ClientHandler cH: allClients) {
-                cH.out.println("getElo");
-            }
         }
     }
 
@@ -102,4 +101,11 @@ public class ClientHandler extends Thread {
 
         //driver.addUser(user.publicKey, password);
     }
+
+    public void fetchLeaderboard(){
+            for(ClientHandler cH: allClients) {
+                cH.out.println("getElo");
+            }
+    }
+
 }
