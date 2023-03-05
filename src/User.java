@@ -4,7 +4,7 @@ public class User {
 
     String publicKey;
 
-    public void User(String publicKey) {this.publicKey = publicKey;}
+    public User(String publicKey) {this.publicKey = publicKey;}
 
     public String getPublicKey() {return publicKey;}
     
