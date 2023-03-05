@@ -5,7 +5,7 @@ import java.util.*;
 // Client class
 class Client {
 
-    static User user = new User();
+    static User user = null;
 
     // driver code
     public static void main(String[] args) {
@@ -52,7 +52,7 @@ class Client {
         System.out.println("Enter username");
         Scanner input = new Scanner(System.in);
 
-        user.publicKey = input.nextLine();
+        user = new User(input.nextLine());
         out.println(user.publicKey);
         String answer = in.readLine();
 
@@ -102,7 +102,5 @@ class Client {
                 e.printStackTrace();
             }
         }
-
     }
-
 }

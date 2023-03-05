@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +18,7 @@ public class ClientHandler extends Thread {
     PrintWriter out = null;
     BufferedReader in = null;
 
-    static User user = new User();
+    static User user = null;
     //static Driver driver = new Driver();
 
     // Constructor
@@ -40,15 +42,10 @@ public class ClientHandler extends Thread {
 
             loginHandler(out, in);
 
-            String line;
-            while ((line = in.readLine()) != null) {
-                if (line.charAt(0) == '/') {
-                    commandHandler(line.charAt(1), line);
-                } else {
-                    // writing the received message from client
-                    System.out.printf("Sent from " + user.publicKey + " : %s\n", line);
-                    out.println("[" + LocalTime.now() + "] : " + line);
-                }
+            String packet;
+            while ((packet = in.readLine()) != null) {
+                JSONObject jsonPacket = new JSONObject(packet);
+
             }
         }
         catch (IOException | SQLException e) {
@@ -70,7 +67,7 @@ public class ClientHandler extends Thread {
         }
     }
 
-    void commandHandler(char command, String message){
+    void parsePacket(char command, String message){
         String[] users = message.split(" "); //(users[0] = la commande cad /i)
         if(command == 'l'){ //accept
             //database.getLeaderboard()
