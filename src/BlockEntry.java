@@ -8,9 +8,25 @@ import Exceptions.UserNotInEntry;
 import org.json.JSONObject;
 import java.util.Objects;
 
-public record BlockEntry(int timestamp, String refereeKey, int refereeScore, String player1PublicKey, int player1ELO,
-                         String player2PublicKey, int player2ELO) implements Serializable {
+public class BlockEntry implements Serializable {
 
+    private final int timestamp;
+    private final String refereeKey;
+    private final int refereeScore;
+    private final String player1PublicKey;
+    private final int player1ELO;
+    private final String player2PublicKey;
+    private final int player2ELO;
+
+    public BlockEntry(int timestamp, String refereeKey, int refereeScore, String player1PublicKey, int player1ELO, String player2PublicKey, int player2ELO) {
+        this.timestamp = timestamp;
+        this.refereeKey = refereeKey;
+        this.refereeScore = refereeScore;
+        this.player1PublicKey = player1PublicKey;
+        this.player1ELO = player1ELO;
+        this.player2PublicKey = player2PublicKey;
+        this.player2ELO = player2ELO;
+    }
     /**
      * Returns the ELO of a searched player, if the public key of said player is in the current entry
      *
@@ -43,4 +59,31 @@ public record BlockEntry(int timestamp, String refereeKey, int refereeScore, Str
         return serializedEntry;
     }
 
+    public int timestamp() {
+        return this.timestamp;
+    }
+
+    public String refereeKey() {
+        return this.refereeKey;
+    }
+
+    public int refereeScore() {
+        return this.refereeScore;
+    }
+
+    public String player1PublicKey() {
+        return this.player1PublicKey;
+    }
+
+    public int player1ELO() {
+        return this.player1ELO;
+    }
+
+    public String player2PublicKey() {
+        return this.player2PublicKey;
+    }
+
+    public int player2ELO() {
+        return this.player2ELO;
+    }
 }

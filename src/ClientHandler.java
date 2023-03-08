@@ -1,3 +1,5 @@
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -6,9 +8,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.math.*;
+import java.util.Objects;
+import Enum.*;
 
 // ClientHandler class
 public class ClientHandler extends Thread {
@@ -17,7 +19,7 @@ public class ClientHandler extends Thread {
     int entryCounter;
     PrintWriter out = null;
     BufferedReader in = null;
-
+    JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
     static User user = null;
     //static Driver driver = new Driver();
 
@@ -40,15 +42,12 @@ public class ClientHandler extends Thread {
                     new InputStreamReader(
                             clientSocket.getInputStream()));
 
-            loginHandler(out, in);
-
             String packet;
             while ((packet = in.readLine()) != null) {
-                JSONObject jsonPacket = new JSONObject(packet);
-
+                parsePacket(packet);
             }
         }
-        catch (IOException | SQLException e) {
+        catch (IOException e) {
             e.printStackTrace();
         } finally {
             allClients.remove(this);
@@ -67,39 +66,75 @@ public class ClientHandler extends Thread {
         }
     }
 
-    void parsePacket(char command, String message){
-        String[] users = message.split(" "); //(users[0] = la commande cad /i)
-        if(command == 'l'){ //accept
-            //database.getLeaderboard()
+    public void parsePacket(String userMessage) {
+        System.out.println("entered server");
+        JSONObject jsonMessage;
+        try {
+            jsonMessage = new JSONObject(userMessage);
         }
-        if(command == 'f'){ //friend
-            //database.addFriend(users[1])
-            //}
+        catch (JSONException err) {
+            throw new IllegalArgumentException("Wrong request format");
         }
-        if(command == 'j'){ //friend
-            //    database.friendLeaderBoard()
-        }
-        if(command == 'e') { //entry
-            entryCounter += 1 % Math.log10(allClients.size());
-            if(entryCounter == 0) {
-                fetchLeaderboard();
+        System.out.println(jsonMessage.toString());
+        String domain = jsonMessage.getString(MessageStrings.DOMAIN);
+        if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
+        else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
+    }
+
+    public void sendMessage(JSONObject message) {
+        String stringMessage = message.toString();
+        out.println(stringMessage);
+    }
+
+    public void loginHandler(JSONObject jsonMessage) {
+        String action = getActionFromMessage(jsonMessage);
+        String username = getUsernameFromMessage(jsonMessage);
+        String password = jsonMessage.getString(MessageStrings.PASSWORD);
+        boolean authOk = false;
+        try {
+            if (Objects.equals(action, AuthActions.LOGIN.serialized())) {
+                Driver.connection();
+
+                //Driver.auth(username, password);
+                authOk = true;
             }
-            //if(user instanceof Referee){
-            //    user.createEntry(tout le tintouin, ca devrait etre facilement accessible)
-            //}
+            if (Objects.equals(action, AuthActions.REGISTER.serialized())) {
+                //driver
+                if (!Driver.nameExists(username)) {
+                    Driver.addUser(username, password);
+                }
+            }
+        }
+        catch (SQLException sqlException) {
+            System.out.println("connexion problem");
+        }
+
+        AuthActions authResponse = authOk ? AuthActions.CLIENT_OK_AUTH : AuthActions.CLIENT_BAD_AUTH;
+        JSONObject answer = jsonFactory.authServerAnswer(username, authResponse);
+        sendMessage(answer);
+    }
+
+    public void friendsHandler(JSONObject jsonMessage) {
+        String action = getActionFromMessage(jsonMessage);
+        String sender = jsonMessage.getString(MessageStrings.SENDER);
+        if (Objects.equals(action, FriendReqActions.FOLLOW_FRIEND.serialized())) {
+            //Driver add friend
+        }
+        else if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
+            //Driver remove friend
         }
     }
 
-    public static void loginHandler(PrintWriter out, BufferedReader in) throws IOException, SQLException {
-        user.publicKey = in.readLine();
-        while (user.publicKey.equals("Theo")) { //(driver.nameExists(user.username)) {
-            out.println("N");
-            user.publicKey = in.readLine();
-        }
-        out.println("Y");
-        String password = in.readLine();
+    public void entryHandler(JSONObject jsonMessage) {
 
-        //driver.addUser(user.publicKey, password);
+    }
+
+    public String getActionFromMessage(JSONObject jsonMessage) {
+        return jsonMessage.getString(MessageStrings.ACTION);
+    }
+
+    public String getUsernameFromMessage(JSONObject jsonMessage) {
+        return jsonMessage.getString(MessageStrings.USERNAME);
     }
 
     public void fetchLeaderboard(){
@@ -107,5 +142,4 @@ public class ClientHandler extends Thread {
                 cH.out.println("getElo");
             }
     }
-
 }

@@ -9,7 +9,7 @@ public class JsonMessageFactory {
     private static JsonMessageFactory instance = null;
     private JsonMessageFactory() {}
 
-    public JsonMessageFactory getInstance() {
+    public static JsonMessageFactory getInstance() {
         if (instance == null) {
             instance = new JsonMessageFactory();
         }
@@ -25,10 +25,10 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
-    public JSONObject authServerAnswer(String username, AuthActions clientAuthAction, AuthActions serverResponse) {
+    public JSONObject authServerAnswer(String username, AuthActions serverResponse) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.AUTH.serialized());
-        messageJson.put(MessageStrings.ACTION, clientAuthAction.serialized());
+        //messageJson.put(MessageStrings.ACTION, clientAuthAction.serialized());
         messageJson.put(MessageStrings.USERNAME, username);
         messageJson.put(MessageStrings.SERVER_RESPONSE, serverResponse);
         return messageJson;
@@ -53,7 +53,7 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
-    public JSONObject followFriendMessage(String sender, String receiver, FriendReqActions friendAction) {
+    public JSONObject friendMessage(String sender, String receiver, FriendReqActions friendAction) {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.FRIEND.serialized());
         messageJson.put(MessageStrings.ACTION, friendAction.serialized());
