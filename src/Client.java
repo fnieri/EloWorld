@@ -5,10 +5,12 @@ import java.util.*;
 // Client class
 class Client {
 
+    PrintWriter out;
+    BufferedReader in;
     static User user = null;
 
     // driver code
-    public static void main(String[] args) {
+    public void main(String[] args) {
 
         // establish a connection by providing host and port 8080
         try (Socket socket = new Socket("localhost", 8080)) {
@@ -22,7 +24,7 @@ class Client {
                     = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
 
-            getUserInfo(out, in);
+            getUserInfo(this.out, this.in);
 
             ClientListener listener = new ClientListener(socket);
 
@@ -48,24 +50,24 @@ class Client {
         }
     }
 
-    public static void getUserInfo(PrintWriter out, BufferedReader in) throws IOException {
-        System.out.println("Enter username");
-        Scanner input = new Scanner(System.in);
+    public void getUserInfo(PrintWriter out, BufferedReader in) throws IOException {
+         System.out.println("Enter username");
+         Scanner input = new Scanner(System.in);
 
-        user = new User(input.nextLine());
-        out.println(user.publicKey);
-        String answer = in.readLine();
+         user = new User(input.nextLine());
+         out.println(user.publicKey);
+         String answer = in.readLine();
 
-        while(!answer.equals("Y")){
-            System.out.println("username already taken, please enter another one");
-            user.publicKey = input.nextLine();
-            out.println(user.publicKey);
-            answer = in.readLine();
-        }
+         while(!answer.equals("Y")){
+             System.out.println("username already taken, please enter another one");
+             user.publicKey = input.nextLine();
+             out.println(user.publicKey);
+             answer = in.readLine();
+         }
 
-        System.out.println("Enter password");
-        String password = input.nextLine();
-        out.println(password);
+         System.out.println("Enter password");
+         String password = input.nextLine();
+         out.println(password);
     }
 
 

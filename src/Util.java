@@ -18,7 +18,7 @@ public class Util {
      * @return Content of the file as a String
      */
     public static String convertJsonFileToString(String filename) {
-        String path = PATH_TO_BLOCKCHAIN_FOLDER + filename + ".json";
+        String path = PATH_TO_BLOCKCHAIN_FOLDER + filename;
         try {
             return new String(Files.readAllBytes(Paths.get(path)));
         } catch (IOException e) {

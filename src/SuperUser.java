@@ -1,4 +1,8 @@
-public class SuperUser {
+public class SuperUser extends User {
+
+    public SuperUser(String publickey) {
+        super(publickey);
+    }
 
     public void promoteUser(String userId){}
 

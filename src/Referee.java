@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Referee extends User implements Serializable {
     BlockChain blockchain;
@@ -87,7 +88,14 @@ public class Referee extends User implements Serializable {
      */
     public JSONObject getBlockchain() {
         JSONObject jsonBlockchain = new JSONObject();
+        JSONArray filesArray = new JSONArray();
 
+        File folder = new File(Util.PATH_TO_BLOCKCHAIN_FOLDER);
+
+        for (final File fileEntry: Objects.requireNonNull(folder.listFiles())) {
+            String filename = fileEntry.getName();
+            String fileContent = Util.convertJsonFileToString(filename);
+        }
 
         return jsonBlockchain;
     }

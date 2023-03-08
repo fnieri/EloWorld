@@ -1,5 +1,6 @@
 public class JsonStrings {
     // Blockchain Constants
+    public static String BLOCKCHAIN = "blockchain";
     public static String LAST_BLOCK = "last_block";
     public static String BLOCK_NO = "block_no";
 
