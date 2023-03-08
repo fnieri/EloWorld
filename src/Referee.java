@@ -1,5 +1,4 @@
 import Exceptions.UserNotInEntry;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import java.time.LocalTime;
 
@@ -48,16 +47,17 @@ public class Referee extends User implements Serializable {
      * @param playerTwoKey Second player username
      * @return JSON String of the entry
      */
-    public String createEntry(int eloPlayer1, int eloPlayer2, int playerOneKey, int playerTwoKey) {
+    public void createEntry(int eloPlayer1, String playerOneKey, int eloPlayer2, String playerTwoKey, String refereeKey) {
         //parsing dans Block.java
-        String newEntry = "";
-        newEntry += eloPlayer1 + " ";
-        newEntry += eloPlayer2 + " ";
-        newEntry += this.getRefereeScore() + " ";
-        newEntry += playerOneKey + " ";
-        newEntry += playerTwoKey + " ";
-        newEntry += LocalTime.now();
-        return newEntry;
+        JSONObject entry = new JSONObject();
+        entry.put(JsonStrings.PLAYER_1_ELO, eloPlayer1);
+        entry.put(JsonStrings.PLAYER_2_ELO, eloPlayer2);
+        entry.put(JsonStrings.PLAYER_1_KEY, playerOneKey);
+        entry.put(JsonStrings.PLAYER_2_KEY, playerTwoKey);
+        entry.put(JsonStrings.REFEREE_KEY, refereeKey);
+        entry.put(JsonStrings.REFEREE_SCORE, getRefereeScore());
+        entry.put(JsonStrings.TIMESTAMP, LocalTime.now());
+        Util.writeJSONFile(entry.toString(), Util.PATH_TO_ENTRIES_FOLDER);
     }
 
     /**
@@ -88,16 +88,20 @@ public class Referee extends User implements Serializable {
      */
     public JSONObject getBlockchain() {
         JSONObject jsonBlockchain = new JSONObject();
-        JSONArray filesArray = new JSONArray();
 
         File folder = new File(Util.PATH_TO_BLOCKCHAIN_FOLDER);
 
         for (final File fileEntry: Objects.requireNonNull(folder.listFiles())) {
+
             String filename = fileEntry.getName();
-            String fileContent = Util.convertJsonFileToString(filename);
+            jsonBlockchain.put(filename, Util.convertJsonFileToJSONObject(filename));
         }
 
         return jsonBlockchain;
+    }
+
+    public void setBlockchain() {
+
     }
 
     /**

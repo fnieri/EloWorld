@@ -15,8 +15,7 @@ class Block implements Serializable {
     private final String previousBlockHash;
     private final List<BlockEntry> entries;
     private boolean hasData = false;
-    private boolean hasEntries = false;
-    private BlockParser parser = null;
+    private final BlockParser parser;
     private final int score;
 
     /**
@@ -33,20 +32,6 @@ class Block implements Serializable {
     }
 
     /**
-     * Constructor used for testing
-     * @param blockHash Hash of current block
-     * @param previousBlockHash Hash of parent
-     * @param entries   List of BlockEntry
-     */
-    public Block(String blockHash, String previousBlockHash, List<BlockEntry> entries) {
-        this.blockHash = blockHash;
-        this.previousBlockHash = previousBlockHash;
-        this.entries = entries;
-        this.hasEntries = true;
-        this.score = entries.size();
-    }
-
-    /**
      * Sort block entries by their timestamp
      */
     private void sortEntriesByTimestamp() {
@@ -58,7 +43,6 @@ class Block implements Serializable {
      */
     private List<BlockEntry> getEntriesFromData() throws UnsupportedOperationException {
         if (!hasData) throw new UnsupportedOperationException("Entry creation from data called without loading data");
-        hasEntries = true;
         return parser.getBlockEntries();
     }
 

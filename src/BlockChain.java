@@ -111,10 +111,10 @@ public class BlockChain {
      */
     public void addBlock(ArrayList<BlockEntry> entries) {
         JSONObject futureBlock = new JSONObject();
-        int block_no = blockCount + 1;
+        int blockNo = blockCount + 1;
 
         // block id
-        String id = "Block" + block_no;
+        String id = "Block" + blockNo;
         futureBlock.put(JsonStrings.BLOCK_HASH, id);
 
         // previous_block id
@@ -128,29 +128,27 @@ public class BlockChain {
         futureBlock.put(JsonStrings.ENTRIES, jsonEntries);
 
         // Write new Block as .json file
-        String filename = Util.PATH_TO_BLOCKCHAIN_FOLDER + id + ".json";
-        try (FileWriter file = new FileWriter(filename)) {
-            file.write(futureBlock.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String filename = Util.PATH_TO_BLOCKCHAIN_FOLDER + id + Util.SUFFIX;
+        Util.writeJSONFile(futureBlock.toString(), filename);
 
         // Update with new information
-        lastBlock = Util.convertJsonFileToBlock(id);
-        blockCount = block_no;
+        this.lastBlock = Util.convertJsonFileToBlock(id);
+        this.blockCount = blockNo;
+        updateHead();
+    }
 
 
-        JSONObject updateHead = new JSONObject();
-        updateHead.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
-        updateHead.put(JsonStrings.BLOCK_NO, blockCount);
-        String headFile = Util.PATH_TO_BLOCKCHAIN_FOLDER + "HEAD.json";
-        try (FileWriter file = new FileWriter(headFile)) {
-            file.write(updateHead.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+    /**
+     * Updates the HEAD File of the blockchain to the blockchain's current information.
+     */
+    private void updateHead() {
 
+        JSONObject newHeadFile = new JSONObject();
+        newHeadFile.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
+        newHeadFile.put(JsonStrings.BLOCK_NO, blockCount);
+        String headFile = Util.PATH_TO_BLOCKCHAIN_FOLDER + Util.BLOCKCHAIN_HEAD;
+        Util.writeJSONFile(newHeadFile.toString(), headFile);
     }
 
 }
