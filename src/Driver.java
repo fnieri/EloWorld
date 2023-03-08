@@ -12,7 +12,6 @@ public class Driver {
         try { // if the connection failed
 
             connection = DriverManager.getConnection(url, user, password);
-            System.out.println("ça marche");
             res = true;
 
         }
@@ -21,11 +20,24 @@ public class Driver {
             e.printStackTrace();
         }
         return res;
+
     }
+
 
     private static String stringToSql(String string) {
         // function to add simple quote to a Java String for MySql strings.
         return "'" + string + "'";
+    }
+
+
+    public static boolean auth(String username, String password) throws SQLException {
+        Statement statement = connection.createStatement();
+        String authQuery = "SELECT * FROM USERS WHERE USERNAME=" + stringToSql(username) + "AND PASSWORD=" + stringToSql(password);
+
+        ResultSet login = statement.executeQuery(authQuery);
+
+        return login.next();
+
     }
 
     public static void updatePassword(String username, String password) throws SQLException{
@@ -44,27 +56,23 @@ public class Driver {
         Statement statement = connection.createStatement();
         String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`username`, `password`) VALUES (" + stringToSql(username) + ", "+ stringToSql(password) + ")" + ";";
         System.out.println(addUserQuery);
-        // rajouter userRole dnas la table role
-        try {
-            statement.executeUpdate(addUserQuery);
-        }
-
-        catch (Exception e) {
-            e.printStackTrace();
-
-        }
+        statement.executeUpdate(addUserQuery);
+        addRole(0);
 
     }
 
-    public static void addRole(Integer id, String role) throws SQLException{
+    public static void addRole(Integer id) throws SQLException{
+        // set defaultRole = user
+        String defaultRole = "user";
         Statement statement = connection.createStatement();
         String addRoleQuery = "";
     }
 
-    public static void updateRole (Integer id, String role) throws SQLException{
+    public static void updateRole (Integer id) throws SQLException{
+        // update user -> referee
+        String updateRole = "referee";
         Statement statement = connection.createStatement();
         String updateRoleQuery = "";
-
 
     }
 
