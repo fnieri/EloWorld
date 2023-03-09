@@ -8,8 +8,6 @@ import Exceptions.UserNotInEntry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -23,7 +21,7 @@ public class BlockChain {
      */
     public BlockChain() {
         JSONObject jsonData = Util.convertJsonFileToJSONObject(Util.BLOCKCHAIN_HEAD);
-        this.lastBlock = Util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK));
+        this.lastBlock = Util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK) + Util.SUFFIX);
         blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }
 
@@ -45,7 +43,7 @@ public class BlockChain {
 
             numEntries += currBlock.getScore();
 
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + Util.SUFFIX);
         }
         return numEntries;
     }
@@ -68,7 +66,7 @@ public class BlockChain {
             playerELO = currBlock.getELO(userPublicKey);
             if (playerELO.found()) {return playerELO.ELO();}
 
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + Util.SUFFIX);
         }
         return Util.BASE_ELO;
     }
@@ -98,7 +96,7 @@ public class BlockChain {
                 }
             }
 
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + Util.SUFFIX);
 
         }
         return leaderboard;
@@ -132,7 +130,7 @@ public class BlockChain {
         Util.writeJSONFile(futureBlock.toString(), filename);
 
         // Update with new information
-        this.lastBlock = Util.convertJsonFileToBlock(id);
+        this.lastBlock = Util.convertJsonFileToBlock(id + Util.SUFFIX);
         this.blockCount = blockNo;
         updateHead();
     }

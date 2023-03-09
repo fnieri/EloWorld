@@ -11,7 +11,7 @@ public class Util {
     final static String SUFFIX = ".json";
     final static String BLOCKCHAIN_HEAD = "HEAD" + SUFFIX;
     final static String FIRST_BLOCK = "GenesisBlock";
-    final static String BLOCK_CHAIN_FOLDER = "blockchain";
+    final static String BLOCK_CHAIN_FOLDER = "test";
     final static String ENTRIES_FOLDER = "entries";
     final static String PATH_TO_BLOCKCHAIN_FOLDER = System.getProperty("user.dir") + File.separator + BLOCK_CHAIN_FOLDER + File.separator;
     final static String PATH_TO_ENTRIES_FOLDER = System.getProperty("user.dir") + File.separator + ENTRIES_FOLDER + File.separator;

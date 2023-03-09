@@ -22,7 +22,7 @@ public class SHA256 {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         digest.update(inputToHash.getBytes());
         byte[] hash = digest.digest();
-        StringBuffer hexHash = new StringBuffer();------------------------------------------------
+        StringBuilder hexHash = new StringBuilder();
         for (int i = 0; i < hash.length; i++) {
             hexHash.append(Integer.toHexString(0xFF & hash[i]));
         }  

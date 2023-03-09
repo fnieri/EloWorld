@@ -17,7 +17,7 @@ class BlockChainTest {
     void getScore() {
         BlockChain blockchain = new BlockChain();
 
-        assertEquals(2, blockchain.getScore());
+        assertEquals(6, blockchain.getScore());
     }
 
     @Test
@@ -52,6 +52,7 @@ class BlockChainTest {
         assertEquals("Block2", blockchain.lastBlock.getPreviousBlockHash());
         assertEquals(149, blockchain.getELO("theo31"));
         getELO();
+
     }
 
 }

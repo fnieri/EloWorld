@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class Referee extends User implements Serializable {
@@ -100,8 +101,11 @@ public class Referee extends User implements Serializable {
         return jsonBlockchain;
     }
 
-    public void setBlockchain() {
-
+    public void setBlockchain(JSONObject newBlockchain) {
+        for (Iterator<String> it = newBlockchain.keys(); it.hasNext(); ) {
+            String key = it.next();
+            Util.writeJSONFile(newBlockchain.getString(key), Util.PATH_TO_BLOCKCHAIN_FOLDER + key);
+        }
     }
 
     /**
