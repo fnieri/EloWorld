@@ -27,6 +27,17 @@ public class BlockEntry implements Serializable {
         this.player2PublicKey = player2PublicKey;
         this.player2ELO = player2ELO;
     }
+
+    public BlockEntry(JSONObject entry) {
+        this.timestamp = entry.getInt(JsonStrings.TIMESTAMP);
+        this.refereeKey = entry.getString(JsonStrings.REFEREE_KEY);
+        this.refereeScore = entry.getInt(JsonStrings.REFEREE_SCORE);
+        this.player1PublicKey = entry.getString(JsonStrings.PLAYER_1_KEY);
+        this.player1ELO = entry.getInt(JsonStrings.PLAYER_1_ELO);
+        this.player2PublicKey = entry.getString(JsonStrings.PLAYER_2_KEY);
+        this.player2ELO = entry.getInt(JsonStrings.PLAYER_2_ELO);
+    }
+
     /**
      * Returns the ELO of a searched player, if the public key of said player is in the current entry
      *

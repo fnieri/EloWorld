@@ -1,15 +1,16 @@
 import Exceptions.UserNotInEntry;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.time.LocalTime;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 
 public class Referee extends User implements Serializable {
     BlockChain blockchain;
+    ArrayList<BlockEntry> entries = new ArrayList<>();
 
 
     /**
@@ -19,24 +20,40 @@ public class Referee extends User implements Serializable {
      */
     public Referee(String publicKey) {
         super(publicKey);
-        String pathname = Util.PATH_TO_BLOCKCHAIN_FOLDER + Util.BLOCKCHAIN_HEAD + ".json";
-        File f = new File(pathname);
+        String blockchainPath = Util.PATH_TO_BLOCKCHAIN_FOLDER;
+        File blockchainFile = new File(blockchainPath + Util.BLOCKCHAIN_HEAD + Util.SUFFIX);
 
         // blockchain directory already exists
-        if(f.exists() && !f.isDirectory()) {blockchain = new BlockChain();}
+        if (blockchainFile.exists() && !blockchainFile.isDirectory()) {blockchain = new BlockChain();}
 
         // create Blockchain directory
         else {
+            // Head file
             JSONObject head = new JSONObject();
             head.put(JsonStrings.LAST_BLOCK, Util.FIRST_BLOCK);
             head.put(JsonStrings.BLOCK_NO, 1);
-            try (FileWriter file = new FileWriter(pathname)) {
-                file.write(head.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Util.writeJSONFile(head.toString(), blockchainPath + Util.BLOCKCHAIN_HEAD + Util.SUFFIX);
+
+            // first block
+            JSONObject firstBlock = new JSONObject();
+            firstBlock.put(JsonStrings.BLOCK_HASH, Util.FIRST_BLOCK);
+            firstBlock.put(JsonStrings.PARENT_BLOCK_HASH, Util.FIRST_BLOCK);
+            firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
+            firstBlock.put(JsonStrings.ENTRIES, new JSONArray());
+            Util.writeJSONFile(firstBlock.toString(), blockchainPath + Util.FIRST_BLOCK + Util.SUFFIX);
         }
 
+        String entriesPath = Util.PATH_TO_ENTRIES_FOLDER;
+        File entriesFolder = new File(entriesPath);
+
+        // read entries
+        if (entriesFolder.exists() && entriesFolder.isDirectory()) {
+            for (final File fileEntry: Objects.requireNonNull(entriesFolder.listFiles())) {
+                JSONObject jsonEntry = Util.convertJsonFileToJSONObject(fileEntry.getPath());
+                BlockEntry entry = new BlockEntry(jsonEntry);
+                this.entries.add(entry);
+            }
+        }
     }
 
     /**
@@ -46,10 +63,8 @@ public class Referee extends User implements Serializable {
      * @param eloPlayer2 Updated elo of the second player of the match
      * @param playerOneKey First player username
      * @param playerTwoKey Second player username
-     * @return JSON String of the entry
      */
     public void createEntry(int eloPlayer1, String playerOneKey, int eloPlayer2, String playerTwoKey, String refereeKey) {
-        //parsing dans Block.java
         JSONObject entry = new JSONObject();
         entry.put(JsonStrings.PLAYER_1_ELO, eloPlayer1);
         entry.put(JsonStrings.PLAYER_2_ELO, eloPlayer2);
@@ -58,7 +73,8 @@ public class Referee extends User implements Serializable {
         entry.put(JsonStrings.REFEREE_KEY, refereeKey);
         entry.put(JsonStrings.REFEREE_SCORE, getRefereeScore());
         entry.put(JsonStrings.TIMESTAMP, LocalTime.now());
-        Util.writeJSONFile(entry.toString(), Util.PATH_TO_ENTRIES_FOLDER);
+        String filename = "Entry" + entries.size();
+        Util.writeJSONFile(entry.toString(), Util.PATH_TO_ENTRIES_FOLDER + filename);
     }
 
     /**
