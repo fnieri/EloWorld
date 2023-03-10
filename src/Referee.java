@@ -1,6 +1,11 @@
 import Exceptions.UserNotInEntry;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 
 import java.io.File;
@@ -23,11 +28,9 @@ public class Referee extends User implements Serializable {
         String blockchainPath = Util.PATH_TO_BLOCKCHAIN_FOLDER;
         File blockchainFile = new File(blockchainPath + Util.BLOCKCHAIN_HEAD + Util.SUFFIX);
 
-        // blockchain directory already exists
-        if (blockchainFile.exists() && !blockchainFile.isDirectory()) {blockchain = new BlockChain();}
-
         // create Blockchain directory
-        else {
+        if (!blockchainFile.exists() || blockchainFile.isDirectory()) {
+
             // Head file
             JSONObject head = new JSONObject();
             head.put(JsonStrings.LAST_BLOCK, Util.FIRST_BLOCK);
@@ -42,16 +45,26 @@ public class Referee extends User implements Serializable {
             firstBlock.put(JsonStrings.ENTRIES, new JSONArray());
             Util.writeJSONFile(firstBlock.toString(), blockchainPath + Util.FIRST_BLOCK + Util.SUFFIX);
         }
+        this.blockchain = new BlockChain();
 
         String entriesPath = Util.PATH_TO_ENTRIES_FOLDER;
         File entriesFolder = new File(entriesPath);
 
         // read entries
         if (entriesFolder.exists() && entriesFolder.isDirectory()) {
-            for (final File fileEntry: Objects.requireNonNull(entriesFolder.listFiles())) {
+            for (final File fileEntry : Objects.requireNonNull(entriesFolder.listFiles())) {
                 JSONObject jsonEntry = Util.convertJsonFileToJSONObject(fileEntry.getPath());
                 BlockEntry entry = new BlockEntry(jsonEntry);
                 this.entries.add(entry);
+            }
+        }
+        // create entries directory
+        else {
+            try {
+                Path path = Paths.get(Util.PATH_TO_ENTRIES_FOLDER);
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                System.err.println("Failed to create directory" + e.getMessage());
             }
         }
     }
@@ -59,8 +72,8 @@ public class Referee extends User implements Serializable {
     /**
      * Create an entry to store in a local JSON file
      *
-     * @param eloPlayer1 Updated elo of the first player of the match
-     * @param eloPlayer2 Updated elo of the second player of the match
+     * @param eloPlayer1   Updated elo of the first player of the match
+     * @param eloPlayer2   Updated elo of the second player of the match
      * @param playerOneKey First player username
      * @param playerTwoKey Second player username
      */
@@ -108,7 +121,7 @@ public class Referee extends User implements Serializable {
 
         File folder = new File(Util.PATH_TO_BLOCKCHAIN_FOLDER);
 
-        for (final File fileEntry: Objects.requireNonNull(folder.listFiles())) {
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
 
             String filename = fileEntry.getName();
             jsonBlockchain.put(filename, Util.convertJsonFileToJSONObject(filename));
@@ -124,6 +137,9 @@ public class Referee extends User implements Serializable {
         }
     }
 
+    // TODO
+    public void addBlock() {};
+
     /**
      * Returns all the data of the Referee as a JSONObject
      *
@@ -131,7 +147,7 @@ public class Referee extends User implements Serializable {
      */
     @Override
     public JSONObject asJson() {
-        JSONObject refereeJson =  new JSONObject();
+        JSONObject refereeJson = new JSONObject();
         refereeJson.put(getPublicKey(), getRefereeScore());
         return refereeJson;
     }
