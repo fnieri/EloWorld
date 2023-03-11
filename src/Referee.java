@@ -88,8 +88,9 @@ public class Referee extends User implements Serializable {
         entry.put(JsonStrings.REFEREE_KEY, refereeKey);
         entry.put(JsonStrings.REFEREE_SCORE, getRefereeScore());
         entry.put(JsonStrings.TIMESTAMP, LocalTime.now());
-        String filename = "Entry" + entries.size();
-        Util.writeJSONFile(entry.toString(), Util.PATH_TO_ENTRIES_FOLDER + filename);
+        String path = Util.PATH_TO_ENTRIES_FOLDER + "Entry" + entries.size() + Util.SUFFIX;
+        Util.writeJSONFile(entry.toString(), path);
+        this.entries.add(new BlockEntry(Util.convertJsonFileToJSONObject(path)));
     }
 
     /**
@@ -134,14 +135,33 @@ public class Referee extends User implements Serializable {
     }
 
     public void setBlockchain(JSONObject newBlockchain) {
+
+        // delete current blockchain
+        File folder = new File(Util.PATH_TO_BLOCKCHAIN_FOLDER);
+        for(File file: Objects.requireNonNull(folder.listFiles())) {
+            file.delete();
+        }
+
+        // replace with newer chosen blockchain
         for (Iterator<String> it = newBlockchain.keys(); it.hasNext(); ) {
             String key = it.next();
             Util.writeJSONFile(newBlockchain.getString(key), Util.PATH_TO_BLOCKCHAIN_FOLDER + key);
         }
+
+        this.blockchain = new BlockChain();
     }
 
-    // TODO
-    public void addBlock() {};
+    /**
+     * add a new block to the blockchain from the saved entries
+     */
+    public void addBlock() {
+        this.blockchain.addBlock(this.entries);
+
+        File folder = new File(Util.PATH_TO_ENTRIES_FOLDER);
+        for(File file: Objects.requireNonNull(folder.listFiles())) {
+            file.delete();
+        }
+    };
 
     /**
      * Returns all the data of the Referee as a JSONObject
