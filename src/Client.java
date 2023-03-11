@@ -1,107 +1,69 @@
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import Enum.AuthActions;
+import Enum.Domain;
+
 // Client class
-class Client {
+public class Client {
 
     PrintWriter out;
     BufferedReader in;
     static User user = null;
+    Socket socket;
+    Model model = new Model();
+    //Controller controller = new Controller(model);
+
+    public Client() throws IOException {
+        model.setUsername("fnieri");
+    }
 
     // driver code
-    public void main(String[] args) {
+    public void main() {
 
         // establish a connection by providing host and port 8080
         try (Socket socket = new Socket("localhost", 8080)) {
 
-            // writing to server
-            PrintWriter out = new PrintWriter(
-                    socket.getOutputStream(), true);
-
             // reading from server
-            BufferedReader in
-                    = new BufferedReader(new InputStreamReader(
-                    socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            getUserInfo(this.out, this.in);
+            out = new PrintWriter(socket.getOutputStream(), true);
 
-            ClientListener listener = new ClientListener(socket);
+            String line;
 
-            new Thread(listener).start();
-
-            // object of scanner class
-            Scanner sc = new Scanner(System.in);
-            String input = null;
-
-            while (!"exit".equalsIgnoreCase(input)) {
-                // reading from user
-                input = sc.nextLine();
-
-                // sending the user input to server
-                out.println(input);
+            while ((line = in.readLine()) != null) {
+                parsePacket(line);
             }
-
-            // closing the scanner object
-            sc.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void getUserInfo(PrintWriter out, BufferedReader in) throws IOException {
-         System.out.println("Enter username");
-         Scanner input = new Scanner(System.in);
-
-         user = new User(input.nextLine());
-         out.println(user.publicKey);
-         String answer = in.readLine();
-
-         while(!answer.equals("Y")){
-             System.out.println("username already taken, please enter another one");
-             user.publicKey = input.nextLine();
-             out.println(user.publicKey);
-             answer = in.readLine();
-         }
-
-         System.out.println("Enter password");
-         String password = input.nextLine();
-         out.println(password);
+    public void sendMessage(String message) {
+        JSONObject jsonObject = new JSONObject(message);
+        out.println(jsonObject);
     }
 
-
-
-    private static class ClientListener extends Thread {
-        private final Socket clientSocket;
-        PrintWriter out = null;
-        BufferedReader in = null;
-
-        public ClientListener(Socket socket) { this.clientSocket = socket;}
-        public void run() {
-            try {
-                PrintWriter out = new PrintWriter(
-                        clientSocket.getOutputStream(), true);
-
-                in = new BufferedReader(
-                        new InputStreamReader(
-                                clientSocket.getInputStream()));
-
-                String line;
-
-                while((line = in.readLine()) != null) {
-                    if (line.charAt(0) == '/') {
-                        if(user instanceof Referee) {
-                            System.out.println("Referee");
-                            //out.println(user.getLeaderboard);
-                        }
-                    } else {
-                        System.out.print(line + "\n");
-                    }
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void parsePacket(String userMessage) {
+        System.out.println("entered server");
+        JSONObject jsonMessage;
+        try {
+            jsonMessage = new JSONObject(userMessage);
+        }
+        catch (JSONException err) {
+            throw new IllegalArgumentException("Wrong request format");
+        }
+        System.out.println(jsonMessage);
+        String domain = jsonMessage.getString(MessageStrings.DOMAIN);
+        if (Objects.equals(domain, Domain.AUTH.serialized())) {System.out.println("connexion établie");}
+        else if (Objects.equals(domain, Domain.FRIEND.serialized())) {System.out.println("Ami ajouté");}
+        else if (Objects.equals(domain, Domain.FETCH.serialized())) {
+            if (user instanceof Referee) {
+                out.println(JsonMessageFactory.sendBlockChain((Referee) user));
             }
         }
     }

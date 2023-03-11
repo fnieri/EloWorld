@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 
+import Enum.Domain;
+
 public class Referee extends User implements Serializable {
     BlockChain blockchain;
     ArrayList<BlockEntry> entries = new ArrayList<>();
@@ -127,6 +129,7 @@ public class Referee extends User implements Serializable {
             String filename = fileEntry.getName();
             jsonBlockchain.put(filename, Util.convertJsonFileToJSONObject(filename));
         }
+
 
         return jsonBlockchain;
     }
