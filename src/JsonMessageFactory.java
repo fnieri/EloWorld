@@ -74,6 +74,13 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
+    public static JSONObject askBlockChain(){
+        JSONObject messageJson = new JSONObject();
+        messageJson.put(MessageStrings.DOMAIN, Domain.FETCH.serialized());
+        messageJson.put(MessageStrings.ACTION, MessageStrings.FETCH_BLOCKCHAIN);
+        return messageJson;
+    }
+
     public static JSONObject sendBlockChain(Referee referee) {
         JSONObject messageJson = referee.getBlockchain();
         messageJson.put(MessageStrings.DOMAIN, Domain.BLOCKCHAIN.serialized());
