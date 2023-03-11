@@ -1,13 +1,16 @@
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import Enum.*;
 
 // Client class
 class Client {
 
     BufferedReader in;
+    PrintWriter out;
     static User user = null;
 
     // driver code
@@ -17,9 +20,9 @@ class Client {
         try (Socket socket = new Socket("localhost", 8080)) {
 
             // reading from server
-            BufferedReader in
-                    = new BufferedReader(new InputStreamReader(
-                    socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            out = new PrintWriter(socket.getOutputStream(), true);
 
             String line;
 
@@ -38,30 +41,24 @@ class Client {
         }
     }
 
-    public void sendMessage(String message, Socket socket) throws IOException {
+    public void sendMessage(String message) {
         JSONObject jsonObject = new JSONObject(message);
-        PrintWriter out = new PrintWriter(
-                socket.getOutputStream(), true);
         out.println(jsonObject);
     }
 
-    public void getUserInfo(PrintWriter out, BufferedReader in) throws IOException {
-        System.out.println("Enter username");
-        Scanner input = new Scanner(System.in);
-
-        user = new User(input.nextLine());
-        out.println(user.publicKey);
-        String answer = in.readLine();
-
-        while (!answer.equals("Y")) {
-            System.out.println("username already taken, please enter another one");
-            user.publicKey = input.nextLine();
-            out.println(user.publicKey);
-            answer = in.readLine();
+    public void parsePacket(String userMessage) {
+        System.out.println("entered server");
+        JSONObject jsonMessage;
+        try {
+            jsonMessage = new JSONObject(userMessage);
         }
-
-        System.out.println("Enter password");
-        String password = input.nextLine();
-        out.println(password);
+        catch (JSONException err) {
+            throw new IllegalArgumentException("Wrong request format");
+        }
+        System.out.println(jsonMessage);
+        String domain = jsonMessage.getString(MessageStrings.DOMAIN);
+        if (Objects.equals(domain, Domain.AUTH.serialized())) {System.out.println("connexion établie");}
+        else if (Objects.equals(domain, Domain.FRIEND.serialized())) {System.out.println("Ami ajouté");}
     }
+
 }
