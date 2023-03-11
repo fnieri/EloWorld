@@ -4,7 +4,8 @@ public enum Domain {
     AUTH,
     FRIEND,
     ENTRY,
-    RESOURCE;
+    RESOURCE,
+    FETCH;
 
     public String serialized() {
         return switch (this) {
@@ -12,6 +13,7 @@ public enum Domain {
             case FRIEND -> "friend";
             case ENTRY -> "entry";
             case RESOURCE -> "resource";
+            case FETCH -> "fetch";
         };
     }
 }
