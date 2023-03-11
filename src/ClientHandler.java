@@ -80,6 +80,7 @@ public class ClientHandler extends Thread {
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
+            //TODO comportement du serveur face a l'arrivée d'une blockchain
             System.out.println("Blockchain");} //on stock une blockchain
     }
 
@@ -139,9 +140,9 @@ public class ClientHandler extends Thread {
         return jsonMessage.getString(MessageStrings.USERNAME);
     }
 
-    public void sendMessageToUsers(JSONObject jsonObject){
+    public void sendMessageToAllUsers(JSONObject jsonObject){
         for(ClientHandler cH: allClients) {
-            cH.out.println(jsonObject);
+            cH.sendMessage(jsonObject);
         }
     }
 }
