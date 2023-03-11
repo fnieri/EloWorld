@@ -79,6 +79,8 @@ public class ClientHandler extends Thread {
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
+        else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
+            System.out.println("Blockchain");} //on stock une blockchain
     }
 
     public void sendMessage(JSONObject message) {

@@ -63,7 +63,7 @@ public class Client {
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {System.out.println("Ami ajouté");}
         else if (Objects.equals(domain, Domain.FETCH.serialized())) {
             if (user instanceof Referee) {
-                out.println(((Referee) user).getBlockchain());
+                out.println(JsonMessageFactory.sendBlockChain((Referee) user));
             }
         }
     }
