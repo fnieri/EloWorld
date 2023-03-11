@@ -75,7 +75,7 @@ public class ClientHandler extends Thread {
         catch (JSONException err) {
             throw new IllegalArgumentException("Wrong request format");
         }
-        System.out.println(jsonMessage.toString());
+        System.out.println(jsonMessage);
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
@@ -137,9 +137,9 @@ public class ClientHandler extends Thread {
         return jsonMessage.getString(MessageStrings.USERNAME);
     }
 
-    public void fetchLeaderboard(){
-            for(ClientHandler cH: allClients) {
-                cH.out.println("getElo");
-            }
+    public void sendMessageToUsers(JSONObject jsonObject){
+        for(ClientHandler cH: allClients) {
+            cH.out.println(jsonObject);
+        }
     }
 }
