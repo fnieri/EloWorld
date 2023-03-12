@@ -97,4 +97,8 @@ public class BlockEntry implements Serializable {
     public int player2ELO() {
         return this.player2ELO;
     }
+
+    public String toString() {
+        return player1PublicKey + " - " + player1ELO + " / " + player2PublicKey + " - " + player2ELO;
+    }
 }

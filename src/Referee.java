@@ -175,4 +175,11 @@ public class Referee extends User implements Serializable {
         return refereeJson;
     }
 
+    /**
+     * Return the currently saved entries
+     * @return list of pending entries
+     */
+    public ArrayList<BlockEntry> getEntries() {
+        return entries;
+    }
 }
