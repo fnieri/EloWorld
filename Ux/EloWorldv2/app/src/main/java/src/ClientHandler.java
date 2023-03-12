@@ -1,6 +1,5 @@
 package src;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,16 +8,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import src.Enum.*;
+
 import src.Enum.AuthActions;
 import src.Enum.Domain;
-import src.Enum.FriendReqActions;
 import src.Enum.UserRoles;
 
 // ClientHandler class
@@ -150,10 +147,10 @@ public class ClientHandler extends Thread {
         sendMessage(jsonMessage); // resend message as is to client
     }
 
-    public void entryHandler(JSONObject jsonMessage) {
+    public void entryHandler(JSONObject jsonMessage) throws JSONException {
         entryCounter += 1;
         if (entryCounter % allClients.size() == 0) {
-            sendMessageToAllUsers(new JSONObject()); //TODO ajouter le fetch des blockchain
+            sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
         }
     }
 
@@ -165,8 +162,8 @@ public class ClientHandler extends Thread {
         return jsonMessage.getString(MessageStrings.USERNAME);
     }
 
-    public void sendMessageToAllUsers(JSONObject jsonObject){
-        for(ClientHandler cH: allClients) {
+    public void sendMessageToAllUsers(JSONObject jsonObject) {
+        for (ClientHandler cH : allClients) {
             cH.sendMessage(jsonObject);
         }
     }
