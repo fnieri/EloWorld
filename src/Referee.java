@@ -161,6 +161,7 @@ public class Referee extends User implements Serializable {
         for(File file: Objects.requireNonNull(folder.listFiles())) {
             file.delete();
         }
+        this.entries = new ArrayList<>();
     };
 
     /**
