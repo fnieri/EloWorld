@@ -20,7 +20,6 @@ public class ClientHandler extends Thread {
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
-    static User user = null;
     //static Driver driver = new Driver();
 
     // Constructor
@@ -79,6 +78,7 @@ public class ClientHandler extends Thread {
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
+        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {entryHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             //TODO comportement du serveur face a l'arrivée d'une blockchain
             System.out.println("Blockchain");} //on stock une blockchain
@@ -121,15 +121,18 @@ public class ClientHandler extends Thread {
         String action = getActionFromMessage(jsonMessage);
         String sender = jsonMessage.getString(MessageStrings.SENDER);
         if (Objects.equals(action, FriendReqActions.FOLLOW_FRIEND.serialized())) {
-            //Driver add friend
+            //TODO Driver add friend
         }
         else if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
-            //Driver remove friend
+            //TODO Driver remove friend
         }
     }
 
     public void entryHandler(JSONObject jsonMessage) {
-
+        entryCounter += 1;
+        if ((entryCounter % allClients.size()) == 0){
+            sendMessageToAllUsers(JsonMessageFactory.askBlockChain());
+        }
     }
 
     public String getActionFromMessage(JSONObject jsonMessage) {

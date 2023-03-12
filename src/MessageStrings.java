@@ -16,4 +16,5 @@ public class MessageStrings {
     static public String ELO = "elo";
     static public String REFEREE_SCORE = "referee_score";
     static public String MEMBER_SINCE = "member_since";
+    static public String FETCH_BLOCKCHAIN = "fetch_blockchain";
 }

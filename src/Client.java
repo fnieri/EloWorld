@@ -46,25 +46,11 @@ public class Client {
     public void sendMessage(String message) {
         JSONObject jsonObject = new JSONObject(message);
         out.println(jsonObject);
+
     }
 
-    public void parsePacket(String userMessage) {
-        System.out.println("entered server");
-        JSONObject jsonMessage;
-        try {
-            jsonMessage = new JSONObject(userMessage);
-        }
-        catch (JSONException err) {
-            throw new IllegalArgumentException("Wrong request format");
-        }
-        System.out.println(jsonMessage);
-        String domain = jsonMessage.getString(MessageStrings.DOMAIN);
-        if (Objects.equals(domain, Domain.AUTH.serialized())) {System.out.println("connexion établie");}
-        else if (Objects.equals(domain, Domain.FRIEND.serialized())) {System.out.println("Ami ajouté");}
-        else if (Objects.equals(domain, Domain.FETCH.serialized())) {
-            if (user instanceof Referee) {
-                out.println(JsonMessageFactory.sendBlockChain((Referee) user));
-            }
-        }
+    public void parsePacket(String message) {
+
     }
+
 }
