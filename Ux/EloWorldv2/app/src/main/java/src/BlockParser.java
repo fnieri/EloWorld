@@ -55,7 +55,7 @@ public class BlockParser {
      */
     public BlockEntry getEntryFromJsonObject(JSONObject entry) throws JSONException {
         return new BlockEntry(
-                entry.getInt(JsonStrings.TIMESTAMP),
+                entry.getString(JsonStrings.TIMESTAMP),
                 entry.getString(JsonStrings.REFEREE_KEY),
                 entry.getInt(JsonStrings.REFEREE_SCORE),
                 entry.getString(JsonStrings.PLAYER_1_KEY),

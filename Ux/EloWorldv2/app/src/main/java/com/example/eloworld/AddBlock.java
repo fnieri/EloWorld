@@ -54,7 +54,7 @@ public class AddBlock extends AppCompatActivity {
     }
 
     public void addAllEntriesToBlock(View view) throws JSONException {
-
+        referee.addBlock();
     }
 
     public void setUpDisplayEntries(ListView entriesListView) {

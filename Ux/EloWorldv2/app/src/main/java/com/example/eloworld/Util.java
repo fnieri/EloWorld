@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.json.JSONObject;
+
+import java.security.Permission;
+
 import src.Model;
 import kotlin.jvm.internal.Intrinsics;
 import src.Client;
@@ -33,6 +36,7 @@ public class Util {
     public static boolean changeLayoutOnLogIn(Context caller, Client client) {
         Model model = client.getModel();
         if (model.isLoggedIn()) {
+
             Util.changeLayout(caller, MainActivity.class);
             return true;
         }

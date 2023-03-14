@@ -55,7 +55,6 @@ public class Client {
 
     public void sendMessage(JSONObject message) {
         try {
-            System.out.println("entered sock");
             String messageString = message.toString();
             out.println(messageString);
             out.flush();

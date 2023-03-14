@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class BlockEntry implements Serializable {
 
-    private final int timestamp;
+    private final String timestamp;
     private final String refereeKey;
     private final int refereeScore;
     private final String player1PublicKey;
@@ -30,7 +30,7 @@ public class BlockEntry implements Serializable {
     private final String player2PublicKey;
     private final int player2ELO;
 
-    public BlockEntry(int timestamp, String refereeKey, int refereeScore, String player1PublicKey, int player1ELO, String player2PublicKey, int player2ELO) {
+    public BlockEntry(String timestamp, String refereeKey, int refereeScore, String player1PublicKey, int player1ELO, String player2PublicKey, int player2ELO) {
         this.timestamp = timestamp;
         this.refereeKey = refereeKey;
         this.refereeScore = refereeScore;
@@ -41,7 +41,7 @@ public class BlockEntry implements Serializable {
     }
 
     public BlockEntry(JSONObject entry) throws JSONException {
-        this.timestamp = entry.getInt(JsonStrings.TIMESTAMP);
+        this.timestamp = entry.getString(JsonStrings.TIMESTAMP);
         this.refereeKey = entry.getString(JsonStrings.REFEREE_KEY);
         this.refereeScore = entry.getInt(JsonStrings.REFEREE_SCORE);
         this.player1PublicKey = entry.getString(JsonStrings.PLAYER_1_KEY);
@@ -82,7 +82,7 @@ public class BlockEntry implements Serializable {
         return serializedEntry;
     }
 
-    public int timestamp() {
+    public String timestamp() {
         return this.timestamp;
     }
 

@@ -30,6 +30,7 @@ public class ProfileFragment extends Fragment {
     Client client;
     private FragmentProfileBinding binding;
     ProfileViewModel profileViewModel;
+    //To be shown only to referee
     Button addMatchBtn;
     TextView refereeRatingText;
     TextView refereeRatingScore;
@@ -38,11 +39,12 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
+
         client = ((App) requireActivity().getApplication()).getClient();
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Model model = client.getModel();
-
+        //Bind texts to model to be dynamically updated
         final TextView username = binding.profileUsername;
         final TextView memberSince = binding.memberSince;
         final TextView ELO = binding.playerELORating;
@@ -74,6 +76,11 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Remove buttons and text from view that don't need to be shown if it's not a referee
+     * @param model model
+     * @param root Root view
+     */
     public void removeRefereeInterface(Model model, View root) {
         if (model.getRole() != UserRoles.REFEREE) {
             //Remove the button if it's not a referee
