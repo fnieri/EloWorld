@@ -1,5 +1,7 @@
 package src;
 
+import android.content.Context;
+
 import org.json.JSONException;
 
 import java.util.List;
@@ -20,7 +22,6 @@ public class Model extends Subject {
     private String publicKey;
     private String privateKey;
 
-    private int elo = Util.BASE_ELO;
     private int refereeScore;
     private List<String> friends;
     //Leaderboard is an list of entries of type <Position, <Username, ELO>>
@@ -31,6 +32,9 @@ public class Model extends Subject {
     private boolean isSetUp = false;
 
     Referee referee;
+    Util util = Util.getInstance();
+    private int elo = util.BASE_ELO;
+
     public String getUsername() {
         return username;
     }
@@ -63,7 +67,6 @@ public class Model extends Subject {
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
         setLeaderboard(leaderboard);
-        setReferee();
         isSetUp = true;
     }
     /**
@@ -72,7 +75,7 @@ public class Model extends Subject {
     public void logsOut() {
         setUsername(null);
         setMemberSince(null);
-        setELO(Util.BASE_ELO);
+        setELO(util.BASE_ELO);
         setRefereeScore(0);
         clearFriends();
         isLoggedIn = false;
@@ -80,12 +83,16 @@ public class Model extends Subject {
         setRole(UserRoles.NOT_LOGGED_IN);
     }
 
+    public void mainActivitySetup(Context context) throws JSONException {
+        if (role == UserRoles.REFEREE) setReferee(context);
+    }
+
     public Referee getReferee() throws  JSONException {
         if (getRole() == UserRoles.REFEREE) return referee;
         return null;
     }
 
-    public void setReferee() throws JSONException {
+    public void setReferee(Context context) throws JSONException {
         if (getRole() == UserRoles.REFEREE) referee = new Referee(publicKey);
     }
 

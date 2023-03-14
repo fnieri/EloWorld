@@ -1,5 +1,6 @@
 package src;
-import android.os.Environment;
+import android.annotation.SuppressLint;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,24 +12,43 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Util {
-    final static int BASE_ELO = 0;
-    final static String SUFFIX = ".json";
-    final static String BLOCKCHAIN_HEAD = "HEAD" + SUFFIX;
-    final static String FIRST_BLOCK = "GenesisBlock";
-    final static String BLOCK_CHAIN_FOLDER = "test";
-    final static String ENTRIES_FOLDER = "entries";
-    final static String PATH_TO_BLOCKCHAIN_FOLDER = System.getProperty("user.dir") + File.separator + BLOCK_CHAIN_FOLDER + File.separator;
-    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/newfoldername/";
-    final static String PATH_TO_ENTRIES_FOLDER = System.getProperty("user.dir") + File.separator + ENTRIES_FOLDER + File.separator;
+
+    private static Util instance = null;
+    private Util() {}
+
+    public static Util getInstance() {
+        if (instance == null) {
+            instance = new Util();
+        }
+        return instance;
+    }
+
+    int BASE_ELO = 0;
+    String SUFFIX = ".json";
+    String BLOCKCHAIN_HEAD = "HEAD";
+    String FIRST_BLOCK = "GenesisBlock";
+    String BLOCK_CHAIN_FOLDER = "test";
+    String ENTRIES_FOLDER = "entries";
+    @SuppressLint("SdCardPath") //??
+    File  PATH_TO_BLOCKCHAIN_FOLDER = new File("/data/user/0/com.example.eloworld/files/");
+    String PATH_TO_ENTRIES_FOLDER = ENTRIES_FOLDER + File.separator;
+
+    public void setPathToBlockChain(Context context) {
+        PATH_TO_BLOCKCHAIN_FOLDER = context.getFilesDir();
+    }
+
+    public String getPathToBlockChain() {
+        return PATH_TO_BLOCKCHAIN_FOLDER.toString();
+    }
 
     /**
      * This Utility method is used to read .json files of the blockchain
      * @param filename : name of the .json file in the blockchain folder to read
      * @return Content of the file as a String
      */
-    public static String convertJsonFileToString(String filename) {
-        String path = PATH_TO_BLOCKCHAIN_FOLDER + filename;
-        System.out.println(path);
+    public String convertJsonFileToString(String filename) {
+
+        String path = PATH_TO_BLOCKCHAIN_FOLDER + "/" + filename;
 
         try {
             return new String(Files.readAllBytes(Paths.get(path)));
@@ -41,7 +61,7 @@ public class Util {
      * @param filename : name of the .json file in the blockchain folder to read
      * @return Content of the file as a Block
      */
-    public static Block convertJsonFileToBlock(String filename) throws JSONException {
+    public  Block convertJsonFileToBlock(String filename) throws JSONException {
         return new Block(convertJsonFileToString(filename));
     }
     /**
@@ -49,7 +69,7 @@ public class Util {
      * @param filename : name of the .json file in the blockchain folder to read
      * @return Content of the file as a JSONObject
      */
-    public static JSONObject convertJsonFileToJSONObject(String filename) throws JSONException {
+    public JSONObject convertJsonFileToJSONObject(String filename) throws JSONException {
         return new JSONObject(convertJsonFileToString(filename));
     }
 
@@ -58,7 +78,7 @@ public class Util {
      * @param content content of the file
      * @param path path where the file will be written
      */
-    public static void writeJSONFile(String content, String path) {
+    public  void writeJSONFile(String content, String path) {
         try (FileWriter file = new FileWriter(path, false)) {
             file.write(content);
         } catch (IOException e) {

@@ -19,13 +19,15 @@ import java.util.Objects;
 public class BlockChain {
     public Block lastBlock;
     public int blockCount;
+    Util util = Util.getInstance();
 
     /**
      * Constructor used when a Referee class is created
      */
     public BlockChain() throws JSONException {
-        JSONObject jsonData = Util.convertJsonFileToJSONObject(Util.BLOCKCHAIN_HEAD);
-        this.lastBlock = Util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK));
+
+        JSONObject jsonData = util.convertJsonFileToJSONObject(util.BLOCKCHAIN_HEAD + util.SUFFIX);
+        this.lastBlock = util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK));
         blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }
 
@@ -47,7 +49,7 @@ public class BlockChain {
 
             numEntries += currBlock.getScore();
 
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
         return numEntries;
     }
@@ -70,9 +72,9 @@ public class BlockChain {
             playerELO = currBlock.getELO(userPublicKey);
             if (playerELO.found()) {return playerELO.ELO();}
 
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
-        return Util.BASE_ELO;
+        return util.BASE_ELO;
     }
 
     /**
@@ -100,7 +102,7 @@ public class BlockChain {
                 }
             }
 
-            currBlock = Util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
 
         }
         return leaderboard;
@@ -130,7 +132,8 @@ public class BlockChain {
         futureBlock.put(JsonStrings.ENTRIES, jsonEntries);
 
         // Write new Block as .json file
-        String filename = Util.PATH_TO_BLOCKCHAIN_FOLDER + id + ".json";
+
+        String filename = util.getPathToBlockChain() + id + ".json";
         try (FileWriter file = new FileWriter(filename)) {
             file.write(futureBlock.toString());
         } catch (IOException e) {
@@ -138,14 +141,14 @@ public class BlockChain {
         }
 
         // Update with new information
-        lastBlock = Util.convertJsonFileToBlock(id);
+        lastBlock = util.convertJsonFileToBlock(id);
         blockCount = block_no;
 
 
         JSONObject updateHead = new JSONObject();
         updateHead.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
         updateHead.put(JsonStrings.BLOCK_NO, blockCount);
-        String headFile = Util.PATH_TO_BLOCKCHAIN_FOLDER + "HEAD.json";
+        String headFile = util.getPathToBlockChain() + "HEAD.json";
         try (FileWriter file = new FileWriter(headFile)) {
             file.write(updateHead.toString());
         } catch (IOException e) {
