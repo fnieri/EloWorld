@@ -21,7 +21,7 @@ import src.Exceptions.UserNotInEntry;
 public class Referee extends User implements Serializable {
     BlockChain blockchain;
     ArrayList<BlockEntry> entries = new ArrayList<>();
-
+    Util util = Util.getInstance();
 
     /**
      * Instantiation Constructor for Referee
@@ -30,35 +30,35 @@ public class Referee extends User implements Serializable {
      */
     public Referee(String publicKey) throws JSONException {
         super(publicKey);
-        String blockchainPath = Util.PATH_TO_BLOCKCHAIN_FOLDER;
+        String blockchainPath = util.getPathToBlockChain();
         File blockchainFile = new File(blockchainPath); //+ Util.BLOCKCHAIN_HEAD);
-        System.out.println(blockchainFile);
+
         // create Blockchain directory
-        if (!blockchainFile.exists()) { //|| blockchainFile.isDirectory()) {
-            blockchainFile.mkdir();
+       // if (!blockchainFile.exists()) { //|| blockchainFile.isDirectory()) {
+            blockchainFile.mkdirs();
             // Head file
             JSONObject head = new JSONObject();
-            head.put(JsonStrings.LAST_BLOCK, Util.FIRST_BLOCK);
+            head.put(JsonStrings.LAST_BLOCK, util.FIRST_BLOCK);
             head.put(JsonStrings.BLOCK_NO, 1);
-            Util.writeJSONFile(head.toString(), blockchainPath + Util.BLOCKCHAIN_HEAD + Util.SUFFIX);
+            util.writeJSONFile(head.toString(), blockchainPath + "/" + util.BLOCKCHAIN_HEAD + util.SUFFIX);
 
             // first block
             JSONObject firstBlock = new JSONObject();
-            firstBlock.put(JsonStrings.BLOCK_HASH, Util.FIRST_BLOCK);
-            firstBlock.put(JsonStrings.PARENT_BLOCK_HASH, Util.FIRST_BLOCK);
+            firstBlock.put(JsonStrings.BLOCK_HASH, util.FIRST_BLOCK);
+            firstBlock.put(JsonStrings.PARENT_BLOCK_HASH, util.FIRST_BLOCK);
             firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
             firstBlock.put(JsonStrings.ENTRIES, new JSONArray());
-            Util.writeJSONFile(firstBlock.toString(), blockchainPath + Util.FIRST_BLOCK + Util.SUFFIX);
-        }
+            util.writeJSONFile(firstBlock.toString(), blockchainPath + "/" + util.FIRST_BLOCK + util.SUFFIX);
+     //   }
         this.blockchain = new BlockChain();
 
-        String entriesPath = Util.PATH_TO_ENTRIES_FOLDER;
+        String entriesPath = util.PATH_TO_ENTRIES_FOLDER;
         File entriesFolder = new File(entriesPath);
 
         // read entries
         if (entriesFolder.exists() && entriesFolder.isDirectory()) {
             for (final File fileEntry : Objects.requireNonNull(entriesFolder.listFiles())) {
-                JSONObject jsonEntry = Util.convertJsonFileToJSONObject(fileEntry.getPath());
+                JSONObject jsonEntry = util.convertJsonFileToJSONObject(fileEntry.getPath());
                 BlockEntry entry = new BlockEntry(jsonEntry);
                 this.entries.add(entry);
             }
@@ -66,7 +66,7 @@ public class Referee extends User implements Serializable {
         // create entries directory
         else {
             try {
-                Path path = Paths.get(Util.PATH_TO_ENTRIES_FOLDER);
+                Path path = Paths.get(util.PATH_TO_ENTRIES_FOLDER);
                 Files.createDirectories(path);
             } catch (IOException e) {
                 System.err.println("Failed to create directory" + e.getMessage());
@@ -90,10 +90,11 @@ public class Referee extends User implements Serializable {
         entry.put(JsonStrings.PLAYER_2_KEY, playerTwoKey);
         entry.put(JsonStrings.REFEREE_KEY, refereeKey);
         entry.put(JsonStrings.REFEREE_SCORE, getRefereeScore());
-        entry.put(JsonStrings.TIMESTAMP, LocalTime.now());
-        String path = Util.PATH_TO_ENTRIES_FOLDER + "Entry" + entries.size() + Util.SUFFIX;
-        Util.writeJSONFile(entry.toString(), path);
-        this.entries.add(new BlockEntry(Util.convertJsonFileToJSONObject(path)));
+        entry.put(JsonStrings.TIMESTAMP, String.valueOf(LocalTime.now()));
+        String path = util.PATH_TO_ENTRIES_FOLDER + "Entry" + entries.size() + util.SUFFIX;
+        String firstPath = util.getPathToBlockChain() + "/" + path ;
+        util.writeJSONFile(entry.toString(), firstPath);
+        this.entries.add(new BlockEntry(util.convertJsonFileToJSONObject(path)));
     }
 
     /**
@@ -124,23 +125,19 @@ public class Referee extends User implements Serializable {
      */
     public JSONObject getBlockchain() throws JSONException {
         JSONObject jsonBlockchain = new JSONObject();
-
-        File folder = new File(Util.PATH_TO_BLOCKCHAIN_FOLDER);
-
+        File folder = new File(util.getPathToBlockChain());
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
 
             String filename = fileEntry.getName();
-            jsonBlockchain.put(filename, Util.convertJsonFileToJSONObject(filename));
+            jsonBlockchain.put(filename, util.convertJsonFileToJSONObject(filename));
         }
-
-
         return jsonBlockchain;
     }
 
     public void setBlockchain(JSONObject newBlockchain) throws JSONException {
 
         // delete current blockchain
-        File folder = new File(Util.PATH_TO_BLOCKCHAIN_FOLDER);
+        File folder = new File(util.getPathToBlockChain());
         for(File file: Objects.requireNonNull(folder.listFiles())) {
             file.delete();
         }
@@ -148,7 +145,7 @@ public class Referee extends User implements Serializable {
         // replace with newer chosen blockchain
         for (Iterator<String> it = newBlockchain.keys(); it.hasNext(); ) {
             String key = it.next();
-            Util.writeJSONFile(newBlockchain.getString(key), Util.PATH_TO_BLOCKCHAIN_FOLDER + key);
+            util.writeJSONFile(newBlockchain.getString(key), util.getPathToBlockChain() + key);
         }
 
         this.blockchain = new BlockChain();
@@ -158,9 +155,9 @@ public class Referee extends User implements Serializable {
      * add a new block to the blockchain from the saved entries
      */
     public void addBlock() throws JSONException {
+        File folder = new File(util.PATH_TO_ENTRIES_FOLDER);
         this.blockchain.addBlock(this.entries);
 
-        File folder = new File(Util.PATH_TO_ENTRIES_FOLDER);
         for(File file: Objects.requireNonNull(folder.listFiles())) {
             file.delete();
         }

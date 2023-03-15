@@ -123,7 +123,7 @@ public class ClientHandler extends Thread {
         sendMessage(answer);
 
         if (authOk) {
-            String memberSince = "12/01/2023"; //Driver.getMemberSince(username)
+            String memberSince = "12/01/2023";
             List<String> friends = Arrays.asList("emile", "theo", "elliot");
             UserRoles role = UserRoles.USER;
             int ELO = 1500;
@@ -151,7 +151,10 @@ public class ClientHandler extends Thread {
     }
 
     public void entryHandler(JSONObject jsonMessage) {
-
+        entryCounter += 1;
+        if (entryCounter % allClients.size() == 0) {
+            sendMessageToAllUsers(new JSONObject()); //TODO ajouter le fetch des blockchain
+        }
     }
 
     public String getActionFromMessage(JSONObject jsonMessage) throws JSONException {
@@ -162,9 +165,9 @@ public class ClientHandler extends Thread {
         return jsonMessage.getString(MessageStrings.USERNAME);
     }
 
-    public void fetchLeaderboard(){
+    public void sendMessageToAllUsers(JSONObject jsonObject){
         for(ClientHandler cH: allClients) {
-            cH.out.println("getElo");
+            cH.sendMessage(jsonObject);
         }
     }
 }

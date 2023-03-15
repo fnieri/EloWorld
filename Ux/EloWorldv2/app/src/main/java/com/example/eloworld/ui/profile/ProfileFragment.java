@@ -30,50 +30,56 @@ public class ProfileFragment extends Fragment {
     Client client;
     private FragmentProfileBinding binding;
     ProfileViewModel profileViewModel;
+    //To be shown only to referee
     Button addMatchBtn;
     TextView refereeRatingText;
     TextView refereeRatingScore;
+    Model model;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
+
         client = ((App) requireActivity().getApplication()).getClient();
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        Model model = client.getModel();
+        model = client.getModel();
 
+        //Bind texts to model to be dynamically updated
         final TextView username = binding.profileUsername;
         final TextView memberSince = binding.memberSince;
         final TextView ELO = binding.playerELORating;
         final TextView refereeScore = binding.playerRefereeRating;
         final TextView publicKey = binding.publicKey;
-        final TextView privateKey = binding.privateKey;
-
 
         profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
         profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
         profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
         profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
         profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
-        profileViewModel.getPrivateKey().observe(getViewLifecycleOwner(), privateKey::setText);
 
         String mUsername = model.getUsername();
         int mElo = model.getELO();
         int mRefereeScore = model.getRefereeScore();
         String mPublicKey = model.getPublicKey();
-        String mPrivateKey = model.getPrivateKey();
+        String mMemberSince = model.getMemberSince();
+
 
         profileViewModel.setUsername(mUsername);
         profileViewModel.setRefereeELO(mRefereeScore);
         profileViewModel.setELO(mElo);
         profileViewModel.setPublicKey(mPublicKey);
-        profileViewModel.setPrivateKey(mPrivateKey);
+        profileViewModel.setMemberSince(mMemberSince);
 
-      //  removeRefereeInterface(model, root);
         return root;
     }
 
+    /**
+     * Remove buttons and text from view that don't need to be shown if it's not a referee
+     * @param model model
+     * @param root Root view
+     */
     public void removeRefereeInterface(Model model, View root) {
         if (model.getRole() != UserRoles.REFEREE) {
             //Remove the button if it's not a referee

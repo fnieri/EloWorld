@@ -52,6 +52,7 @@ public class SignUp extends AppCompatActivity {
 
             JSONObject registerMessage = messageFactory.encodeAuthMessage(username, password, AuthActions.REGISTER);
             Util.sendThreadedmessage(client, registerMessage);
+            System.out.println(registerMessage);
         }
     }
 

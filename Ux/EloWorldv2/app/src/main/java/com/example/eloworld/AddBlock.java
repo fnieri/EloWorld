@@ -29,22 +29,23 @@ public class AddBlock extends AppCompatActivity {
     List<BlockEntry> entries;
     List<String> displayEntries;
     Referee referee;
+    Model model;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.add_block);
         client = ((App) getApplication()).getClient();
         messageFactory = JsonMessageFactory.getInstance();
-        Model model = client.getModel();
+        model = client.getModel();
         try {
             referee = model.getReferee();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         try {
-            referee.createEntry(1500, "fnieri", 1500, "emile", referee.getPublicKey());
-            referee.createEntry(1501, "fnieri", 1500, "emile", referee.getPublicKey());
-            referee.createEntry(1502, "fnieri", 1500, "emile", referee.getPublicKey());
+            referee.createEntry(1500, "fnieri", 1500, "emile", model.getPublicKey());
+            referee.createEntry(1501, "fnieri", 1500, "emile", model.getPublicKey());
+            referee.createEntry(1502, "fnieri", 1500, "emile", model.getPublicKey());
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +55,7 @@ public class AddBlock extends AppCompatActivity {
     }
 
     public void addAllEntriesToBlock(View view) throws JSONException {
-
+        referee.addBlock();
     }
 
     public void setUpDisplayEntries(ListView entriesListView) {

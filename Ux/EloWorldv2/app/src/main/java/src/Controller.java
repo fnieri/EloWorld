@@ -90,7 +90,9 @@ public class Controller {
         if (Objects.equals(serializedRole, UserRoles.USER.serialized())) { role = UserRoles.USER;}
         else if (Objects.equals(serializedRole, UserRoles.REFEREE.serialized())) { role = UserRoles.REFEREE;}
         else if (Objects.equals(serializedRole, UserRoles.SUPER_USER.serialized())) { role = UserRoles.SUPER_USER;}
+        System.out.println(role.serialized());
 
+        System.out.println(leaderboard);
         model.setUp(memberSince, friendsList, role, elo, refereeScore, publicKey, privateKey, leaderboard);
     }
 

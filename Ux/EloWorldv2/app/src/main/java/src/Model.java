@@ -1,5 +1,8 @@
 package src;
 
+import android.content.Context;
+import android.icu.text.SymbolTable;
+
 import org.json.JSONException;
 
 import java.util.List;
@@ -20,7 +23,6 @@ public class Model extends Subject {
     private String publicKey;
     private String privateKey;
 
-    private int elo = Util.BASE_ELO;
     private int refereeScore;
     private List<String> friends;
     //Leaderboard is an list of entries of type <Position, <Username, ELO>>
@@ -31,6 +33,9 @@ public class Model extends Subject {
     private boolean isSetUp = false;
 
     Referee referee;
+    Util util = Util.getInstance();
+    private int elo = util.BASE_ELO;
+
     public String getUsername() {
         return username;
     }
@@ -50,7 +55,7 @@ public class Model extends Subject {
     public void logsIn(String username) throws IllegalArgumentException {
         isLoggedIn = true;
         setUsername(username);
-        System.out.println("I am in");
+        System.out.println("I am in22");
     }
 
 
@@ -64,20 +69,25 @@ public class Model extends Subject {
         setPrivateKey(privateKey);
         setLeaderboard(leaderboard);
         setReferee();
+        System.out.println("MY role is " + getRole().serialized());
         isSetUp = true;
     }
     /**
      * Method called upon log out, clear all attributes
      */
-    public void logsOut() {
+    public void logsOut() throws JSONException {
         setUsername(null);
         setMemberSince(null);
-        setELO(Util.BASE_ELO);
+        setELO(util.BASE_ELO);
         setRefereeScore(0);
         clearFriends();
         isLoggedIn = false;
         isSetUp = false;
         setRole(UserRoles.NOT_LOGGED_IN);
+    }
+
+    public void mainActivitySetup(Context context) throws JSONException {
+        if (role == UserRoles.REFEREE) setReferee();
     }
 
     public Referee getReferee() throws  JSONException {

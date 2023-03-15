@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.eloworld.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -19,6 +20,8 @@ import src.Model;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.security.Permission;
 
 public class SignIn extends AppCompatActivity {
 
@@ -51,6 +54,7 @@ public class SignIn extends AppCompatActivity {
         String password = String.valueOf(passwordField.getText());
 
         JSONObject loginMessage = messageFactory.encodeAuthMessage(username, password, AuthActions.LOGIN);
+        System.out.println(loginMessage);
         Util.sendThreadedmessage(client, loginMessage);
 
      }
