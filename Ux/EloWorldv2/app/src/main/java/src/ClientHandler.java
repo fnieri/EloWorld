@@ -1,5 +1,6 @@
 package src;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,9 +11,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
 
-import src.Enum.AuthActions;
-import src.Enum.Domain;
-import src.Enum.UserRoles;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.*;
+
+import src.Enum.*;
+import src.Enum.*;
 
 // ClientHandler class
 public class ClientHandler extends Thread {
@@ -24,13 +31,13 @@ public class ClientHandler extends Thread {
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
+    //static Driver driver = new Driver();
 
     // Constructor
     public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter, ArrayList<JSONObject> receivedBlockChains) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
         this.entryCounter = entryCounter;
-        this.receivedBlockChains = receivedBlockChains;
     }
 
     public void run() {
@@ -50,8 +57,10 @@ public class ClientHandler extends Thread {
                 parsePacket(packet);
             }
         }
-        catch (IOException | JSONException e) {
+        catch (IOException | JSONException | SQLException e) {
             e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         } finally {
             allClients.remove(this);
             try {
@@ -69,7 +78,7 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void parsePacket(String userMessage) throws JSONException {
+    public void parsePacket(String userMessage) throws JSONException, SQLException, NoSuchAlgorithmException {
         JSONObject jsonMessage;
         try {
             jsonMessage = new JSONObject(userMessage);
@@ -91,59 +100,86 @@ public class ClientHandler extends Thread {
         out.println(stringMessage);
     }
 
-    public void loginHandler(JSONObject jsonMessage) throws JSONException {
+    public void loginHandler(JSONObject jsonMessage) throws JSONException, SQLException, NoSuchAlgorithmException {
         String action = getActionFromMessage(jsonMessage);
         String username = getUsernameFromMessage(jsonMessage);
         String password = jsonMessage.getString(MessageStrings.PASSWORD);
         boolean authOk = false;
-        //  try {
+        Driver.connection();
         if (Objects.equals(action, AuthActions.LOGIN.serialized())) {
-            Driver.connection();
+            authOk = Driver.auth(username, password);
 
-            //Driver.auth(username, password);
-            authOk = true;
         }
         if (Objects.equals(action, AuthActions.REGISTER.serialized())) {
             //driver
-            // if (!Driver.nameExists(username)) {
-            //   Driver.addUser(username, password);
-            authOk = true;
+            if (!Driver.nameExists(username)) {
+                // https://stackoverflow.com/questions/9474121/i-want-to-get-year-month-day-etc-from-java-date-to-compare-with-gregorian-cal
+                Date date = new Date();
+                int year = 0, month = 0, day = 0;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    year  = localDate.getYear();
+                    month = localDate.getMonthValue();
+                    day = localDate.getDayOfMonth();
+                }
+                String memberSinceDate = day + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+                Driver.addUser(username, password, memberSinceDate);
+                authOk = true;
+            }
         }
-        //  }
-        // }
-        // catch (SQLException sqlException) {
-        //   System.out.println("connexion problem");
-        //}
+
 
         AuthActions authResponse = authOk ? AuthActions.CLIENT_OK_AUTH : AuthActions.CLIENT_BAD_AUTH;
         JSONObject answer = jsonFactory.authServerAnswer(username, authResponse);
         sendMessage(answer);
 
         if (authOk) {
-            String memberSince = "12/01/2023";
-            List<String> friends = Arrays.asList("emile", "theo", "elliot");
-            UserRoles role = UserRoles.USER;
+            Driver.connection();
+            String memberDate = Driver.getMemberDate(username);
+
+            List<String> friends = Driver.getFriendsList(username);
+
+            String role = Driver.getRole(username);
+            UserRoles playerRole;
+            if (Objects.equals(role, "user")) playerRole = UserRoles.USER;
+            else playerRole = UserRoles.REFEREE;
+
             int ELO = 1500;
             int refereeScore = 0;
-            String publicKey = "asdisajd";
-            String privateKey = "iiufiufd";
+
+            String publicKey = Driver.getPublicKey(username);
+            String privateKey = Driver.getPrivateKey(username);
             List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard =
                     List.of(Map.entry(1, Map.entry("emile", 1500)),
                             Map.entry(2, Map.entry("fnieri", 1499)),
                             Map.entry(3, Map.entry("theo", 1498)),
                             Map.entry(4, Map.entry("elliot", 1497)));
-            JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberSince, friends, role, ELO, refereeScore, publicKey, privateKey, leaderboard);
+            JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, publicKey, privateKey, leaderboard);
             System.out.println(setUpMessage);
             sendMessage(setUpMessage);
         }
+        Driver.closeConnection();
+
     }
 
-    public void friendsHandler(JSONObject jsonMessage) throws JSONException {
+    public void friendsHandler(JSONObject jsonMessage) throws JSONException, SQLException {
         String action = getActionFromMessage(jsonMessage);
         String sender = jsonMessage.getString(MessageStrings.SENDER);
         String receiver = jsonMessage.getString(MessageStrings.RECEIVER);
         JSONObject messageFriend = new JSONObject();
+        Driver.connection();
+
         //If driver exists and friend exists // TODO
+        if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
+            //TODO(elliot)
+        }
+        else if (Objects.equals(action, FriendReqActions.FOLLOW_FRIEND.serialized())) {
+            Driver.addFriend(sender, receiver);
+        }
+
+
+
+        Driver.closeConnection();
         sendMessage(jsonMessage); // resend message as is to client
     }
 

@@ -133,11 +133,8 @@ public class BlockChain {
 
         // Write new Block as .json file
 
-<<<<<<< HEAD
         String filename = util.getPathToBlockChain() + id + util.SUFFIX;
-=======
-        String filename = util.getPathToBlockChain() + id + ".json";
->>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
+
         try (FileWriter file = new FileWriter(filename)) {
             file.write(futureBlock.toString());
         } catch (IOException e) {
@@ -145,22 +142,14 @@ public class BlockChain {
         }
 
         // Update with new information
-<<<<<<< HEAD
         lastBlock = util.convertJsonFileToBlock(id + util.SUFFIX);
-=======
-        lastBlock = util.convertJsonFileToBlock(id);
->>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         blockCount = block_no;
 
 
         JSONObject updateHead = new JSONObject();
         updateHead.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
         updateHead.put(JsonStrings.BLOCK_NO, blockCount);
-<<<<<<< HEAD
         String headFile = util.getPathToBlockChain() + util.BLOCKCHAIN_HEAD + util.SUFFIX;
-=======
-        String headFile = util.getPathToBlockChain() + "HEAD.json";
->>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         try (FileWriter file = new FileWriter(headFile)) {
             file.write(updateHead.toString());
         } catch (IOException e) {

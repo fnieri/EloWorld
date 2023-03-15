@@ -39,7 +39,6 @@ android {
 
 dependencies {
     //noinspection GradlePath
-    implementation files('C:/Users/franc/AndroidStudioProjects/EloWorldv2/app/src/main/java/src/lib/mysql-connector-java-8.0.28.jar')
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
