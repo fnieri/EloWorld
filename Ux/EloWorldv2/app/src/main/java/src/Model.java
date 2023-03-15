@@ -1,7 +1,10 @@
 package src;
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.icu.text.SymbolTable;
+=======
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
 
 import org.json.JSONException;
 
@@ -68,8 +71,11 @@ public class Model extends Subject {
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
         setLeaderboard(leaderboard);
+<<<<<<< HEAD
         setReferee();
         System.out.println("MY role is " + getRole().serialized());
+=======
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         isSetUp = true;
     }
     /**
@@ -87,7 +93,11 @@ public class Model extends Subject {
     }
 
     public void mainActivitySetup(Context context) throws JSONException {
+<<<<<<< HEAD
         if (role == UserRoles.REFEREE) setReferee();
+=======
+        if (role == UserRoles.REFEREE) setReferee(context);
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
     }
 
     public Referee getReferee() throws  JSONException {
@@ -95,7 +105,7 @@ public class Model extends Subject {
         return null;
     }
 
-    public void setReferee() throws JSONException {
+    public void setReferee(Context context) throws JSONException {
         if (getRole() == UserRoles.REFEREE) referee = new Referee(publicKey);
     }
 

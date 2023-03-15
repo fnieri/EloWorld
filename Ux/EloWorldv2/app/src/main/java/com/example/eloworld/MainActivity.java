@@ -35,7 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     Client client;
+<<<<<<< HEAD
     Model model;
+=======
+    final static String PATH_TO_BLOCKCHAIN_FOLDER = Environment.getExternalStorageDirectory() + File.separator + "Android/data/com.example.eloworld" + File.separator;
+
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,15 @@ public class MainActivity extends AppCompatActivity {
         client = ((App) getApplication()).getClient();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         Model model = client.getModel();
+<<<<<<< HEAD
 
+=======
+        try {
+            model.setReferee(this);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -77,9 +90,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+<<<<<<< HEAD
     public void logOut(View v) throws JSONException {
         System.out.println("LOG OUT");
         if (model != null) model.logsOut();
+=======
+
+    public void logOut(View v) {
+        finish();
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         Util.changeLayout(this, SignIn.class);
     }
 

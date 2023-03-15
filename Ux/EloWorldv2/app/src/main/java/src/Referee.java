@@ -125,7 +125,13 @@ public class Referee extends User implements Serializable {
      */
     public JSONObject getBlockchain() throws JSONException {
         JSONObject jsonBlockchain = new JSONObject();
+<<<<<<< HEAD
         File folder = new File(util.getPathToBlockChain());
+=======
+
+        File folder = new File(util.getPathToBlockChain());
+
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
 
             String filename = fileEntry.getName();
@@ -156,6 +162,11 @@ public class Referee extends User implements Serializable {
      */
     public void addBlock() throws JSONException {
         File folder = new File(util.PATH_TO_ENTRIES_FOLDER);
+<<<<<<< HEAD
+=======
+        System.out.println(folder);
+        System.out.println("ayo");
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         this.blockchain.addBlock(this.entries);
 
         for(File file: Objects.requireNonNull(folder.listFiles())) {

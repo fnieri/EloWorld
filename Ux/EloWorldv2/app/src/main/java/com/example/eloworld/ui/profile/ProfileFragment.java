@@ -44,8 +44,12 @@ public class ProfileFragment extends Fragment {
         client = ((App) requireActivity().getApplication()).getClient();
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+<<<<<<< HEAD
         model = client.getModel();
 
+=======
+        Model model = client.getModel();
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         //Bind texts to model to be dynamically updated
         final TextView username = binding.profileUsername;
         final TextView memberSince = binding.memberSince;
