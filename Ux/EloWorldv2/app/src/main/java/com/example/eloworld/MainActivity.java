@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
 =======
         try {
-            model.setReferee(this);
+            model.setReferee();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

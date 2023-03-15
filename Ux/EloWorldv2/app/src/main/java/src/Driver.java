@@ -1,5 +1,6 @@
 package src;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,27 +96,41 @@ public class Driver {
         return getMaxId() + 1;
     }
 
-    public static void addUser(String username, String password, String memberDate) throws SQLException {
+    public static void addUser(String username, String password, String memberDate) throws SQLException, NoSuchAlgorithmException {
+        RSAKeyGenerator keysGenerator = new RSAKeyGenerator();
+        List<String> keys = keysGenerator.generateKeys();
+        String privateKey = keys.get(0);
+        String publicKey = keys.get(1);
+
         if (!nameExists(username)) {
             int newId = assignId();
+            System.out.println(username + password + memberDate + publicKey + privateKey);
             Statement statement = connection.createStatement();
-            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `publicKey`, `privateKey`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + ")" + ";";
+            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `publicKey`, `privateKey`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql("public") + stringToSql("private") + ")" + ";";
             statement.executeUpdate(addUserQuery);
             addRole(newId);
         }
     }
 
-    public static void addFriend(int id, String friendName) throws SQLException{
-        if (!nameExists(friendName)){
-            System.out.println("This username don't exists");
+    public static void removeFriend(String username, String friendName) throws SQLException, SQLException {
+        if (nameExists(username)){
+            int id = getId(username);
+            Statement statement = connection.createStatement();
+            String removeFriendQuery = "DELETE FROM `heroku_76cef2360ddfe66`.`friends` WHERE `iduser`=" + id + ";";
+            statement.executeUpdate(removeFriendQuery);
         }
-
-        Statement statement = connection.createStatement();
-        String addFriendQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`friends` (`iduser`, `friendname`) VALUES (" + id + "," + stringToSql(friendName) +");";
-        statement.executeUpdate(addFriendQuery);
     }
 
-    public static List<String> getFriendList(String username) throws SQLException{
+    public static void addFriend(String username, String friendName) throws SQLException{
+        if (nameExists(friendName)) {
+            int id = getId(username);
+            Statement statement = connection.createStatement();
+            String addFriendQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`friends` (`iduser`, `friendname`) VALUES (" + id + "," + stringToSql(friendName) + ");";
+            statement.executeUpdate(addFriendQuery);
+        }
+    }
+
+    public static List<String> getFriendsList(String username) throws SQLException{
         List<String> friendList = new ArrayList<>();
         int id = getId(username);
 
@@ -165,6 +180,20 @@ public class Driver {
             }
         }
         return resRole;
+    }
+
+    public static String getPrivateKey(String username) throws SQLException {
+        String privateKey = "";
+        if (nameExists(username)){
+            Statement statement = connection.createStatement();
+            String getPrivateKeyQuery = "SELECT users.privateKey FROM heroku_76cef2360ddfe66.users WHERE username =" + stringToSql(username) + ";";
+            ResultSet key = statement.executeQuery(getPrivateKeyQuery);
+
+            if (key.next()){
+                privateKey = key.getString("publicKey");
+            }
+        }
+        return privateKey;
     }
 
     public static String getMemberDate(String username) throws SQLException{

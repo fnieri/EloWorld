@@ -1,10 +1,6 @@
 package src;
 
 import android.content.Context;
-<<<<<<< HEAD
-import android.icu.text.SymbolTable;
-=======
->>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
 
 import org.json.JSONException;
 
@@ -58,7 +54,7 @@ public class Model extends Subject {
     public void logsIn(String username) throws IllegalArgumentException {
         isLoggedIn = true;
         setUsername(username);
-        System.out.println("I am in22");
+        System.out.println("I am in");
     }
 
 
@@ -71,17 +67,12 @@ public class Model extends Subject {
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
         setLeaderboard(leaderboard);
-<<<<<<< HEAD
-        setReferee();
-        System.out.println("MY role is " + getRole().serialized());
-=======
->>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         isSetUp = true;
     }
     /**
      * Method called upon log out, clear all attributes
      */
-    public void logsOut() throws JSONException {
+    public void logsOut() {
         setUsername(null);
         setMemberSince(null);
         setELO(util.BASE_ELO);
@@ -93,11 +84,7 @@ public class Model extends Subject {
     }
 
     public void mainActivitySetup(Context context) throws JSONException {
-<<<<<<< HEAD
         if (role == UserRoles.REFEREE) setReferee();
-=======
-        if (role == UserRoles.REFEREE) setReferee(context);
->>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
     }
 
     public Referee getReferee() throws  JSONException {
@@ -105,7 +92,7 @@ public class Model extends Subject {
         return null;
     }
 
-    public void setReferee(Context context) throws JSONException {
+    public void setReferee() throws JSONException {
         if (getRole() == UserRoles.REFEREE) referee = new Referee(publicKey);
     }
 
