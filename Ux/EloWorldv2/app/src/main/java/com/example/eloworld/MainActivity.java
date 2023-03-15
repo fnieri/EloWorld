@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public void logOut(View v) throws JSONException {
         System.out.println("LOG OUT");
         if (model != null) model.logsOut();
+        Util.changeLayout(this, SignIn.class);
     }
 
     public void addMatch(View v) {
