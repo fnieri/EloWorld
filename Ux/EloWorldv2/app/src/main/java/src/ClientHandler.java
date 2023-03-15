@@ -120,7 +120,7 @@ public class ClientHandler extends Thread {
         sendMessage(answer);
 
         if (authOk) {
-            String memberSince = "12/01/2023"; //Driver.getMemberSince(username)
+            String memberSince = "12/01/2023";
             List<String> friends = Arrays.asList("emile", "theo", "elliot");
             UserRoles role = UserRoles.USER;
             int ELO = 1500;

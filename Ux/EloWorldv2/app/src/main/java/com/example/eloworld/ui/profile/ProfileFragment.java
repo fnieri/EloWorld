@@ -34,6 +34,7 @@ public class ProfileFragment extends Fragment {
     Button addMatchBtn;
     TextView refereeRatingText;
     TextView refereeRatingScore;
+    Model model;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,36 +44,38 @@ public class ProfileFragment extends Fragment {
         client = ((App) requireActivity().getApplication()).getClient();
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+<<<<<<< HEAD
+        model = client.getModel();
+
+=======
         Model model = client.getModel();
+>>>>>>> 905c57ae1c28471fa5516a0084cdca36e36ace36
         //Bind texts to model to be dynamically updated
         final TextView username = binding.profileUsername;
         final TextView memberSince = binding.memberSince;
         final TextView ELO = binding.playerELORating;
         final TextView refereeScore = binding.playerRefereeRating;
         final TextView publicKey = binding.publicKey;
-        final TextView privateKey = binding.privateKey;
-
 
         profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
         profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
         profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
         profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
         profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
-        profileViewModel.getPrivateKey().observe(getViewLifecycleOwner(), privateKey::setText);
 
         String mUsername = model.getUsername();
         int mElo = model.getELO();
         int mRefereeScore = model.getRefereeScore();
         String mPublicKey = model.getPublicKey();
-        String mPrivateKey = model.getPrivateKey();
+        String mMemberSince = model.getMemberSince();
+
 
         profileViewModel.setUsername(mUsername);
         profileViewModel.setRefereeELO(mRefereeScore);
         profileViewModel.setELO(mElo);
         profileViewModel.setPublicKey(mPublicKey);
-        profileViewModel.setPrivateKey(mPrivateKey);
+        profileViewModel.setMemberSince(mMemberSince);
 
-      //  removeRefereeInterface(model, root);
         return root;
     }
 
