@@ -8,11 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import src.Enum.AuthActions;
 import src.Enum.Domain;
@@ -22,18 +18,19 @@ import src.Enum.UserRoles;
 public class ClientHandler extends Thread {
     private final Socket clientSocket;
     ArrayList<ClientHandler> allClients;
+
+    ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
     int entryCounter;
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
-    static User user = null;
-    //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter, ArrayList<JSONObject> receivedBlockChains) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
         this.entryCounter = entryCounter;
+        this.receivedBlockChains = receivedBlockChains;
     }
 
     public void run() {
@@ -84,6 +81,9 @@ public class ClientHandler extends Thread {
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
+        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {entryHandler();}
+        else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
+            receivedBlockChains.add(jsonMessage);}
     }
 
     public void sendMessage(JSONObject message) {
@@ -147,11 +147,18 @@ public class ClientHandler extends Thread {
         sendMessage(jsonMessage); // resend message as is to client
     }
 
-    public void entryHandler(JSONObject jsonMessage) throws JSONException {
+    public void entryHandler() throws JSONException {
         entryCounter += 1;
-        if (entryCounter % allClients.size() == 0) {
+        if (entryCounter >= allClients.size()) {
             sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
-        }
+            Timer t = new Timer();
+            getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
+            TimerTask tt = bestBlockchain;
+            Date now = new Date();
+            t.schedule(tt, now.getTime() + 10000);
+            sendMessageToAllUsers(JsonMessageFactory.getInstance().
+                    sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
+            }
     }
 
     public String getActionFromMessage(JSONObject jsonMessage) throws JSONException {
@@ -165,6 +172,30 @@ public class ClientHandler extends Thread {
     public void sendMessageToAllUsers(JSONObject jsonObject) {
         for (ClientHandler cH : allClients) {
             cH.sendMessage(jsonObject);
+        }
+    }
+
+    static class getBestBlockchain extends TimerTask {
+        ArrayList<JSONObject> challengers = null;
+        int currBestScore = 0;
+        JSONObject champion = null;
+        public getBestBlockchain(ArrayList<JSONObject> challengerList){
+            challengers = challengerList;
+        }
+        public void tournament() throws JSONException {
+            for (JSONObject challenger : challengers) {
+                if (challenger.getInt(MessageStrings.BLOCKCHAIN_SCORE) >= currBestScore) {
+                    champion = challenger;
+                    currBestScore = champion.getInt(MessageStrings.BLOCKCHAIN_SCORE);
+                }
+            }
+        }
+        public void run() {
+            try {
+                tournament();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

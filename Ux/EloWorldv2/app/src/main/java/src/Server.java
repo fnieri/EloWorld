@@ -1,5 +1,7 @@
 package src;
 
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ class Server {
         int entryCounter = 0;
         ServerSocket server = null;
         ArrayList<ClientHandler> connectedClients = new ArrayList<>();
+        ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
 
         try {
             // server is listening on port 8080
@@ -31,7 +34,7 @@ class Server {
                         .getHostAddress());
 
                 // create a new thread object
-                ClientHandler clientSock = new ClientHandler(client, connectedClients, entryCounter);
+                ClientHandler clientSock = new ClientHandler(client, connectedClients, entryCounter, receivedBlockChains);
 
                 connectedClients.add(clientSock);
 
