@@ -1,6 +1,7 @@
 package src;
 
 import android.content.Context;
+import android.icu.lang.UScript;
 
 import org.json.JSONException;
 
@@ -95,9 +96,8 @@ public class Model extends Subject {
         if (getRole() == UserRoles.REFEREE) referee = new Referee(publicKey);
     }
 
-    public void addFriend(String friend) throws IllegalArgumentException {
-        if (friends.contains(friend)) throw new IllegalArgumentException("Friend is already in friends");
-        friends.add(friend);
+    public void addFriend(String friend) {
+        if (!friends.contains(friend)) friends.add(friend);
     }
 
     public void removeFriend(String friend) {
@@ -108,8 +108,9 @@ public class Model extends Subject {
 
     public void clearFriends() {friends.clear();}
 
-    public int getRefereeScore() {
-        return refereeScore;
+    public int getRefereeScore() throws JSONException {
+        if (role == UserRoles.REFEREE) return referee.getRefereeScore();
+        else return 0;
     }
 
     public void setRefereeScore(int newScore) {

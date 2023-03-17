@@ -49,8 +49,8 @@ public class BlockChain {
             }
 
             numEntries += currBlock.getScore();
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + util.SUFFIX);
 
-            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
         return numEntries;
     }

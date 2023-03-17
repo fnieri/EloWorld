@@ -18,6 +18,7 @@ import com.example.eloworld.R;
 import com.example.eloworld.Util;
 import com.example.eloworld.databinding.FragmentProfileBinding;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.util.Objects;
@@ -55,7 +56,12 @@ public class ProfileFragment extends Fragment {
 
         String mUsername = model.getUsername();
         int mElo = model.getELO();
-        int mRefereeScore = model.getRefereeScore();
+        int mRefereeScore = 0;
+        try {
+            mRefereeScore = model.getRefereeScore();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         String mPublicKey = model.getPublicKey();
         String mMemberSince = model.getMemberSince();
 
