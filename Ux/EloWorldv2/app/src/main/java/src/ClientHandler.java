@@ -1,6 +1,5 @@
 package src;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,11 +13,8 @@ import java.util.*;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.*;
 
-import src.Enum.*;
 import src.Enum.*;
 
 // ClientHandler class
@@ -27,17 +23,17 @@ public class ClientHandler extends Thread {
     ArrayList<ClientHandler> allClients;
 
     ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
-    int entryCounter;
+    int blockCounter;
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
     //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter, ArrayList<JSONObject> receivedBlockChains) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int blockCounter, ArrayList<JSONObject> receivedBlockChains) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
-        this.entryCounter = entryCounter;
+        this.blockCounter = blockCounter;
     }
 
     public void run() {
@@ -177,21 +173,18 @@ public class ClientHandler extends Thread {
             Driver.addFriend(sender, receiver);
         }
 
-
-
         Driver.closeConnection();
         sendMessage(jsonMessage); // resend message as is to client
     }
 
     public void entryHandler() throws JSONException {
-        entryCounter += 1;
-        if (entryCounter >= allClients.size()) {
+        blockCounter += 1;
+        if (blockCounter >= allClients.size() % 6) {
             sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
             Timer t = new Timer();
             getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
-            TimerTask tt = bestBlockchain;
             Date now = new Date();
-            t.schedule(tt, now.getTime() + 10000);
+            t.schedule(bestBlockchain, now.getTime() + 10000);
             sendMessageToAllUsers(JsonMessageFactory.getInstance().
                     sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
             }
