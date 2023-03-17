@@ -63,10 +63,12 @@ public class Model extends Subject {
         setFriendList(friends);
         setRole(role);
         setELO(elo);
+        setReferee();
         setRefereeScore(refereeScore);
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
         setLeaderboard(leaderboard);
+        isLoggedIn = true;
         isSetUp = true;
     }
     /**
@@ -77,14 +79,11 @@ public class Model extends Subject {
         setMemberSince(null);
         setELO(util.BASE_ELO);
         setRefereeScore(0);
+        referee = null;
         clearFriends();
         isLoggedIn = false;
         isSetUp = false;
         setRole(UserRoles.NOT_LOGGED_IN);
-    }
-
-    public void mainActivitySetup(Context context) throws JSONException {
-        if (role == UserRoles.REFEREE) setReferee();
     }
 
     public Referee getReferee() throws  JSONException {

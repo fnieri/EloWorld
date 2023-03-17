@@ -15,7 +15,6 @@ import kotlin.jvm.internal.Intrinsics;
 import src.Client;
 import src.Enum.*;
 import src.JsonMessageFactory;
-import src.Model;
 
 public class SignUp extends AppCompatActivity {
     Client client;
@@ -51,7 +50,7 @@ public class SignUp extends AppCompatActivity {
         if (password.equals(confirmPassword)) {
 
             JSONObject registerMessage = messageFactory.encodeAuthMessage(username, password, AuthActions.REGISTER);
-            Util.sendThreadedmessage(client, registerMessage);
+            Util.sendThreadedMessage(client, registerMessage);
             System.out.println(registerMessage);
         }
     }

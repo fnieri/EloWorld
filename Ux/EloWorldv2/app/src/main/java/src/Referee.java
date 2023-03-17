@@ -84,6 +84,7 @@ public class Referee extends User implements Serializable {
      */
     public void createEntry(int eloPlayer1, String playerOneKey, int eloPlayer2, String playerTwoKey, String refereeKey) throws JSONException {
         JSONObject entry = new JSONObject();
+        // winnerUsername, loserUsername, timestamp, refereeKey
         entry.put(JsonStrings.PLAYER_1_ELO, eloPlayer1);
         entry.put(JsonStrings.PLAYER_2_ELO, eloPlayer2);
         entry.put(JsonStrings.PLAYER_1_KEY, playerOneKey);
@@ -134,6 +135,10 @@ public class Referee extends User implements Serializable {
         return jsonBlockchain;
     }
 
+    public BlockChain getBlockchainObject() throws JSONException {
+        return this.blockchain;
+    }
+
     public void setBlockchain(JSONObject newBlockchain) throws JSONException {
 
         // delete current blockchain
@@ -155,12 +160,15 @@ public class Referee extends User implements Serializable {
      * add a new block to the blockchain from the saved entries
      */
     public void addBlock() throws JSONException {
-        File folder = new File(util.PATH_TO_ENTRIES_FOLDER);
+        String path = util.getPathToBlockChain() + File.separator + util.PATH_TO_ENTRIES_FOLDER;
+
+        File folder = new File(path);
         this.blockchain.addBlock(this.entries);
 
         for(File file: Objects.requireNonNull(folder.listFiles())) {
             file.delete();
         }
+
         this.entries = new ArrayList<>();
     };
 

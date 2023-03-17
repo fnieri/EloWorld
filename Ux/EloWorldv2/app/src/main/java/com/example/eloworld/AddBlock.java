@@ -34,18 +34,22 @@ public class AddBlock extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.add_block);
+
         client = ((App) getApplication()).getClient();
         messageFactory = JsonMessageFactory.getInstance();
         model = client.getModel();
+
         try {
             referee = model.getReferee();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
         try {
             referee.createEntry(1500, "fnieri", 1500, "emile", model.getPublicKey());
             referee.createEntry(1501, "fnieri", 1500, "emile", model.getPublicKey());
             referee.createEntry(1502, "fnieri", 1500, "emile", model.getPublicKey());
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -55,18 +59,19 @@ public class AddBlock extends AppCompatActivity {
     }
 
     public void addAllEntriesToBlock(View view) throws JSONException {
-        referee.addBlock();
+        if (referee.getEntries().size() > 0) referee.addBlock();
     }
 
     public void setUpDisplayEntries(ListView entriesListView) {
         entries = referee.getEntries();
-        displayEntries = new ArrayList<>();
-        displayEntries.add("Your entries:");
-        for (BlockEntry entry: entries) {
-            displayEntries.add(entry.toString());
+        if (entries.size() > 0) {
+            displayEntries = new ArrayList<>();
+            displayEntries.add("Your entries:");
+            for (BlockEntry entry : entries) {
+                displayEntries.add(entry.toString());
+            }
+            ArrayAdapter<String> entriesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, displayEntries);
+            entriesListView.setAdapter(entriesAdapter); //Line by ChatGPT
         }
-        ArrayAdapter<String> entriesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, displayEntries);
-        entriesListView.setAdapter(entriesAdapter); //Line by ChatGPT
-
     }
 }

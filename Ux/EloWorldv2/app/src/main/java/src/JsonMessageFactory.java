@@ -87,12 +87,6 @@ public class JsonMessageFactory {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.ENTRY.serialized());
         messageJson.put(MessageStrings.ACTION, MessageStrings.SEND_ENTRY);
-        //messageJson.put(JsonStrings.REFEREE_KEY, refereeKey);
-        //messageJson.put(JsonStrings.REFEREE_SCORE, refereeScore);
-        //messageJson.put(JsonStrings.PLAYER_1_KEY, player1Key);
-        //messageJson.put(JsonStrings.PLAYER_1_ELO, player1ELO);
-        //messageJson.put(JsonStrings.PLAYER_2_KEY, player2Key);
-        //messageJson.put(JsonStrings.PLAYER_2_ELO, player2ELO);
         messageJson.put(JsonStrings.REFEREE_USERNAME, refereeUsername);
         messageJson.put(JsonStrings.PLAYER_1_USERNAME, player1Username);
         messageJson.put(JsonStrings.PLAYER_2_USERNAME, player2Username);

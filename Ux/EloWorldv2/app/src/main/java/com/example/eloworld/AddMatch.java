@@ -34,7 +34,7 @@ public class AddMatch extends AppCompatActivity {
         String player2Username = String.valueOf(player2edit.getText());
         String refereeUsername = client.getModel().getUsername();
         JSONObject entryMessage = messageFactory.encodeEntryMessage(refereeUsername, player1Username, player2Username);
-        Util.sendThreadedmessage(client, entryMessage);
+        Util.sendThreadedMessage(client, entryMessage);
         finish();
     }
 }

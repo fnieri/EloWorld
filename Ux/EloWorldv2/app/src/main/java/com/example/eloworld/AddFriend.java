@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.eloworld.R;
+
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import src.Client;
-import src.Enum.*;
 import src.Enum.FriendReqActions;
 import src.JsonMessageFactory;
 import src.Model;
@@ -35,7 +34,7 @@ public class AddFriend extends AppCompatActivity {
         String sender = model.getUsername();
         JSONObject friendMessage = messageFactory.friendMessage(sender, friendUsername, FriendReqActions.FOLLOW_FRIEND);
 
-        Util.sendThreadedmessage(client, friendMessage);
+        Util.sendThreadedMessage(client, friendMessage);
         finish();
     }
 
@@ -44,7 +43,7 @@ public class AddFriend extends AppCompatActivity {
         Model model = client.getModel();
         String sender = model.getUsername();
         JSONObject friendMessage = messageFactory.friendMessage(sender, friendUsername, FriendReqActions.REMOVE_FRIEND);
-        Util.sendThreadedmessage(client, friendMessage);
+        Util.sendThreadedMessage(client, friendMessage);
         finish();
     }
 

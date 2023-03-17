@@ -46,7 +46,7 @@ public class SocialFragment extends Fragment {
 
         binding = FragmentSocialBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        Model model = client.getModel();
+        model = client.getModel();
         ListView leaderboardListView = binding.leaderboardListView;
         setUpLeaderboard(leaderboardListView, model);
 
@@ -71,7 +71,8 @@ public class SocialFragment extends Fragment {
 
         leaderboard = model.getLeaderboard();
         displayLeaderboard.add("EloWorld Leaderboard:");
-
+        System.out.println(leaderboard);
+        System.out.println("this it it");
         for (Map.Entry<Integer, Map.Entry<String, Integer>> playerEntry: leaderboard) {
             int position = playerEntry.getKey();
             String playerUsername = playerEntry.getValue().getKey();
@@ -85,7 +86,6 @@ public class SocialFragment extends Fragment {
 
     public void setUpFriends(ListView friendsListView, Model model) {
         friends = model.getFriends();
-        System.out.println(friends);
         List<String> displayFriends = new ArrayList<>(friends);
         displayFriends.add(0, "EloWorld friends:");
 
@@ -104,5 +104,8 @@ public class SocialFragment extends Fragment {
     }
 
     public void addBlockSocial(View view) {
+    }
+
+    public void viewBlockchain(View view) {
     }
 }

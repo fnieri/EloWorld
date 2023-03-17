@@ -53,12 +53,6 @@ public class ProfileFragment extends Fragment {
         final TextView refereeScore = binding.playerRefereeRating;
         final TextView publicKey = binding.publicKey;
 
-        profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
-        profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
-        profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
-        profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
-        profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
-
         String mUsername = model.getUsername();
         int mElo = model.getELO();
         int mRefereeScore = model.getRefereeScore();
@@ -71,6 +65,13 @@ public class ProfileFragment extends Fragment {
         profileViewModel.setELO(mElo);
         profileViewModel.setPublicKey(mPublicKey);
         profileViewModel.setMemberSince(mMemberSince);
+
+        profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
+        profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
+        profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
+        profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
+        profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
+
 
         return root;
     }

@@ -5,19 +5,17 @@ import android.content.Intent;
 
 import org.json.JSONObject;
 
-import java.security.Permission;
-
 import src.Model;
-import kotlin.jvm.internal.Intrinsics;
 import src.Client;
 
 public class Util {
+
     public static void changeLayout(Context caller, Class newScreen) {
         Intent intent = new Intent(caller, newScreen);
         caller.startActivity(intent);
     }
 
-    public static void sendThreadedmessage(Client client, JSONObject message) {
+    public static void sendThreadedMessage(Client client, JSONObject message) {
         Thread thread = new Thread(new Runnable() {
 
             @Override
@@ -35,11 +33,11 @@ public class Util {
 
     public static boolean changeLayoutOnLogIn(Context caller, Client client) {
         Model model = client.getModel();
-        if (model.isLoggedIn()) {
+            if (model.isLoggedIn()) {
 
-            Util.changeLayout(caller, MainActivity.class);
-            return true;
-        }
+                Util.changeLayout(caller, MainActivity.class);
+                return true;
+            }
         return false;
     }
 

@@ -22,11 +22,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SignUp"
@@ -41,13 +37,24 @@
         </activity>
         <activity
             android:name=".SignIn"
-            android:exported="true" />
+            android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".AddFriend"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".AddBlock"
             android:exported="false"
             />
         <activity
-            android:name=".AddBlock"
+            android:name=".BlocksView"
             android:exported="false"
             />
     </application>

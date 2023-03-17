@@ -48,7 +48,7 @@ public class Util {
      */
     public String convertJsonFileToString(String filename) {
 
-        String path = PATH_TO_BLOCKCHAIN_FOLDER + "/" + filename;
+        String path = PATH_TO_BLOCKCHAIN_FOLDER + File.separator + filename;
 
         try {
             return new String(Files.readAllBytes(Paths.get(path)));
