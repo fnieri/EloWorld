@@ -9,7 +9,6 @@ import java.util.ArrayList;
 // Server class
 class Server {
     public static void main(String[] args) {
-        int blockCounter = 0;
         ServerSocket server = null;
         ArrayList<ClientHandler> connectedClients = new ArrayList<>();
         ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
@@ -34,7 +33,7 @@ class Server {
                         .getHostAddress());
 
                 // create a new thread object
-                ClientHandler clientSock = new ClientHandler(client, connectedClients, blockCounter, receivedBlockChains);
+                ClientHandler clientSock = new ClientHandler(client, connectedClients, receivedBlockChains);
 
                 connectedClients.add(clientSock);
 
