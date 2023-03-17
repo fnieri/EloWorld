@@ -36,6 +36,7 @@ public class Controller {
         else if (Objects.equals(domain, Domain.RESOURCE.serialized())) {processSetUp(jsonReq);}
         else if (Objects.equals(domain, Domain.FETCH.serialized())) {processServerBlockchainScoreRequest();}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {processFriend(jsonReq);}
+        else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {processBlock(jsonReq);}
     }
 
     public void processAuth(JSONObject jsonReq) throws JSONException {
@@ -103,6 +104,13 @@ public class Controller {
             JSONObject blockchain = ref.getBlockchain();
             JSONObject message = jsonFactory.sendBlockchainScoreToServer(blockchainScore, blockchain);
             client.sendMessage(message);
+        }
+    }
+
+    public void processBlock(JSONObject jsonReq) throws JSONException {
+        if (model.getRole() == UserRoles.REFEREE) {
+            Referee referee = model.getReferee();
+            referee.setBlockchain(jsonReq);
         }
     }
 }

@@ -191,6 +191,5 @@ public class Referee extends User implements Serializable {
     public ArrayList<BlockEntry> getEntries() {
         return entries;
     }
-
 }
 

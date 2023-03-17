@@ -169,12 +169,16 @@ public class ClientHandler extends Thread {
         JSONObject messageFriend = new JSONObject();
         Driver.connection();
 
+        //If driver exists and friend exists // TODO
         if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
-            Driver.removeFriend(sender, receiver);
+            //TODO(elliot)
         }
         else if (Objects.equals(action, FriendReqActions.FOLLOW_FRIEND.serialized())) {
             Driver.addFriend(sender, receiver);
         }
+
+
+
         Driver.closeConnection();
         sendMessage(jsonMessage); // resend message as is to client
     }
