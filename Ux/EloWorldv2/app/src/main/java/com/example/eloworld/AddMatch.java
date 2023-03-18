@@ -13,11 +13,15 @@ import org.json.JSONObject;
 
 import src.Client;
 import src.JsonMessageFactory;
+import src.Model;
+import src.Referee;
 
 public class AddMatch extends AppCompatActivity {
 
     Client client;
     JsonMessageFactory messageFactory;
+    Model model;
+    Referee referee;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,16 +29,21 @@ public class AddMatch extends AppCompatActivity {
         client = ((App) getApplication()).getClient();
 
         messageFactory = JsonMessageFactory.getInstance();
+        model = client.getModel();
+        try {
+            referee = model.getReferee();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void addMatchRefereeScreen(View view) throws JSONException {
         TextInputEditText player1edit = (TextInputEditText)this.findViewById(R.id.winner_input_edit);
         TextInputEditText player2edit = (TextInputEditText)this.findViewById(R.id.loser_input_edit);
-        String player1Username = String.valueOf(player1edit.getText());
-        String player2Username = String.valueOf(player2edit.getText());
-        String refereeUsername = client.getModel().getUsername();
-        JSONObject entryMessage = messageFactory.encodeEntryMessage(refereeUsername, player1Username, player2Username);
-        Util.sendThreadedmessage(client, entryMessage);
+        String winner = String.valueOf(player1edit.getText());
+        String loser = String.valueOf(player2edit.getText());
+        String refereeKey = client.getModel().getPublicKey();
+        referee.createEntry(winner, loser, refereeKey);
         finish();
     }
 }

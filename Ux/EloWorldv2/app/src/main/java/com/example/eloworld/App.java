@@ -15,7 +15,7 @@ import src.Client;
 
 public class App extends Application {
     Client client = new Client();
-
+    public int currentBlockSelected = 0;
     public App() throws IOException {
     }
 
@@ -26,4 +26,12 @@ public class App extends Application {
     }
 
     public Client getClient() {return client;}
+
+    public int getCurrentBlockSelected() {
+        return currentBlockSelected;
+    }
+
+    public void setCurrentBlockSelected(int newBlockSelected) {
+        currentBlockSelected = newBlockSelected;
+    }
 }

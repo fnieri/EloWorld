@@ -33,7 +33,7 @@ class Server {
                         .getHostAddress());
 
                 // create a new thread object
-                ClientHandler clientSock = new ClientHandler(client, connectedClients, receivedBlockChains);
+                ClientHandler clientSock = new ClientHandler(client, connectedClients, 0, receivedBlockChains);
 
                 connectedClients.add(clientSock);
 

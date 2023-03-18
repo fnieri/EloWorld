@@ -23,4 +23,6 @@ public class JsonStrings {
     public static String REFEREE_USERNAME = "referee_username";
     public static String PLAYER_1_USERNAME = "player_1_username";
     public static String PLAYER_2_USERNAME = "player_2_username";
+    public static String WINNER = "winner";
+    public static String LOSER = "loser";
 }

@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,8 +50,8 @@ public class BlockChain {
             }
 
             numEntries += currBlock.getScore();
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + util.SUFFIX);
 
-            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
         }
         return numEntries;
     }
@@ -134,8 +135,9 @@ public class BlockChain {
 
         // Write new Block as .json file
 
-        String filename = util.getPathToBlockChain() + id + util.SUFFIX;
-
+        String filename = util.getPathToBlockChain() + File.separator + id + util.SUFFIX;
+        System.out.println(filename);
+        System.out.println("newblick");
         try (FileWriter file = new FileWriter(filename)) {
             file.write(futureBlock.toString());
         } catch (IOException e) {
@@ -158,6 +160,10 @@ public class BlockChain {
         }
 
 
+    }
+
+    public int size() {
+        return blockCount;
     }
 
 }

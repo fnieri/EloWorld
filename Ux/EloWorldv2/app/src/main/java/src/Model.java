@@ -1,6 +1,7 @@
 package src;
 
 import android.content.Context;
+import android.icu.lang.UScript;
 
 import org.json.JSONException;
 
@@ -63,10 +64,12 @@ public class Model extends Subject {
         setFriendList(friends);
         setRole(role);
         setELO(elo);
+        setReferee();
         setRefereeScore(refereeScore);
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
         setLeaderboard(leaderboard);
+        isLoggedIn = true;
         isSetUp = true;
     }
     /**
@@ -77,14 +80,11 @@ public class Model extends Subject {
         setMemberSince(null);
         setELO(util.BASE_ELO);
         setRefereeScore(0);
+        referee = null;
         clearFriends();
         isLoggedIn = false;
         isSetUp = false;
         setRole(UserRoles.NOT_LOGGED_IN);
-    }
-
-    public void mainActivitySetup(Context context) throws JSONException {
-        if (role == UserRoles.REFEREE) setReferee();
     }
 
     public Referee getReferee() throws  JSONException {
@@ -96,9 +96,8 @@ public class Model extends Subject {
         if (getRole() == UserRoles.REFEREE) referee = new Referee(publicKey);
     }
 
-    public void addFriend(String friend) throws IllegalArgumentException {
-        if (friends.contains(friend)) throw new IllegalArgumentException("Friend is already in friends");
-        friends.add(friend);
+    public void addFriend(String friend) {
+        if (!friends.contains(friend)) friends.add(friend);
     }
 
     public void removeFriend(String friend) {
@@ -109,8 +108,9 @@ public class Model extends Subject {
 
     public void clearFriends() {friends.clear();}
 
-    public int getRefereeScore() {
-        return refereeScore;
+    public int getRefereeScore() throws JSONException {
+        if (role == UserRoles.REFEREE) return referee.getRefereeScore();
+        else return 0;
     }
 
     public void setRefereeScore(int newScore) {
