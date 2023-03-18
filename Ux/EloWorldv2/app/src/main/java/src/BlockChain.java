@@ -1,9 +1,10 @@
-package src; /**
+/**
  * Blockchain Class tasked to parse blocks from db/json and query data from it and add blocks to the blockchain
  * Author : Merian Emile
  * Date 19/02/2023
  */
 
+package src;
 import src.Exceptions.UserNotInEntry;
 
 import org.json.JSONArray;
@@ -111,7 +112,7 @@ public class BlockChain {
     /**
      * creates a new block from a list of entries and add it to the blockchain
      *
-     * @param entries
+     * @param entries add a block
      */
     public void addBlock(ArrayList<BlockEntry> entries) throws JSONException {
         JSONObject futureBlock = new JSONObject();
