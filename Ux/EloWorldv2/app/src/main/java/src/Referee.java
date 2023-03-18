@@ -77,18 +77,15 @@ public class Referee extends User implements Serializable {
     /**
      * Create an entry to store in a local JSON file
      *
-     * @param eloPlayer1   Updated elo of the first player of the match
-     * @param eloPlayer2   Updated elo of the second player of the match
-     * @param playerOneKey First player username
-     * @param playerTwoKey Second player username
+     * @param winner   The winner's username
+     * @param loser The loser's username
+     * @param refereeKey The referee's public key
      */
-    public void createEntry(int eloPlayer1, String playerOneKey, int eloPlayer2, String playerTwoKey, String refereeKey) throws JSONException {
+    public void createEntry(String winner, String loser, String refereeKey) throws JSONException {
         JSONObject entry = new JSONObject();
-        // winnerUsername, loserUsername, timestamp, refereeKey
-        entry.put(JsonStrings.PLAYER_1_ELO, eloPlayer1);
-        entry.put(JsonStrings.PLAYER_2_ELO, eloPlayer2);
-        entry.put(JsonStrings.PLAYER_1_KEY, playerOneKey);
-        entry.put(JsonStrings.PLAYER_2_KEY, playerTwoKey);
+
+        entry.put(JsonStrings.WINNER, winner);
+        entry.put(JsonStrings.LOSER, loser);
         entry.put(JsonStrings.REFEREE_KEY, refereeKey);
         entry.put(JsonStrings.REFEREE_SCORE, getRefereeScore());
         entry.put(JsonStrings.TIMESTAMP, String.valueOf(LocalTime.now()));

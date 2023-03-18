@@ -58,10 +58,8 @@ public class BlockParser {
                 entry.getString(JsonStrings.TIMESTAMP),
                 entry.getString(JsonStrings.REFEREE_KEY),
                 entry.getInt(JsonStrings.REFEREE_SCORE),
-                entry.getString(JsonStrings.PLAYER_1_KEY),
-                entry.getInt(JsonStrings.PLAYER_1_ELO),
-                entry.getString(JsonStrings.PLAYER_2_KEY),
-                entry.getInt(JsonStrings.PLAYER_2_ELO)
+                entry.getString(JsonStrings.WINNER),
+                entry.getString(JsonStrings.LOSER)
         );
     }
 

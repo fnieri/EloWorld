@@ -42,6 +42,7 @@ public class SignIn extends AppCompatActivity {
         TextInputEditText usernameField = (TextInputEditText)this.findViewById(R.id.username_input_edit);
         Intrinsics.checkNotNullExpressionValue(usernameField, "usernameField");
         String username = String.valueOf(usernameField.getText());
+
         TextInputEditText passwordField = (TextInputEditText)this.findViewById(R.id.password_input_edit);
         Intrinsics.checkNotNullExpressionValue(passwordField, "passwordField");
         String password = String.valueOf(passwordField.getText());

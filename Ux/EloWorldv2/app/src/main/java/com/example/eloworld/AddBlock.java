@@ -44,15 +44,6 @@ public class AddBlock extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-
-        try {
-            referee.createEntry(1500, "fnieri", 1500, "emile", model.getPublicKey());
-            referee.createEntry(1501, "fnieri", 1500, "emile", model.getPublicKey());
-            referee.createEntry(1502, "fnieri", 1500, "emile", model.getPublicKey());
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
         ListView entriesListView = this.findViewById(R.id.entries);
         setUpDisplayEntries(entriesListView);
 

@@ -81,14 +81,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
-
     public void logOut(View v) throws JSONException {
         System.out.println("LOG OUT");
         if (model != null) model.logsOut();
+        finish();
         Util.changeLayout(this, SignIn.class);
     }
 
-    public void addMatch(View v) {
+    public void addMatch(View view) {
         Util.changeLayout(this, AddMatch.class);
     }
 

@@ -2,6 +2,7 @@ package com.example.eloworld.ui.profile;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class ProfileFragment extends Fragment {
     TextView refereeRatingScore;
     Model model;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
@@ -47,41 +49,20 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
         model = client.getModel();
 
-        //Bind texts to model to be dynamically updated
-        final TextView username = binding.profileUsername;
-        final TextView memberSince = binding.memberSince;
-        final TextView ELO = binding.playerELORating;
-        final TextView refereeScore = binding.playerRefereeRating;
-        final TextView publicKey = binding.publicKey;
-
-        String mUsername = model.getUsername();
-        int mElo = model.getELO();
-        int mRefereeScore = 0;
-        try {
-            mRefereeScore = model.getRefereeScore();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        String mPublicKey = model.getPublicKey();
-        String mMemberSince = model.getMemberSince();
-
-
-        profileViewModel.setUsername(mUsername);
-        profileViewModel.setRefereeELO(mRefereeScore);
-        profileViewModel.setELO(mElo);
-        profileViewModel.setPublicKey(mPublicKey);
-        profileViewModel.setMemberSince(mMemberSince);
-
-        profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
-        profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
-        profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
-        profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
-        profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
-
+        showClientInformation();
+        removeRefereeInterface(model, root);
 
         return root;
     }
+    @Override
+    public void onResume() {
+        client = ((App) requireActivity().getApplication()).getClient();
+        model = client.getModel();
 
+        showClientInformation();
+
+        super.onResume();
+    }
     /**
      * Remove buttons and text from view that don't need to be shown if it's not a referee
      * @param model model
@@ -109,4 +90,37 @@ public class ProfileFragment extends Fragment {
         profileViewModel.setELO(newELO);
     }
 
+    public void showClientInformation() {
+        //Bind texts to model to be dynamically updated
+        final TextView username = binding.profileUsername;
+        final TextView memberSince = binding.memberSince;
+        final TextView ELO = binding.playerELORating;
+        final TextView refereeScore = binding.playerRefereeRating;
+        final TextView publicKey = binding.publicKey;
+
+        String mUsername = model.getUsername();
+        int mElo = model.getELO();
+        int mRefereeScore = 0;
+        try {
+            mRefereeScore = model.getRefereeScore();
+        } catch (JSONException e) {
+        }
+        String mPublicKey = model.getPublicKey();
+        String mMemberSince = model.getMemberSince();
+
+
+        profileViewModel.setUsername(mUsername);
+        profileViewModel.setRefereeELO(mRefereeScore);
+        profileViewModel.setELO(mElo);
+        profileViewModel.setPublicKey(mPublicKey);
+        profileViewModel.setMemberSince(mMemberSince);
+
+        profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
+        profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
+        profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
+        profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
+        profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
+
+
+    }
 }
