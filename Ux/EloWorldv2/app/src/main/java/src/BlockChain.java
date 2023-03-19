@@ -56,6 +56,22 @@ public class BlockChain {
         return numEntries;
     }
 
+    public JSONObject getBlock(int index) throws Exception {
+        try {
+            Block currBlock = lastBlock;
+            for (int i = 0; i < index; i++) {
+                if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
+                    throw new IndexOutOfBoundsException("Block index out of blockchain bounds !");
+                }
+                currBlock = new Block(currBlock.getPreviousBlockHash());
+            }
+            return currBlock.asJson();
+        } catch (IndexOutOfBoundsException e) {
+           System.out.println(e.getMessage());
+           return null;
+        }
+    }
+
     /**
      * formats the blockchain into a leaderboard listing all players and their most recent ELO recorded in the blockchain.
      *
@@ -98,7 +114,6 @@ public class BlockChain {
         return matches;
     }
 
-
     /**
      * creates a new block from a list of entries and add it to the blockchain
      *
@@ -127,12 +142,9 @@ public class BlockChain {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // Update with new information
         lastBlock = util.convertJsonFileToBlock(id + util.SUFFIX);
         blockCount = block_no;
-
-
         JSONObject updateHead = new JSONObject();
         updateHead.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
         updateHead.put(JsonStrings.BLOCK_NO, blockCount);
@@ -142,7 +154,6 @@ public class BlockChain {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public int size() {
