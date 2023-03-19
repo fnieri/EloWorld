@@ -22,18 +22,19 @@ public class ClientHandler extends Thread {
     private final Socket clientSocket;
     ArrayList<ClientHandler> allClients;
 
-    ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
-    int blockCount;
+    ArrayList<JSONObject> receivedBlockChains;
+    JSONObject leaderBoard;
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
     //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, ArrayList<JSONObject> receivedBlockChains) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, ArrayList<JSONObject> receivedBlockChains, JSONObject leaderBoard) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
         this.receivedBlockChains = receivedBlockChains;
+        this.leaderBoard = leaderBoard;
     }
 
     public void run() {
@@ -90,6 +91,8 @@ public class ClientHandler extends Thread {
             blockHandler();}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             receivedBlockChains.add(jsonMessage);}
+        else if (Objects.equals(domain, Domain.LEADERBOARD.serialized())) {
+            }
         else if (Objects.equals(domain, Domain.CHECK_ENTRY.serialized())) {checkEntryValidity(jsonMessage);}
     }
 

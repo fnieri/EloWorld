@@ -12,6 +12,7 @@ class Server {
         ServerSocket server = null;
         ArrayList<ClientHandler> connectedClients = new ArrayList<>();
         ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
+        JSONObject leaderBoard = new JSONObject();
 
         try {
             // server is listening on port 8080
@@ -33,7 +34,7 @@ class Server {
                         .getHostAddress());
 
                 // create a new thread object
-                ClientHandler clientSock = new ClientHandler(client, connectedClients, receivedBlockChains);
+                ClientHandler clientSock = new ClientHandler(client, connectedClients, receivedBlockChains, leaderBoard);
 
                 connectedClients.add(clientSock);
 
