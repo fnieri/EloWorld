@@ -76,6 +76,7 @@ public class Model extends Subject {
      * Method called upon log out, clear all attributes
      */
     public void logsOut() {
+        System.out.println("was oaessirt");
         setUsername(null);
         setMemberSince(null);
         setELO(util.BASE_ELO);
@@ -144,7 +145,9 @@ public class Model extends Subject {
     public void setRole(UserRoles newRole) {
         role = newRole;
     }
-
+    public void createEntry(String winner, String loser) throws JSONException {
+        if (role == UserRoles.REFEREE) referee.createEntry(winner, loser, getPublicKey());
+    }
     public boolean isLoggedIn() {
         return isLoggedIn;
     }

@@ -54,15 +54,7 @@ public class ProfileFragment extends Fragment {
 
         return root;
     }
-    @Override
-    public void onResume() {
-        client = ((App) requireActivity().getApplication()).getClient();
-        model = client.getModel();
 
-        showClientInformation();
-
-        super.onResume();
-    }
     /**
      * Remove buttons and text from view that don't need to be shown if it's not a referee
      * @param model model
@@ -73,8 +65,8 @@ public class ProfileFragment extends Fragment {
             //Remove the button if it's not a referee
             addMatchBtn = (Button) root.findViewById(R.id.AddMatch);
             addMatchBtn.setVisibility(View.GONE);
-            refereeRatingText = (TextView) root.findViewById(R.id.profileRefereeText);
-            refereeRatingScore = (TextView) root.findViewById(R.id.playerRefereeRating);
+            refereeRatingText = root.findViewById(R.id.profileRefereeText);
+            refereeRatingScore = root.findViewById(R.id.playerRefereeRating);
             refereeRatingText.setVisibility(View.GONE);
             refereeRatingScore.setVisibility(View.GONE);
         }

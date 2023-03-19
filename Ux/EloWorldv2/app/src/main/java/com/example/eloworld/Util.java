@@ -12,6 +12,7 @@ public class Util {
 
     public static void changeLayout(Context caller, Class newScreen) {
         Intent intent = new Intent(caller, newScreen);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         caller.startActivity(intent);
     }
 

@@ -1,6 +1,8 @@
 package com.example.eloworld;
 
+import android.icu.text.SymbolTable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +31,17 @@ public class SignIn extends AppCompatActivity {
         messageFactory = JsonMessageFactory.getInstance();
         new Thread(this::changeLayoutOnSignIn).start();
 
+        Log.e("TAG", "crtea");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("TAG", "resyme");
+        client = ((App) getApplication()).getClient();
+        messageFactory = JsonMessageFactory.getInstance();
+        new Thread(this::changeLayoutOnSignIn).start();
+    }
 
     public void changeLayout_SI(View v) {
 
@@ -56,6 +67,7 @@ public class SignIn extends AppCompatActivity {
      public void changeLayoutOnSignIn() {
         for (;;) {
             if (Util.changeLayoutOnLogIn(this, client)) {
+                System.out.println("ASDA");
                 break;
             }
         }

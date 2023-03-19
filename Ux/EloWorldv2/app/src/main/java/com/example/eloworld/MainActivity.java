@@ -23,6 +23,7 @@ import com.example.eloworld.databinding.ActivityMainBinding;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.Permission;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,13 +80,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-    }
-
-    public void logOut(View v) throws JSONException {
-        System.out.println("LOG OUT");
-        if (model != null) model.logsOut();
-        finish();
-        Util.changeLayout(this, SignIn.class);
     }
 
     public void addMatch(View view) {

@@ -39,7 +39,7 @@
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/green"
         android:onClick="addFriendSocial"
-        android:text="Manage your friends"
+        android:text="Ajoutez ou supprimez vos amis"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,12 +54,11 @@
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/teal_200"
         android:onClick="addBlockSocial"
-        android:text="Add a block"
+        android:text="Ajoutez un bloc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_friend_btn_social"
-        tools:ignore="MissingConstraints"
-       />
+        tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/view_blockchain"
@@ -70,7 +69,7 @@
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/teal_700"
         android:onClick="viewBlockchain"
-        android:text="View the blockchain"
+        android:text="Regardez la blockchain"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

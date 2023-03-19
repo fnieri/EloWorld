@@ -37,7 +37,7 @@ public class SocialFragment extends Fragment {
     List<String> displayLeaderboard = new ArrayList<>();
     Model model;
     Button addBlockBtn;
-
+    Button viewBlokchainBtn;
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
         SocialViewModel socialViewModel =
@@ -53,26 +53,16 @@ public class SocialFragment extends Fragment {
         ListView friendsListView = binding.friendsListView;
         setUpFriends(friendsListView, model);
 
-       // removeRefereeInterface(model, root);
+        removeRefereeInterface(model, root);
 
 
         return root;
-    }
-
-    public void removeRefereeInterface(Model model, View root) {
-        if (model.getRole() != UserRoles.REFEREE) {
-            //Remove the button if it's not a referee
-            addBlockBtn = (Button) root.findViewById(R.id.add_block_btn_social);
-            addBlockBtn.setVisibility(View.GONE);
-        }
     }
 
     public void setUpLeaderboard(ListView leaderboardListView, Model model) {
 
         leaderboard = model.getLeaderboard();
         displayLeaderboard.add("EloWorld Leaderboard:");
-        System.out.println(leaderboard);
-        System.out.println("this it it");
         for (Map.Entry<Integer, Map.Entry<String, Integer>> playerEntry: leaderboard) {
             int position = playerEntry.getKey();
             String playerUsername = playerEntry.getValue().getKey();
@@ -87,7 +77,7 @@ public class SocialFragment extends Fragment {
     public void setUpFriends(ListView friendsListView, Model model) {
         friends = model.getFriends();
         List<String> displayFriends = new ArrayList<>(friends);
-        displayFriends.add(0, "EloWorld friends:");
+        displayFriends.add(0, "Vos amis:");
 
         ArrayAdapter<String> friendsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1, displayFriends);
         friendsListView.setAdapter(friendsAdapter);
@@ -107,5 +97,15 @@ public class SocialFragment extends Fragment {
     }
 
     public void viewBlockchain(View view) {
+    }
+
+    public void removeRefereeInterface(Model model, View root) {
+        if (model.getRole() != UserRoles.REFEREE) {
+            //Remove the button if it's not a referee
+            addBlockBtn = (Button) root.findViewById(R.id.add_block_btn_social);
+            addBlockBtn.setVisibility(View.GONE);
+            viewBlokchainBtn = root.findViewById(R.id.view_blockchain);
+            viewBlokchainBtn.setVisibility(View.GONE);
+        }
     }
 }

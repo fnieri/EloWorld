@@ -29,7 +29,7 @@ public class AddFriend extends AppCompatActivity {
     }
 
     public void addFriend(View view) throws JSONException {
-        String friendUsername = getFriendUsername(view);
+        String friendUsername = getFriendUsername();
         Model model = client.getModel();
         String sender = model.getUsername();
         JSONObject friendMessage = messageFactory.friendMessage(sender, friendUsername, FriendReqActions.FOLLOW_FRIEND);
@@ -39,7 +39,7 @@ public class AddFriend extends AppCompatActivity {
     }
 
     public void removeFriend(View view) throws JSONException {
-        String friendUsername = getFriendUsername(view);
+        String friendUsername = getFriendUsername();
         Model model = client.getModel();
         String sender = model.getUsername();
         JSONObject friendMessage = messageFactory.friendMessage(sender, friendUsername, FriendReqActions.REMOVE_FRIEND);
@@ -47,7 +47,7 @@ public class AddFriend extends AppCompatActivity {
         finish();
     }
 
-    public String getFriendUsername(View view) throws JSONException {
+    public String getFriendUsername() throws JSONException {
         TextInputEditText friendToAdd = (TextInputEditText) this.findViewById(R.id.friend_input_edit);
         return  String.valueOf(friendToAdd.getText());
     }

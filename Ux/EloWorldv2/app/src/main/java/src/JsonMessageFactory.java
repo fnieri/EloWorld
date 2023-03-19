@@ -82,14 +82,12 @@ public class JsonMessageFactory {
     }
 
 
-
-    public JSONObject encodeEntryMessage(String refereeUsername, String player1Username, String player2Username ) throws JSONException {
+    public JSONObject encodeEntryMessage(String winner, String loser) throws JSONException {
         JSONObject messageJson = new JSONObject();
-        messageJson.put(MessageStrings.DOMAIN, Domain.ENTRY.serialized());
+        messageJson.put(MessageStrings.DOMAIN, Domain.CHECK_ENTRY.serialized());
         messageJson.put(MessageStrings.ACTION, MessageStrings.SEND_ENTRY);
-        messageJson.put(JsonStrings.REFEREE_USERNAME, refereeUsername);
-        messageJson.put(JsonStrings.PLAYER_1_USERNAME, player1Username);
-        messageJson.put(JsonStrings.PLAYER_2_USERNAME, player2Username);
+        messageJson.put(JsonStrings.WINNER, winner);
+        messageJson.put(JsonStrings.LOSER, loser);
         return messageJson;
     }
 

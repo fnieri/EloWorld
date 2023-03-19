@@ -98,24 +98,6 @@ public class BlockChain {
         return matches;
     }
 
-    @NonNull
-    private Stack<String[]> getMatchHistory(String playerKey) throws JSONException {
-        Block currBlock = lastBlock;
-        Stack<String[]> matches = new Stack<>();
-        boolean endNotReached = true;
-        while (endNotReached) {
-            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
-                endNotReached = false;
-            }
-            for (BlockEntry entry: currBlock.getEntries()) {
-                if (entry.getPlayers().contains(playerKey)) {
-                    matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
-                }
-            }
-            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
-        }
-        return matches;
-    }
 
     /**
      * creates a new block from a list of entries and add it to the blockchain

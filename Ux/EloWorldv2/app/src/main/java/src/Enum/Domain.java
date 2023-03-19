@@ -4,6 +4,7 @@ public enum Domain {
     AUTH,
     FRIEND,
     ENTRY,
+    CHECK_ENTRY,
     FETCH,
     BLOCKCHAIN,
     RESOURCE;
@@ -13,6 +14,7 @@ public enum Domain {
             case AUTH -> "auth";
             case FRIEND -> "friend";
             case ENTRY -> "entry";
+            case CHECK_ENTRY -> "check_entry";
             case RESOURCE -> "resource";
             case FETCH -> "fetch";
             case BLOCKCHAIN -> "blockchain";

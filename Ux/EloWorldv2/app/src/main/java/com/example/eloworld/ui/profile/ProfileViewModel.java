@@ -33,6 +33,6 @@ public class ProfileViewModel extends ViewModel {
     public void setUsername(String newUsername) {username.setValue(newUsername);}
     public void setELO(int newELO) {ELO.setValue(String.valueOf(newELO));}
     public void setRefereeELO(int newELO) {refereeELO.setValue(String.valueOf(newELO));}
-    public void setMemberSince(String newMemberSince) {memberSince.setValue("Member since " + newMemberSince);}
+    public void setMemberSince(String newMemberSince) {memberSince.setValue("Membre depuis " + newMemberSince);}
     public void setPublicKey(String newPublicKey) {publicKey.setValue(newPublicKey);}
 }

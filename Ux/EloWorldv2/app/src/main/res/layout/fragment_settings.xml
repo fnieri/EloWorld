@@ -6,18 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.settings.SettingsFragment">
 
-    <!-- Sign up button-->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/logOut"
-        android:layout_width="311dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="64dp"
-        android:background="@drawable/rounder_corner"
-        android:backgroundTint="@color/red_400"
-        android:onClick="logOut"
-        android:text="Log out"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="0dp" />
 
+    <ImageView
+        android:id="@+id/logo2"
+        android:layout_width="108dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/blocklogo_11" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="333dp"
+        android:layout_height="484dp"
+        android:layout_marginBottom="92dp"
+        android:fontFamily="monospace"
+        android:text="EloWorld est une application pour la gestion d'un tournoi pour un jeu quelconque. Vous, les joueurs, etes classés par une métrique appeléé ELO. Ce score est ajusté après chaque compétition pour tenir compte des rèsultats de chacun : un joueur ayant eu de bonnes performances lors du tournoi gagnera des points tandis qu’un autre ayant contre-performé en perdra. Le calcul des points est laissé à notre discretion. Cette application nous permet de garder un registre partagé parmi les joueurs et les arbitres, nous permettons de décentraliser la gestion du tournoi."
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

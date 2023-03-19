@@ -34,7 +34,7 @@ public class Referee extends User implements Serializable {
         File blockchainFile = new File(blockchainPath); //+ Util.BLOCKCHAIN_HEAD);
 
         // create Blockchain directory
-       // if (!blockchainFile.exists()) { //|| blockchainFile.isDirectory()) {
+        if (!blockchainFile.exists()) { //|| blockchainFile.isDirectory()) {
             blockchainFile.mkdirs();
             // Head file
             JSONObject head = new JSONObject();
@@ -49,7 +49,7 @@ public class Referee extends User implements Serializable {
             firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
             firstBlock.put(JsonStrings.ENTRIES, new JSONArray());
             util.writeJSONFile(firstBlock.toString(), blockchainPath + "/" + util.FIRST_BLOCK + util.SUFFIX);
-     //   }
+        }
         this.blockchain = new BlockChain();
 
         String entriesPath = util.PATH_TO_ENTRIES_FOLDER;
