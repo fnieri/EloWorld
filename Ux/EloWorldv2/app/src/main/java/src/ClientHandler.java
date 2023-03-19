@@ -193,10 +193,8 @@ public class ClientHandler extends Thread {
     public void blockHandler() throws JSONException {
         sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
         Timer t = new Timer();
-        getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
+        getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains, this);
         t.schedule(bestBlockchain, 10000);
-        sendMessage(JsonMessageFactory.getInstance().
-                sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
     }
 
     public String getActionFromMessage(JSONObject jsonMessage) throws JSONException {
@@ -215,10 +213,13 @@ public class ClientHandler extends Thread {
 
     static class getBestBlockchain extends TimerTask {
         ArrayList<JSONObject> challengers;
+
+        ClientHandler clientHandler;
         int currBestScore = 0;
         JSONObject champion = null;
-        public getBestBlockchain(ArrayList<JSONObject> challengerList){
-            challengers = challengerList;
+        public getBestBlockchain(ArrayList<JSONObject> challengerList, ClientHandler clientHandler){
+            this.challengers = challengerList;
+            this.clientHandler = clientHandler;
         }
         public void tournament() throws JSONException {
             for (JSONObject challenger : challengers) {
@@ -228,9 +229,12 @@ public class ClientHandler extends Thread {
                 }
             }
         }
+
         public void run() {
             try {
                 tournament();
+                clientHandler.sendMessage(JsonMessageFactory.getInstance().
+                                sendBlockchainScoreToServer(this.currBestScore, this.champion));
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
