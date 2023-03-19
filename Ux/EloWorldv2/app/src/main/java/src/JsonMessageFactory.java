@@ -105,5 +105,12 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
+    public JSONObject sendLeaderBoardToServer(BlockChain blockchain) throws Exception {
+        JSONObject messageJson = new JSONObject();
+        JSONObject leaderBoard = blockchain.getLeaderboard();
+        messageJson.put(MessageStrings.DOMAIN, Domain.LEADERBOARD.serialized());
+        messageJson.put(MessageStrings.LEADERBOARD, leaderBoard);
+        return messageJson;
+    }
 
 }
