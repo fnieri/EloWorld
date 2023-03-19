@@ -104,9 +104,8 @@ public class Driver {
 
         if (!nameExists(username)) {
             int newId = assignId();
-            System.out.println(username + password + memberDate + publicKey + privateKey);
             Statement statement = connection.createStatement();
-            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `publicKey`, `privateKey`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql("public") + stringToSql("private") + ")" + ";";
+            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `publicKey`, `privateKey`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql(publicKey) + stringToSql(privateKey) + ")" + ";";
             statement.executeUpdate(addUserQuery);
             addRole(newId);
         }

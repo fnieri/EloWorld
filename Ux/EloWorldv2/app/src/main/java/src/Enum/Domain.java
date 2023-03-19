@@ -7,7 +7,8 @@ public enum Domain {
     CHECK_ENTRY,
     FETCH,
     BLOCKCHAIN,
-    RESOURCE;
+    RESOURCE,
+    LEADERBOARD;
 
     public String serialized() {
         return switch (this) {
@@ -18,6 +19,7 @@ public enum Domain {
             case RESOURCE -> "resource";
             case FETCH -> "fetch";
             case BLOCKCHAIN -> "blockchain";
+            case LEADERBOARD -> "leaderboard";
         };
     }
 }
