@@ -191,9 +191,8 @@ public class ClientHandler extends Thread {
         sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
         Timer t = new Timer();
         getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
-        Date now = new Date();
         t.schedule(bestBlockchain, 10000);
-        sendMessageToAllUsers(JsonMessageFactory.getInstance().
+        sendMessage(JsonMessageFactory.getInstance().
                 sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
     }
 
