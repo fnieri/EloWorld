@@ -67,7 +67,6 @@ public class SignIn extends AppCompatActivity {
      public void changeLayoutOnSignIn() {
         for (;;) {
             if (Util.changeLayoutOnLogIn(this, client)) {
-                System.out.println("ASDA");
                 break;
             }
         }

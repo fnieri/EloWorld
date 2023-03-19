@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import src.Enum.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,7 +22,7 @@ public class Controller {
     }
     public Model getModel() {return model;}
 
-    public void parseRequest(String request) throws JSONException {
+    public void parseRequest(String request) throws JSONException, IOException {
         JSONObject jsonReq;
         try {
             jsonReq = new JSONObject(request);
@@ -92,9 +93,7 @@ public class Controller {
         if (Objects.equals(serializedRole, UserRoles.USER.serialized())) { role = UserRoles.USER;}
         else if (Objects.equals(serializedRole, UserRoles.REFEREE.serialized())) { role = UserRoles.REFEREE;}
         else if (Objects.equals(serializedRole, UserRoles.SUPER_USER.serialized())) { role = UserRoles.SUPER_USER;}
-        System.out.println(role.serialized());
 
-        System.out.println(leaderboard);
         model.setUp(memberSince, friendsList, role, elo, refereeScore, publicKey, privateKey, leaderboard);
     }
 
@@ -103,6 +102,7 @@ public class Controller {
             Referee ref = model.getReferee();
             int blockchainScore = ref.getRefereeScore();
             JSONObject blockchain = ref.getBlockchain();
+
             JSONObject message = jsonFactory.sendBlockchainScoreToServer(blockchainScore, blockchain);
             client.sendMessage(message);
         }
@@ -114,7 +114,7 @@ public class Controller {
         model.createEntry(winner, loser);
     }
 
-    public void processBlock(JSONObject jsonReq) throws JSONException {
+    public void processBlock(JSONObject jsonReq) throws JSONException, IOException {
         if (model.getRole() == UserRoles.REFEREE) {
             Referee referee = model.getReferee();
             referee.setBlockchain(jsonReq);

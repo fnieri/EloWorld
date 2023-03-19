@@ -55,7 +55,6 @@ public class Model extends Subject {
     public void logsIn(String username) throws IllegalArgumentException {
         isLoggedIn = true;
         setUsername(username);
-        System.out.println("I am in");
     }
 
 

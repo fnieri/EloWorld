@@ -29,7 +29,7 @@ public class BlockChain {
     public BlockChain() throws JSONException {
 
         JSONObject jsonData = util.convertJsonFileToJSONObject(util.BLOCKCHAIN_HEAD + util.SUFFIX);
-        this.lastBlock = util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK));
+        this.lastBlock = util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK) + util.SUFFIX);
         blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }
 
@@ -135,8 +135,6 @@ public class BlockChain {
         futureBlock.put(JsonStrings.ENTRIES, jsonEntries);
         // Write new Block as .json file
         String filename = util.getPathToBlockChain() + File.separator + id + util.SUFFIX;
-        System.out.println(filename);
-        System.out.println("newblick");
         try (FileWriter file = new FileWriter(filename)) {
             file.write(futureBlock.toString());
         } catch (IOException e) {

@@ -22,6 +22,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        getExternalFilesDir(null);getExternalFilesDir(null);
         new Thread(() -> client.main()).start();
     }
 

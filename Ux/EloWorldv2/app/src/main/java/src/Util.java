@@ -56,6 +56,7 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * This Utility method is used to read .json files of the blockchain
      * @param filename : name of the .json file in the blockchain folder to read
@@ -64,6 +65,7 @@ public class Util {
     public  Block convertJsonFileToBlock(String filename) throws JSONException {
         return new Block(convertJsonFileToString(filename));
     }
+
     /**
      * This Utility method is used to read .json files of the blockchain
      * @param filename : name of the .json file in the blockchain folder to read
@@ -79,9 +81,13 @@ public class Util {
      * @param path path where the file will be written
      */
     public  void writeJSONFile(String content, String path) {
+        System.out.println(path);
+        File f = new File(path);
+        System.out.println(f.listFiles());
         try (FileWriter file = new FileWriter(path, false)) {
             file.write(content);
         } catch (IOException e) {
+            System.out.println("aaaaaaaaa");
             e.printStackTrace();
         }
     }

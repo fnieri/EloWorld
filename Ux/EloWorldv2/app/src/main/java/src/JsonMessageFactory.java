@@ -97,6 +97,12 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
+    public JSONObject sendBlockAdded() throws JSONException {
+        JSONObject messageJson = new JSONObject();
+        messageJson.put(MessageStrings.DOMAIN, Domain.BLOCK.serialized());
+        return messageJson;
+    }
+
     public JSONObject sendBlockchainScoreToServer(int blockchainScore, JSONObject blockchain) throws JSONException {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.BLOCKCHAIN.serialized());

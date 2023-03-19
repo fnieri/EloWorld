@@ -73,6 +73,6 @@ public class BlockEntry implements Serializable {
 
     @NonNull
     public String toString() {
-        return "Gagnant: " + winner + " / " + "Perdant" + loser;
+        return "Gagnant: " + winner + " / " + "Perdant: " + loser;
     }
 }
