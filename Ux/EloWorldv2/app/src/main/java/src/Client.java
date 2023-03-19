@@ -15,7 +15,6 @@ public class Client {
 
     PrintWriter out;
     BufferedReader in;
-    static User user = null;
     Socket socket;
     Model model = new Model();
     Controller controller = new Controller(model, this);
@@ -38,9 +37,9 @@ public class Client {
 
             // object of scanner class
             Scanner sc = new Scanner(System.in);
-            String packet = null;
+            String packet;
 
-            while ((packet = in.readLine()) != null) {
+            while (null != (packet = in.readLine())) {
                 controller.parseRequest(packet);
             }
 
