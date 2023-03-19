@@ -9,16 +9,15 @@ import java.lang.Math;
 
 public class ELOCalculator{
 
-    private final float[] startingELOs;
-    private final float[] transformedScores = new float[2];
-    private final float[] expectedScores = new float[2];
-    private final int[] finalELOs = new int[2];
+    private final double[] startingELOs;
+    private final double[] transformedScores = new double[2];
+    private final double[] expectedScores = new double[2];
+    private final double[] finalELOs = new double[2];
     private final boolean[] hasWon;
 
-    private final int KFactor = 32;
     private final int NoOfPlayers = 2;
 
-    public ELOCalculator(float[] startingELOs, boolean[] hasWon) throws Exception {
+    public ELOCalculator(double[] startingELOs, boolean[] hasWon) throws Exception {
         int ELOLength = startingELOs.length;
         int hasWonLength = hasWon.length;
         // Both arrays must be of size two
@@ -29,7 +28,7 @@ public class ELOCalculator{
     }
     
     private void calculateTransformedScore() {
-        float currentTransformedScore;
+        double currentTransformedScore;
         for (int player = 0; player < NoOfPlayers; player++) {
             currentTransformedScore = (float) Math.pow(10, ( (int) startingELOs[player] / 400.0));
             transformedScores[player] = currentTransformedScore;         
@@ -37,8 +36,8 @@ public class ELOCalculator{
     }
     
     private void calculateExpectedScore() {
-        float expectedDenumerator = transformedScores[0] + transformedScores[1];
-        float currentExpectedScore;
+        double expectedDenumerator = transformedScores[0] + transformedScores[1];
+        double currentExpectedScore;
         for (int player = 0; player < NoOfPlayers; player++) {
             currentExpectedScore = transformedScores[player] / expectedDenumerator;
             expectedScores[player] = currentExpectedScore;
@@ -46,16 +45,17 @@ public class ELOCalculator{
     } 
     
     private void calculateFinalELOs() {
-        float currentFinalELO;
+        double currentFinalELO;
         for (int player = 0; player < NoOfPlayers; player++) {
             int playerHasWon = hasWon[player] ? 1 : 0;
-            float KminusSpEp = KFactor * ((playerHasWon - expectedScores[player]));
+            int KFactor = 32;
+            double KminusSpEp = KFactor * ((playerHasWon - expectedScores[player]));
             currentFinalELO = startingELOs[player] + KminusSpEp;
             finalELOs[player] = (int) currentFinalELO;
         }
     }
         
-    public int[] calculateELOs() {
+    public double[] calculateELOs() {
         calculateTransformedScore();
         calculateExpectedScore();
         calculateFinalELOs();

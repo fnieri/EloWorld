@@ -101,7 +101,7 @@ public class Referee extends User implements Serializable {
      * @return JSONObject of the blockchain's leaderboard
      * @throws UserNotInEntry security layer to ensure they are correctly parsed in their entries
      */
-    public JSONObject getLeaderboard() throws UserNotInEntry, JSONException, UserNotInEntry {
+    public JSONObject getLeaderboard() throws Exception {
         return blockchain.getLeaderboard();
     }
 

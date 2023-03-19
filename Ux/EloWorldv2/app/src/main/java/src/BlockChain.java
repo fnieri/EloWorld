@@ -5,8 +5,7 @@
  */
 
 package src;
-import src.Exceptions.UserNotInEntry;
-
+import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Stack;
 
 
 public class BlockChain {
@@ -57,57 +57,64 @@ public class BlockChain {
     }
 
     /**
-     * return the ELO of the given username, or a default value if that player is not a part of the blockchain yet.
-     *
-     * @param userPublicKey name of the user we need to find the elo of
-     * @return player's elo found in the blockchain's most recent blocks or the base value if the player doesn't exist.
-     */
-    public int getELO(String userPublicKey) throws JSONException {
-        Block currBlock = lastBlock;
-        PlayerSearch playerELO;
-        boolean endNotReached = true;
-        while (endNotReached) {
-            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
-                endNotReached = false;
-            }
-
-            playerELO = currBlock.getELO(userPublicKey);
-            if (playerELO.found()) {return playerELO.ELO();}
-
-            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
-        }
-        return util.BASE_ELO;
-    }
-
-    /**
      * formats the blockchain into a leaderboard listing all players and their most recent ELO recorded in the blockchain.
      *
      * @return JSONObject format of a leaderboard parsed from the Blockchain
-     * @throws UserNotInEntry in case a player's name is incorrectly written in the files
      */
-    public JSONObject getLeaderboard() throws UserNotInEntry, JSONException {
-        Block currBlock = lastBlock;
+    public JSONObject getLeaderboard() throws Exception {
         JSONObject leaderboard = new JSONObject();
+        Stack<String[]> matches = getMatchHistory();
 
+        while (!matches.isEmpty()) {
+            String[] players = matches.pop();
+            for (String player: players) {
+                if (!leaderboard.has(player)) {
+                    leaderboard.put(player, util.BASE_ELO);
+                }
+                ELOCalculator eloCalculator = new ELOCalculator(new double[]{leaderboard.getDouble(players[0]), leaderboard.getDouble(players[1])}, new boolean[]{true, false});
+                double[] newElos = eloCalculator.calculateELOs();
+                leaderboard.put(players[0], newElos[0]);
+                leaderboard.put(players[1], newElos[1]);
+            }
+        }
+
+        return leaderboard;
+    }
+
+    @NonNull
+    private Stack<String[]> getMatchHistory() throws JSONException {
+        Block currBlock = lastBlock;
+        Stack<String[]> matches = new Stack<>();
         boolean endNotReached = true;
         while (endNotReached) {
             if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
                 endNotReached = false;
             }
-
             for (BlockEntry entry: currBlock.getEntries()) {
-                String[] players = {entry.player1PublicKey(), entry.player2PublicKey()};
-                for (String player: players) {
-                    if (!leaderboard.has(player)) {
-                        leaderboard.put(player, entry.getPlayerELO(player));
-                    }
+                matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
+            }
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+        }
+        return matches;
+    }
+
+    @NonNull
+    private Stack<String[]> getMatchHistory(String playerKey) throws JSONException {
+        Block currBlock = lastBlock;
+        Stack<String[]> matches = new Stack<>();
+        boolean endNotReached = true;
+        while (endNotReached) {
+            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
+                endNotReached = false;
+            }
+            for (BlockEntry entry: currBlock.getEntries()) {
+                if (entry.getPlayers().contains(playerKey)) {
+                    matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
                 }
             }
-
             currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
-
         }
-        return leaderboard;
+        return matches;
     }
 
     /**
@@ -118,23 +125,18 @@ public class BlockChain {
     public void addBlock(ArrayList<BlockEntry> entries) throws JSONException {
         JSONObject futureBlock = new JSONObject();
         int block_no = blockCount + 1;
-
         // block id
         String id = "Block" + block_no;
         futureBlock.put(JsonStrings.BLOCK_HASH, id);
-
         // previous_block id
         futureBlock.put(JsonStrings.PARENT_BLOCK_HASH, lastBlock.getBlockHash());
-
         // Entries
         JSONArray jsonEntries = new JSONArray();
         for (BlockEntry entry: entries) {
             jsonEntries.put(entry.asJson());
         }
         futureBlock.put(JsonStrings.ENTRIES, jsonEntries);
-
         // Write new Block as .json file
-
         String filename = util.getPathToBlockChain() + File.separator + id + util.SUFFIX;
         System.out.println(filename);
         System.out.println("newblick");
@@ -158,7 +160,6 @@ public class BlockChain {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 

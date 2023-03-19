@@ -100,24 +100,6 @@ class Block implements Serializable {
         return jsonArray;
     }
 
-    /**
-     * Find ELO of a player on the blocks entries using its public key
-     * @param userPublicKey Public key of a Player
-     * @return PlayerSearch : record indicating whether the Player was found among all entries along with its ELO, if the player was not found, return previousBlocksID
-     *
-     */
-    public PlayerSearch getELO(String userPublicKey) {
-        for (BlockEntry entry: entries) {
-            try {
-                int userELO = entry.getPlayerELO(userPublicKey);
-                return new PlayerSearch(true, userELO, "");
-            }
-            catch (UserNotInEntry ignored) {
-            }
-        }
-        return new PlayerSearch(false, 0, previousBlockHash);
-    }
-
     public int getScore() {
         return score;
     }

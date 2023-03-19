@@ -1,23 +1,17 @@
-package src;
 /**
  * Class representing an entry on a block in the entry section
  * Author: Francesco Nieri
  * Date: 17/02/2023
  */
 
-/**
- * Class representing an entry on a block in the entry section
- * Author: Francesco Nieri
- * Date: 17/02/2023
- */
+package src;
 
 import androidx.annotation.NonNull;
 
-import src.Exceptions.UserNotInEntry;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.Objects;
+
+import java.util.ArrayList;
 
 public class BlockEntry implements Serializable {
 
@@ -45,22 +39,6 @@ public class BlockEntry implements Serializable {
     }
 
     /**
-     * Returns the ELO of a searched player, if the public key of said player is in the current entry
-     *
-     * @param playerPublicKey Public key of currently sought player
-     * @throws UserNotInEntry If user is not in the current entry
-     */
-    public int getPlayerELO(String playerPublicKey) throws UserNotInEntry {
-        if (Objects.equals(winner, playerPublicKey)) return player1ELO;
-        else if (Objects.equals(loser, playerPublicKey)) return player2ELO;
-
-        else {
-            String exceptionMessage = "Key " + playerPublicKey + " not found for entry";
-            throw new UserNotInEntry(exceptionMessage);
-        }
-    }
-
-    /**
      * @return BlockEntry as JSONObject
      */
     @Override
@@ -78,20 +56,18 @@ public class BlockEntry implements Serializable {
         return this.timestamp;
     }
 
-    public String refereeKey() {
-        return this.refereeKey;
+    public ArrayList<String> getPlayers() {
+        ArrayList<String> players = new ArrayList<>();
+        players.add(this.winner);
+        players.add(this.loser);
+        return players;
     }
 
-    public int refereeScore() {
-        return this.refereeScore;
-    }
-
-    public String player1PublicKey() {
+    public String getWinnerPublicKey() {
         return this.winner;
     }
 
-
-    public String player2PublicKey() {
+    public String getLoserPublicKey() {
         return this.loser;
     }
 
