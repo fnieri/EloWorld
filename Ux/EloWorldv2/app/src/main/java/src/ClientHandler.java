@@ -23,17 +23,17 @@ public class ClientHandler extends Thread {
     ArrayList<ClientHandler> allClients;
 
     ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
-    int entryCounter;
+    int blockCount;
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
     //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter, ArrayList<JSONObject> receivedBlockChains) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, ArrayList<JSONObject> receivedBlockChains) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
-        this.entryCounter = entryCounter;
+        this.receivedBlockChains = receivedBlockChains;
     }
 
     public void run() {
@@ -86,7 +86,8 @@ public class ClientHandler extends Thread {
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
-        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {entryHandler();}
+        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {
+            blockHandler();}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             receivedBlockChains.add(jsonMessage);}
         else if (Objects.equals(domain, Domain.CHECK_ENTRY.serialized())) {checkEntryValidity(jsonMessage);}
@@ -186,18 +187,14 @@ public class ClientHandler extends Thread {
         sendMessage(jsonMessage); // resend message as is to client
     }
 
-    public void entryHandler() throws JSONException {
-        entryCounter += 1;
-        if (entryCounter >= allClients.size()) {
-            sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
-            Timer t = new Timer();
-            getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
-            TimerTask tt = bestBlockchain;
-            Date now = new Date();
-            t.schedule(tt, now.getTime() + 10000);
-            sendMessageToAllUsers(JsonMessageFactory.getInstance().
-                    sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
-            }
+    public void blockHandler() throws JSONException {
+        sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
+        Timer t = new Timer();
+        getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
+        Date now = new Date();
+        t.schedule(bestBlockchain, 10000);
+        sendMessageToAllUsers(JsonMessageFactory.getInstance().
+                sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
     }
 
     public String getActionFromMessage(JSONObject jsonMessage) throws JSONException {
@@ -215,7 +212,7 @@ public class ClientHandler extends Thread {
     }
 
     static class getBestBlockchain extends TimerTask {
-        ArrayList<JSONObject> challengers = null;
+        ArrayList<JSONObject> challengers;
         int currBestScore = 0;
         JSONObject champion = null;
         public getBestBlockchain(ArrayList<JSONObject> challengerList){
