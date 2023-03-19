@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +32,7 @@ public class Referee extends User implements Serializable {
      *
      * @param publicKey Username of the referee
      */
-    public Referee(String publicKey) throws JSONException {
+    public Referee(String publicKey) throws JSONException, FileNotFoundException {
         super(publicKey);
         String blockchainPath = util.getPathToBlockChain();
         File blockchainFile = new File(blockchainPath); //+ Util.BLOCKCHAIN_HEAD);
@@ -51,7 +52,7 @@ public class Referee extends User implements Serializable {
         firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
         JSONArray fakeEntriesArray = new JSONArray();
         JSONObject fakeEntry = new BlockEntry("", "", 0, "", "").asJson();
-        fakeEntriesArray.put(fakeEntry)    ;
+        fakeEntriesArray.put(fakeEntry);
         firstBlock.put(JsonStrings.ENTRIES, fakeEntriesArray);
         util.writeJSONFile(firstBlock.toString(), blockchainPath + "/" + util.FIRST_BLOCK + util.SUFFIX);
 
@@ -87,7 +88,7 @@ public class Referee extends User implements Serializable {
      * @param loser The loser's username
      * @param refereeKey The referee's public key
      */
-    public void createEntry(String winner, String loser, String refereeKey) throws JSONException {
+    public void createEntry(String winner, String loser, String refereeKey) throws JSONException, FileNotFoundException {
         JSONObject entry = new JSONObject();
 
         entry.put(JsonStrings.WINNER, winner);
@@ -152,7 +153,7 @@ public class Referee extends User implements Serializable {
         File folder = new File(util.getPathToBlockChain());
 
         for(File file: Objects.requireNonNull(folder.listFiles())) {
-            file.delete();
+            if (!file.isDirectory()) file.delete();
 
         }
 
@@ -178,7 +179,7 @@ public class Referee extends User implements Serializable {
         this.blockchain.addBlock(this.entries);
 
         for(File file: Objects.requireNonNull(folder.listFiles())) {
-            file.delete();
+            if (!file.isDirectory()) file.delete();
         }
 
         this.entries = new ArrayList<>();

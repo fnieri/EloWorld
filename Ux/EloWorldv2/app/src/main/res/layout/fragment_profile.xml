@@ -60,9 +60,10 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/AddMatch"
-        android:layout_width="311dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="64dp"
+        android:layout_width="349dp"
+        android:layout_height="55dp"
+
+        android:layout_marginBottom="80dp"
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/purple_200"
         android:onClick="addMatch"
@@ -70,6 +71,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_block_btn_social"
+        android:layout_width="349dp"
+        android:layout_height="55dp"
+
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounder_corner"
+        android:backgroundTint="@color/teal_200"
+        android:onClick="addBlockSocial"
+        android:text="Ajoutez un bloc"
+        app:layout_constraintBottom_toTopOf="@+id/AddMatch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints,UnknownIdInLayout" />
 
     <TextView
         android:id="@+id/profileUsername"

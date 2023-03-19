@@ -5,6 +5,7 @@ import android.icu.lang.UScript;
 
 import org.json.JSONException;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,7 +59,7 @@ public class Model extends Subject {
     }
 
 
-    public void setUp(String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore, String publicKey, String privateKey, List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard) throws JSONException {
+    public void setUp(String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore, String publicKey, String privateKey, List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard) throws JSONException, FileNotFoundException {
         setMemberSince(memberSince);
         setFriendList(friends);
         setRole(role);
@@ -92,7 +93,7 @@ public class Model extends Subject {
         return null;
     }
 
-    public void setReferee() throws JSONException {
+    public void setReferee() throws JSONException, FileNotFoundException {
         if (getRole() == UserRoles.REFEREE) referee = new Referee(publicKey);
     }
 
@@ -144,7 +145,7 @@ public class Model extends Subject {
     public void setRole(UserRoles newRole) {
         role = newRole;
     }
-    public void createEntry(String winner, String loser) throws JSONException {
+    public void createEntry(String winner, String loser) throws JSONException, FileNotFoundException {
         if (role == UserRoles.REFEREE) referee.createEntry(winner, loser, getPublicKey());
     }
     public boolean isLoggedIn() {

@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import src.Enum.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Controller {
         }
     }
 
-    public void processSetUp(JSONObject jsonReq) throws JSONException {
+    public void processSetUp(JSONObject jsonReq) throws JSONException, FileNotFoundException {
         String username = jsonReq.getString(MessageStrings.USERNAME);
         JSONArray friends = jsonReq.getJSONArray(MessageStrings.FRIEND);
         List<String> friendsList = new ArrayList<>();
@@ -108,7 +109,7 @@ public class Controller {
         }
     }
 
-    public void createEntry(JSONObject jsonReq) throws JSONException {
+    public void createEntry(JSONObject jsonReq) throws JSONException, FileNotFoundException {
         String winner = jsonReq.getString(JsonStrings.WINNER);
         String loser = jsonReq.getString(JsonStrings.LOSER);
         model.createEntry(winner, loser);

@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -80,14 +82,16 @@ public class Util {
      * @param content content of the file
      * @param path path where the file will be written
      */
-    public  void writeJSONFile(String content, String path) {
-        System.out.println(path);
-        File f = new File(path);
-        System.out.println(f.listFiles());
-        try (FileWriter file = new FileWriter(path, false)) {
-            file.write(content);
+    public  void writeJSONFile(String content, String path) throws FileNotFoundException {
+        FileOutputStream fos = new FileOutputStream(path, false);
+        FileWriter fw;
+        try  {
+            fw = new FileWriter(fos.getFD());
+            fw.write(content);
+            fw.flush();
+            fw.close();
         } catch (IOException e) {
-            System.out.println("aaaaaaaaa");
+
             e.printStackTrace();
         }
     }

@@ -36,7 +36,7 @@ public class SocialFragment extends Fragment {
     List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard = new ArrayList<>();
     List<String> displayLeaderboard = new ArrayList<>();
     Model model;
-    Button addBlockBtn;
+
     Button viewBlokchainBtn;
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
@@ -102,8 +102,7 @@ public class SocialFragment extends Fragment {
     public void removeRefereeInterface(Model model, View root) {
         if (model.getRole() != UserRoles.REFEREE) {
             //Remove the button if it's not a referee
-            addBlockBtn = (Button) root.findViewById(R.id.add_block_btn_social);
-            addBlockBtn.setVisibility(View.GONE);
+
             viewBlokchainBtn = root.findViewById(R.id.view_blockchain);
             viewBlokchainBtn.setVisibility(View.GONE);
         }

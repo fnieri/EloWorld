@@ -38,5 +38,6 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/background"
         app:layout_constraintEnd_toEndOf="@+id/background"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

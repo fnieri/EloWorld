@@ -27,7 +27,7 @@ public class Client {
         System.out.println("I have been launched");
         // establish a connection by providing host and port 8080
         try {
-            socket = new Socket("10.0.2.2", 8080);
+            socket = new Socket("10.0.30.11", 8080);
 
             // writing to server
             out = new PrintWriter(socket.getOutputStream(), true);

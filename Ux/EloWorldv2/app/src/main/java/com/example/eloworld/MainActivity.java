@@ -23,6 +23,7 @@ import com.example.eloworld.databinding.ActivityMainBinding;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.Permission;
 import java.util.Arrays;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             model.setReferee();
         } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         setContentView(binding.getRoot());

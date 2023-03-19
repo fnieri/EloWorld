@@ -37,6 +37,7 @@ public class ProfileFragment extends Fragment {
     TextView refereeRatingText;
     TextView refereeRatingScore;
     Model model;
+    Button addBlockBtn;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,6 +64,8 @@ public class ProfileFragment extends Fragment {
     public void removeRefereeInterface(Model model, View root) {
         if (model.getRole() != UserRoles.REFEREE) {
             //Remove the button if it's not a referee
+            addBlockBtn = (Button) root.findViewById(R.id.add_block_btn_social);
+            addBlockBtn.setVisibility(View.GONE);
             addMatchBtn = (Button) root.findViewById(R.id.AddMatch);
             addMatchBtn.setVisibility(View.GONE);
             refereeRatingText = root.findViewById(R.id.profileRefereeText);
