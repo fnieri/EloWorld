@@ -34,4 +34,9 @@ public class App extends Application {
     public void setCurrentBlockSelected(int newBlockSelected) {
         currentBlockSelected = newBlockSelected;
     }
+
+    public void setClient(Client newClient) {
+        client = newClient;
+        new Thread(() -> client.main()).start();
+    }
 }

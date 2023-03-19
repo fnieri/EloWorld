@@ -48,10 +48,4 @@ public class SettingsFragment extends Fragment {
         binding = null;
     }
 
-
-
-    public void logOut(View v) throws JSONException {
-        model.logsOut();
-        Util.changeLayout(requireView().getContext(), SignIn.class);
-    }
 }

@@ -1,6 +1,5 @@
 package src;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,11 +13,8 @@ import java.util.*;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.*;
 
-import src.Enum.*;
 import src.Enum.*;
 
 // ClientHandler class
@@ -27,17 +23,17 @@ public class ClientHandler extends Thread {
     ArrayList<ClientHandler> allClients;
 
     ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
-    int entryCounter;
+    int blockCount;
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
     //static Driver driver = new Driver();
 
     // Constructor
-    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, int entryCounter, ArrayList<JSONObject> receivedBlockChains) {
+    public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, ArrayList<JSONObject> receivedBlockChains) {
         this.clientSocket = socket;
         this.allClients = connectedClients;
-        this.entryCounter = entryCounter;
+        this.receivedBlockChains = receivedBlockChains;
     }
 
     public void run() {
@@ -90,9 +86,11 @@ public class ClientHandler extends Thread {
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
-        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {entryHandler();}
+        else if (Objects.equals(domain, Domain.BLOCK.serialized())) {
+            blockHandler();}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             receivedBlockChains.add(jsonMessage);}
+        else if (Objects.equals(domain, Domain.CHECK_ENTRY.serialized())) {checkEntryValidity(jsonMessage);}
     }
 
     public void sendMessage(JSONObject message) {
@@ -116,12 +114,11 @@ public class ClientHandler extends Thread {
                 // https://stackoverflow.com/questions/9474121/i-want-to-get-year-month-day-etc-from-java-date-to-compare-with-gregorian-cal
                 Date date = new Date();
                 int year = 0, month = 0, day = 0;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    year  = localDate.getYear();
-                    month = localDate.getMonthValue();
-                    day = localDate.getDayOfMonth();
-                }
+                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                year  = localDate.getYear();
+                month = localDate.getMonthValue();
+                day = localDate.getDayOfMonth();
+
                 String memberSinceDate = day + "/" + String.valueOf(month) + "/" + String.valueOf(year);
                 Driver.addUser(username, password, memberSinceDate);
                 authOk = true;
@@ -162,6 +159,15 @@ public class ClientHandler extends Thread {
 
     }
 
+    public void checkEntryValidity(JSONObject jsonMessage) throws JSONException, SQLException {
+        String winner = jsonMessage.getString(JsonStrings.WINNER);
+        String loser = jsonMessage.getString(JsonStrings.LOSER);
+        Driver.connection();
+        boolean entryOK = Driver.nameExists(winner) && Driver.nameExists(loser);
+        Driver.closeConnection();
+        if (entryOK) sendMessage(jsonMessage); //Resene message as is to user
+    }
+
     public void friendsHandler(JSONObject jsonMessage) throws JSONException, SQLException {
         String action = getActionFromMessage(jsonMessage);
         String sender = jsonMessage.getString(MessageStrings.SENDER);
@@ -171,30 +177,24 @@ public class ClientHandler extends Thread {
 
         //If driver exists and friend exists // TODO
         if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
-            //TODO(elliot)
+            Driver.removeFriend(sender, receiver);
         }
         else if (Objects.equals(action, FriendReqActions.FOLLOW_FRIEND.serialized())) {
             Driver.addFriend(sender, receiver);
         }
 
-
-
         Driver.closeConnection();
         sendMessage(jsonMessage); // resend message as is to client
     }
 
-    public void entryHandler() throws JSONException {
-        entryCounter += 1;
-        if (entryCounter >= allClients.size()) {
-            sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
-            Timer t = new Timer();
-            getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
-            TimerTask tt = bestBlockchain;
-            Date now = new Date();
-            t.schedule(tt, now.getTime() + 10000);
-            sendMessageToAllUsers(JsonMessageFactory.getInstance().
-                    sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
-            }
+    public void blockHandler() throws JSONException {
+        sendMessageToAllUsers(JsonMessageFactory.getInstance().serverFetchBlockchainRequest());
+        Timer t = new Timer();
+        getBestBlockchain bestBlockchain = new getBestBlockchain(receivedBlockChains);
+        Date now = new Date();
+        t.schedule(bestBlockchain, 10000);
+        sendMessageToAllUsers(JsonMessageFactory.getInstance().
+                sendBlockchainScoreToServer(bestBlockchain.currBestScore, bestBlockchain.champion));
     }
 
     public String getActionFromMessage(JSONObject jsonMessage) throws JSONException {
@@ -212,7 +212,7 @@ public class ClientHandler extends Thread {
     }
 
     static class getBestBlockchain extends TimerTask {
-        ArrayList<JSONObject> challengers = null;
+        ArrayList<JSONObject> challengers;
         int currBestScore = 0;
         JSONObject champion = null;
         public getBestBlockchain(ArrayList<JSONObject> challengerList){
