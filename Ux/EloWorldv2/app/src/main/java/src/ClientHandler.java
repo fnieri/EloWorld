@@ -86,7 +86,7 @@ public class ClientHandler extends Thread {
         String domain = jsonMessage.getString(MessageStrings.DOMAIN);
         if (Objects.equals(domain, Domain.AUTH.serialized())) {loginHandler(jsonMessage);}
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {friendsHandler(jsonMessage);}
-        else if (Objects.equals(domain, Domain.ENTRY.serialized())) {
+        else if (Objects.equals(domain, Domain.BLOCK.serialized())) {
             blockHandler();}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             receivedBlockChains.add(jsonMessage);}
