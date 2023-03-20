@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.eloworld.ui.profile.ProfileFragment"
-        android:label="@string/title_profile"
+        android:label="Profil"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
@@ -20,6 +20,6 @@
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.eloworld.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
+        android:label="Informations"
         tools:layout="@layout/fragment_settings" />
 </navigation>

@@ -25,13 +25,12 @@ public class Util {
         return instance;
     }
 
-    int BASE_ELO = 0;
+    int BASE_ELO = 1500;
     String SUFFIX = ".json";
     String BLOCKCHAIN_HEAD = "HEAD";
     String FIRST_BLOCK = "GenesisBlock";
     String BLOCK_CHAIN_FOLDER = "test";
     String ENTRIES_FOLDER = "entries";
-    @SuppressLint("SdCardPath") //??
     File  PATH_TO_BLOCKCHAIN_FOLDER = new File("/data/user/0/com.example.eloworld/files/");
     String PATH_TO_ENTRIES_FOLDER = ENTRIES_FOLDER + File.separator;
 
@@ -49,7 +48,6 @@ public class Util {
      * @return Content of the file as a String
      */
     public String convertJsonFileToString(String filename) {
-
         String path = PATH_TO_BLOCKCHAIN_FOLDER + File.separator + filename;
 
         try {

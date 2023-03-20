@@ -8,6 +8,7 @@ import src.Enum.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -111,9 +112,22 @@ public class Controller {
     }
 
     public void parseLeaderboard(JSONObject jsonReq) throws JSONException {
+        JSONObject leaderboardJson = jsonReq.getJSONObject(Domain.LEADERBOARD.serialized());
         List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard = new ArrayList<>();
-        JSONArray leaderboardArray = jsonReq.getJSONArray(MessageStrings.LEADERBOARD);
-        for (int i = 0; i < leaderboardArray.length(); i++) {
+        List<Map.Entry<String, Integer>> players = new ArrayList<>();
+        for (Iterator<String> it = leaderboardJson.keys(); it.hasNext(); ) {
+            String key = it.next();
+            System.out.println(key);
+            players.add(Map.entry(key, leaderboardJson.getInt(key)));
+        }
+        players.sort(Map.Entry.comparingByValue());
+        int position = 1; //First player
+        for (Map.Entry<String, Integer> playerEntry: players) {
+            leaderboard.add(Map.entry(position, playerEntry));
+            position++;
+        }
+        /*
+            for (int i = 0; i < leaderboardArray.length(); i++) {
             JSONObject entry = leaderboardArray.getJSONObject(i);
             int position = entry.getInt(MessageStrings.POSITION);
             String leaderboardUsername = entry.getString(MessageStrings.USERNAME);
@@ -121,6 +135,7 @@ public class Controller {
             Map.Entry<Integer, Map.Entry<String, Integer>> leaderboardListEntry = Map.entry(position, Map.entry(leaderboardUsername, ELO));
             leaderboard.add(leaderboardListEntry);
         }
+         */
         model.setLeaderboard(leaderboard);
     }
 

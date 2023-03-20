@@ -88,13 +88,13 @@ public class BlockChain {
                     leaderboard.put(player, util.BASE_ELO);
                 }
             }
-                ELOCalculator eloCalculator = new ELOCalculator(new double[]{
-                        leaderboard.getDouble(players[0]),
-                        leaderboard.getDouble(players[1])},
-                        new boolean[]{true, false});
-                double[] newElos = eloCalculator.calculateELOs();
-                leaderboard.put(players[0], newElos[0]);
-                leaderboard.put(players[1], newElos[1]);
+            ELOCalculator eloCalculator = new ELOCalculator(new double[]{
+                    leaderboard.getDouble(players[0]),
+                    leaderboard.getDouble(players[1])},
+                    new boolean[]{true, false});
+            double[] newElos = eloCalculator.calculateELOs();
+            leaderboard.put(players[0], newElos[0]);
+            leaderboard.put(players[1], newElos[1]);
         }
 
         return leaderboard;
@@ -108,7 +108,7 @@ public class BlockChain {
             for (BlockEntry entry: currBlock.getEntries()) {
                 matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
             }
-            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + util.SUFFIX);
         }
         return matches;
     }

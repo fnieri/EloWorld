@@ -35,12 +35,12 @@
         android:layout_width="349dp"
         android:layout_height="55dp"
 
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="148dp"
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/teal_200"
         android:onClick="addFriendSocial"
         android:text="Ajoutez ou supprimez vos amis"
-        app:layout_constraintBottom_toTopOf="@+id/view_blockchain"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />

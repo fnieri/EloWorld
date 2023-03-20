@@ -148,14 +148,15 @@ public class ClientHandler extends Thread {
             int ELO = 1500;
             int refereeScore = 0;
 
-            String publicKey = Driver.getPublicKey(username);
-            String privateKey = Driver.getPrivateKey(username);
+            String modulus = Driver.getModulus(username);
+
+            String privateKey = Driver.getPublicExponent(username);
             List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard =
                     List.of(Map.entry(1, Map.entry("emile", 1500)),
                             Map.entry(2, Map.entry("fnieri", 1499)),
                             Map.entry(3, Map.entry("theo", 1498)),
                             Map.entry(4, Map.entry("elliot", 1497)));
-            JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, publicKey, privateKey, leaderboard);
+            JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, modulus, privateKey, leaderboard);
             System.out.println(setUpMessage);
             sendMessage(setUpMessage);
         }

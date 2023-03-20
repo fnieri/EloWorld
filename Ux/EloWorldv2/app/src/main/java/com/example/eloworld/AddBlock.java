@@ -63,7 +63,7 @@ public class AddBlock extends AppCompatActivity {
         entries = referee.getEntries();
         if (entries.size() > 0) {
             displayEntries = new ArrayList<>();
-            displayEntries.add("Your entries:");
+            displayEntries.add("Vos entrées:");
             for (BlockEntry entry : entries) {
                 displayEntries.add(entry.toString());
             }

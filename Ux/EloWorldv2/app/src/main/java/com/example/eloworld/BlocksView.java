@@ -59,7 +59,7 @@ public class BlocksView extends AppCompatActivity {
             blocksButtons[i] = new Button(getApplicationContext());
             blocksButtons[i].setId(i);
             blocksButtons[i].setTag(i);
-            blocksButtons[i].setText("Block " + i);
+            blocksButtons[i].setText("Bloc " + i);
             blocksButtons[i].setTextColor(Color.BLUE);
             blocksButtons[i].setTextSize(20);
             blocksButtons[i].setHeight(100);

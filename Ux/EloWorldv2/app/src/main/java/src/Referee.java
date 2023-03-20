@@ -36,26 +36,26 @@ public class Referee extends User implements Serializable {
         super(publicKey);
         String blockchainPath = util.getPathToBlockChain();
         File blockchainFile = new File(blockchainPath); //+ Util.BLOCKCHAIN_HEAD);
+        if (!blockchainFile.exists() && blockchainFile.isDirectory()) {
+            // create Blockchain directory
+            blockchainFile.mkdirs();
+            // Head file
+            JSONObject head = new JSONObject();
+            head.put(JsonStrings.LAST_BLOCK, util.FIRST_BLOCK);
+            head.put(JsonStrings.BLOCK_NO, 1);
+            util.writeJSONFile(head.toString(), blockchainPath + "/" + util.BLOCKCHAIN_HEAD + util.SUFFIX);
 
-        // create Blockchain directory
-        blockchainFile.mkdirs();
-        // Head file
-        JSONObject head = new JSONObject();
-        head.put(JsonStrings.LAST_BLOCK, util.FIRST_BLOCK);
-        head.put(JsonStrings.BLOCK_NO, 1);
-        util.writeJSONFile(head.toString(), blockchainPath + "/" + util.BLOCKCHAIN_HEAD + util.SUFFIX);
-
-        // first block
-        JSONObject firstBlock = new JSONObject();
-        firstBlock.put(JsonStrings.BLOCK_HASH, util.FIRST_BLOCK);
-        firstBlock.put(JsonStrings.PARENT_BLOCK_HASH, util.FIRST_BLOCK);
-        firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
-        JSONArray fakeEntriesArray = new JSONArray();
-        JSONObject fakeEntry = new BlockEntry("", "", 0, "", "").asJson();
-        fakeEntriesArray.put(fakeEntry);
-        firstBlock.put(JsonStrings.ENTRIES, fakeEntriesArray);
-        util.writeJSONFile(firstBlock.toString(), blockchainPath + "/" + util.FIRST_BLOCK + util.SUFFIX);
-
+            // first block
+            JSONObject firstBlock = new JSONObject();
+            firstBlock.put(JsonStrings.BLOCK_HASH, util.FIRST_BLOCK);
+            firstBlock.put(JsonStrings.PARENT_BLOCK_HASH, util.FIRST_BLOCK);
+            firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
+            JSONArray fakeEntriesArray = new JSONArray();
+            JSONObject fakeEntry = new BlockEntry("", "", 0, "", "").asJson();
+            fakeEntriesArray.put(fakeEntry);
+            firstBlock.put(JsonStrings.ENTRIES, fakeEntriesArray);
+            util.writeJSONFile(firstBlock.toString(), blockchainPath + "/" + util.FIRST_BLOCK + util.SUFFIX);
+        }
         this.blockchain = new BlockChain();
 
         String entriesPath = util.PATH_TO_BLOCKCHAIN_FOLDER + File.separator + util.PATH_TO_ENTRIES_FOLDER;
@@ -65,7 +65,8 @@ public class Referee extends User implements Serializable {
         // read entries
         if (entriesFolder.exists() && entriesFolder.isDirectory()) {
             for (final File fileEntry : Objects.requireNonNull(entriesFolder.listFiles())) {
-                JSONObject jsonEntry = util.convertJsonFileToJSONObject(fileEntry.getPath());
+                String path = "entries" + File.separator + fileEntry.getName();
+                JSONObject jsonEntry = util.convertJsonFileToJSONObject(path);
                 BlockEntry entry = new BlockEntry(jsonEntry);
                 this.entries.add(entry);
             }
