@@ -136,6 +136,7 @@ public class Controller {
         if (model.getRole() == UserRoles.REFEREE) {
             Referee referee = model.getReferee();
             referee.setBlockchain(jsonReq);
+            referee.addBlock();
         }
     }
 }

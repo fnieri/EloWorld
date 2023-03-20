@@ -52,7 +52,6 @@ public class AddBlock extends AppCompatActivity {
 
     public void addAllEntriesToBlock(View view) throws JSONException {
         if (referee.getEntries().size() > 0) {
-            referee.addBlock();
             JSONObject newBlockMessage = messageFactory.sendBlockAdded();
             Util.sendThreadedMessage(client, newBlockMessage);
             finish();
