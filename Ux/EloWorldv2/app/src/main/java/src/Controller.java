@@ -40,6 +40,7 @@ public class Controller {
         else if (Objects.equals(domain, Domain.FRIEND.serialized())) {processFriend(jsonReq);}
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {processBlock(jsonReq);}
         else if (Objects.equals(domain, Domain.CHECK_ENTRY.serialized())) {createEntry(jsonReq);}
+        else if (Objects.equals(domain, Domain.LEADERBOARD.serialized())) {parseLeaderboard(jsonReq);};
     }
 
     public void processAuth(JSONObject jsonReq) throws JSONException {
@@ -108,6 +109,22 @@ public class Controller {
             client.sendMessage(message);
         }
     }
+
+    public void parseLeaderboard(JSONObject jsonReq) throws JSONException {
+        List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard = new ArrayList<>();
+        JSONArray leaderboardArray = jsonReq.getJSONArray(MessageStrings.LEADERBOARD);
+        for (int i = 0; i < leaderboardArray.length(); i++) {
+            JSONObject entry = leaderboardArray.getJSONObject(i);
+            int position = entry.getInt(MessageStrings.POSITION);
+            String leaderboardUsername = entry.getString(MessageStrings.USERNAME);
+            int ELO = entry.getInt(MessageStrings.ELO);
+            Map.Entry<Integer, Map.Entry<String, Integer>> leaderboardListEntry = Map.entry(position, Map.entry(leaderboardUsername, ELO));
+            leaderboard.add(leaderboardListEntry);
+        }
+        model.setLeaderboard(leaderboard);
+
+    }
+
 
     public void createEntry(JSONObject jsonReq) throws JSONException, FileNotFoundException {
         String winner = jsonReq.getString(JsonStrings.WINNER);
