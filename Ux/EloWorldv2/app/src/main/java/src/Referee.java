@@ -147,7 +147,7 @@ public class Referee extends User implements Serializable {
         return jsonBlockchain;
     }
 
-    public BlockChain getBlockchainObject() throws JSONException {
+    public BlockChain getBlockchainObject() {
         return this.blockchain;
     }
 

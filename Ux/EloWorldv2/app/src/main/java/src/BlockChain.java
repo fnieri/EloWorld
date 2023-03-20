@@ -87,11 +87,14 @@ public class BlockChain {
                 if (!leaderboard.has(player)) {
                     leaderboard.put(player, util.BASE_ELO);
                 }
-                ELOCalculator eloCalculator = new ELOCalculator(new double[]{leaderboard.getDouble(players[0]), leaderboard.getDouble(players[1])}, new boolean[]{true, false});
+            }
+                ELOCalculator eloCalculator = new ELOCalculator(new double[]{
+                        leaderboard.getDouble(players[0]),
+                        leaderboard.getDouble(players[1])},
+                        new boolean[]{true, false});
                 double[] newElos = eloCalculator.calculateELOs();
                 leaderboard.put(players[0], newElos[0]);
                 leaderboard.put(players[1], newElos[1]);
-            }
         }
 
         return leaderboard;
