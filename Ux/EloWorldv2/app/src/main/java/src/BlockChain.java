@@ -56,7 +56,7 @@ public class BlockChain {
         return numEntries;
     }
 
-    public JSONObject getBlock(int index) throws Exception {
+    public Block getBlock(int index) throws Exception {
         try {
             Block currBlock = lastBlock;
             for (int i = 0; i < index; i++) {
@@ -65,7 +65,7 @@ public class BlockChain {
                 }
                 currBlock = new Block(currBlock.getPreviousBlockHash());
             }
-            return currBlock.asJson();
+            return currBlock;
         } catch (IndexOutOfBoundsException e) {
            System.out.println(e.getMessage());
            return null;
