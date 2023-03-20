@@ -104,11 +104,7 @@ public class BlockChain {
     private Stack<String[]> getMatchHistory() throws JSONException {
         Block currBlock = lastBlock;
         Stack<String[]> matches = new Stack<>();
-        boolean endNotReached = true;
-        while (endNotReached) {
-            if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
-                endNotReached = false;
-            }
+        while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             for (BlockEntry entry: currBlock.getEntries()) {
                 matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
             }
