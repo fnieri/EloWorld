@@ -73,7 +73,7 @@ public class Controller {
             friendsList.add(friend);
         }
 
-        parseLeaderboard(jsonReq.getJSONObject(MessageStrings.LEADERBOARD););
+        parseLeaderboard(jsonReq.getJSONObject(MessageStrings.LEADERBOARD));
 
         String memberSince = jsonReq.getString(MessageStrings.MEMBER_SINCE);
         int elo = jsonReq.getInt(MessageStrings.ELO);
