@@ -1,5 +1,6 @@
 package src;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -92,7 +93,7 @@ public class ClientHandler extends Thread {
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             receivedBlockChains.add(jsonMessage);}
         else if (Objects.equals(domain, Domain.LEADERBOARD.serialized())) {
-            }
+            sendMessageToAllUsers(jsonMessage);}
         else if (Objects.equals(domain, Domain.CHECK_ENTRY.serialized())) {checkEntryValidity(jsonMessage);}
     }
 
