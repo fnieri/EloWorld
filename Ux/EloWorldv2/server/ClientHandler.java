@@ -1,4 +1,3 @@
-package src;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import src.SQLDriver;
 import java.util.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +15,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-import src.Enum.*;
+import Enum.*;
 
 // ClientHandler class
 public class ClientHandler extends Thread {
@@ -29,7 +27,6 @@ public class ClientHandler extends Thread {
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
-    //static SQLDriver SQLDriver = new SQLDriver();
 
     // Constructor
     public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, ArrayList<JSONObject> receivedBlockChains, JSONObject leaderBoard) {
@@ -94,7 +91,8 @@ public class ClientHandler extends Thread {
         else if (Objects.equals(domain, Domain.BLOCKCHAIN.serialized())) {
             receivedBlockChains.add(jsonMessage);}
         else if (Objects.equals(domain, Domain.LEADERBOARD.serialized())) {
-            sendMessageToAllUsers(jsonMessage);}
+            sendMessageToAllUsers(jsonMessage);
+            this.leaderBoard = jsonMessage;}
         else if (Objects.equals(domain, Domain.CHECK_ENTRY.serialized())) {checkEntryValidity(jsonMessage);}
     }
 
@@ -109,10 +107,11 @@ public class ClientHandler extends Thread {
         String password = jsonMessage.getString(MessageStrings.PASSWORD);
         boolean authOk = false;
         SQLDriver.connection();
+
         if (Objects.equals(action, AuthActions.LOGIN.serialized())) {
             authOk = SQLDriver.auth(username, password);
-
         }
+
         if (Objects.equals(action, AuthActions.REGISTER.serialized())) {
             //SQLDriver
             if (!SQLDriver.nameExists(username)) {
@@ -147,10 +146,17 @@ public class ClientHandler extends Thread {
             else playerRole = UserRoles.REFEREE;
 
             int ELO = 1500;
+
+            try {
+                ELO = jsonMessage.getInt(username);
+            }
+            catch (JSONException e) {}
+
             int refereeScore = 0;
 
             String publicKey = SQLDriver.getModulus(username);
             String privateKey = SQLDriver.getPublicExponent(username);
+
             JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, publicKey, privateKey, this.leaderBoard);
             System.out.println(setUpMessage);
             sendMessage(setUpMessage);
@@ -165,7 +171,7 @@ public class ClientHandler extends Thread {
         SQLDriver.connection();
         boolean entryOK = SQLDriver.nameExists(winner) && SQLDriver.nameExists(loser);
         SQLDriver.closeConnection();
-        if (entryOK) sendMessage(jsonMessage); //Resene message as is to user
+        if (entryOK) sendMessage(jsonMessage); //Resend message as is to user
     }
 
     public void friendsHandler(JSONObject jsonMessage) throws JSONException, SQLException {
@@ -206,6 +212,7 @@ public class ClientHandler extends Thread {
         for (ClientHandler cH : allClients) {
             cH.sendMessage(jsonObject);
         }
+
     }
 
     static class getBestBlockchain extends TimerTask {

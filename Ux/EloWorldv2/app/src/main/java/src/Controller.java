@@ -114,6 +114,9 @@ public class Controller {
             String key = it.next();
             System.out.println(key);
             players.add(Map.entry(key, jsonReq.getInt(key)));
+            if (key.equals(model.getUsername())) {
+                model.setELO(jsonReq.getInt(key));
+            }
         }
         players.sort(Map.Entry.comparingByValue());
         Collections.reverse(players);
