@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.Driver;
+import src.SQLDriver;
 import java.util.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -29,7 +29,7 @@ public class ClientHandler extends Thread {
     PrintWriter out = null;
     BufferedReader in = null;
     JsonMessageFactory jsonFactory = JsonMessageFactory.getInstance();
-    //static Driver driver = new Driver();
+    //static SQLDriver SQLDriver = new SQLDriver();
 
     // Constructor
     public ClientHandler(Socket socket, ArrayList<ClientHandler> connectedClients, ArrayList<JSONObject> receivedBlockChains, JSONObject leaderBoard) {
@@ -108,14 +108,14 @@ public class ClientHandler extends Thread {
         String username = getUsernameFromMessage(jsonMessage);
         String password = jsonMessage.getString(MessageStrings.PASSWORD);
         boolean authOk = false;
-        Driver.connection();
+        SQLDriver.connection();
         if (Objects.equals(action, AuthActions.LOGIN.serialized())) {
-            authOk = Driver.auth(username, password);
+            authOk = SQLDriver.auth(username, password);
 
         }
         if (Objects.equals(action, AuthActions.REGISTER.serialized())) {
-            //driver
-            if (!Driver.nameExists(username)) {
+            //SQLDriver
+            if (!SQLDriver.nameExists(username)) {
                 // https://stackoverflow.com/questions/9474121/i-want-to-get-year-month-day-etc-from-java-date-to-compare-with-gregorian-cal
                 Date date = new Date();
                 int year = 0, month = 0, day = 0;
@@ -125,7 +125,7 @@ public class ClientHandler extends Thread {
                 day = localDate.getDayOfMonth();
 
                 String memberSinceDate = day + "/" + String.valueOf(month) + "/" + String.valueOf(year);
-                Driver.addUser(username, password, memberSinceDate);
+                SQLDriver.addUser(username, password, memberSinceDate);
                 authOk = true;
             }
         }
@@ -136,12 +136,12 @@ public class ClientHandler extends Thread {
         sendMessage(answer);
 
         if (authOk) {
-            Driver.connection();
-            String memberDate = Driver.getMemberDate(username);
+            SQLDriver.connection();
+            String memberDate = SQLDriver.getMemberDate(username);
 
-            List<String> friends = Driver.getFriendsList(username);
+            List<String> friends = SQLDriver.getFriendsList(username);
 
-            String role = Driver.getRole(username);
+            String role = SQLDriver.getRole(username);
             UserRoles playerRole;
             if (Objects.equals(role, "user")) playerRole = UserRoles.USER;
             else playerRole = UserRoles.REFEREE;
@@ -149,22 +149,22 @@ public class ClientHandler extends Thread {
             int ELO = 1500;
             int refereeScore = 0;
 
-            String publicKey = Driver.getPublicKey(username);
-            String privateKey = Driver.getPrivateKey(username);
+            String publicKey = SQLDriver.getModulus(username);
+            String privateKey = SQLDriver.getPublicExponent(username);
             JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, publicKey, privateKey, this.leaderBoard);
             System.out.println(setUpMessage);
             sendMessage(setUpMessage);
         }
-        Driver.closeConnection();
+        SQLDriver.closeConnection();
 
     }
 
     public void checkEntryValidity(JSONObject jsonMessage) throws JSONException, SQLException {
         String winner = jsonMessage.getString(JsonStrings.WINNER);
         String loser = jsonMessage.getString(JsonStrings.LOSER);
-        Driver.connection();
-        boolean entryOK = Driver.nameExists(winner) && Driver.nameExists(loser);
-        Driver.closeConnection();
+        SQLDriver.connection();
+        boolean entryOK = SQLDriver.nameExists(winner) && SQLDriver.nameExists(loser);
+        SQLDriver.closeConnection();
         if (entryOK) sendMessage(jsonMessage); //Resene message as is to user
     }
 
@@ -173,17 +173,17 @@ public class ClientHandler extends Thread {
         String sender = jsonMessage.getString(MessageStrings.SENDER);
         String receiver = jsonMessage.getString(MessageStrings.RECEIVER);
         JSONObject messageFriend = new JSONObject();
-        Driver.connection();
+        SQLDriver.connection();
 
-        //If driver exists and friend exists // TODO
+        //If SQLDriver exists and friend exists // TODO
         if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
-            Driver.removeFriend(sender, receiver);
+            SQLDriver.removeFriend(sender, receiver);
         }
         else if (Objects.equals(action, FriendReqActions.FOLLOW_FRIEND.serialized())) {
-            Driver.addFriend(sender, receiver);
+            SQLDriver.addFriend(sender, receiver);
         }
 
-        Driver.closeConnection();
+        SQLDriver.closeConnection();
         sendMessage(jsonMessage); // resend message as is to client
     }
 

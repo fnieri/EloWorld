@@ -55,7 +55,8 @@ public class BlocksView extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         Button[] blocksButtons = new Button[blockChain.size()];
-        for (int i = blockChain.size() - 1; i >= 0; i--) {
+
+        for (int i = blockChain.size() - 2; i > 1; i--) {
             blocksButtons[i] = new Button(getApplicationContext());
             blocksButtons[i].setId(i);
             blocksButtons[i].setTag(i);

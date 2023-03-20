@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.eloworld.ui.profile.ProfileFragment"
-        android:label="@string/title_profile"
+        android:label="Profil"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_social"
         android:name="com.example.eloworld.ui.social.SocialFragment"
-        android:label="@string/title_leaderboard"
+        android:label="Social"
         tools:layout="@layout/fragment_social" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.eloworld.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
+        android:label="Informations"
         tools:layout="@layout/fragment_settings" />
 </navigation>

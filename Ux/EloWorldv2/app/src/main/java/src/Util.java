@@ -25,7 +25,7 @@ public class Util {
         return instance;
     }
 
-    int BASE_ELO = 0;
+    int BASE_ELO = 1500;
     String SUFFIX = ".json";
     String BLOCKCHAIN_HEAD = "HEAD";
     String FIRST_BLOCK = "GenesisBlock";

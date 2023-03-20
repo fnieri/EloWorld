@@ -8,6 +8,8 @@ import src.Enum.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -102,16 +104,25 @@ public class Controller {
     }
 
     public void parseLeaderboard(JSONObject jsonReq) throws JSONException {
-        List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard = new ArrayList<>();
-        JSONArray leaderboardArray = jsonReq.getJSONArray(MessageStrings.LEADERBOARD);
-        for (int i = 0; i < leaderboardArray.length(); i++) {
-            JSONObject entry = leaderboardArray.getJSONObject(i);
-            int position = entry.getInt(MessageStrings.POSITION);
-            String leaderboardUsername = entry.getString(MessageStrings.USERNAME);
-            int ELO = entry.getInt(MessageStrings.ELO);
-            Map.Entry<Integer, Map.Entry<String, Integer>> leaderboardListEntry = Map.entry(position, Map.entry(leaderboardUsername, ELO));
-            leaderboard.add(leaderboardListEntry);
+        try {
+            jsonReq = jsonReq.getJSONObject(MessageStrings.LEADERBOARD);
         }
+        catch (JSONException e) {}
+        List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard = new ArrayList<>();
+        List<Map.Entry<String, Integer>> players = new ArrayList<>();
+        for (Iterator<String> it = jsonReq.keys(); it.hasNext(); ) {
+            String key = it.next();
+            System.out.println(key);
+            players.add(Map.entry(key, jsonReq.getInt(key)));
+        }
+        players.sort(Map.Entry.comparingByValue());
+        Collections.reverse(players);
+        int position = 1; //First player
+        for (Map.Entry<String, Integer> playerEntry: players) {
+            leaderboard.add(Map.entry(position, playerEntry));
+            position++;
+        }
+        Collections.reverse(leaderboard);
         model.setLeaderboard(leaderboard);
     }
 

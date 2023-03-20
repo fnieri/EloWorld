@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class BlockChain {
 
         JSONObject jsonData = util.convertJsonFileToJSONObject(util.BLOCKCHAIN_HEAD + util.SUFFIX);
         this.lastBlock = util.convertJsonFileToBlock(jsonData.getString(JsonStrings.LAST_BLOCK) + util.SUFFIX);
+        System.out.println(jsonData + " data");
         blockCount = jsonData.getInt(JsonStrings.BLOCK_NO);
     }
 
@@ -63,7 +66,9 @@ public class BlockChain {
                 if (Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
                     throw new IndexOutOfBoundsException("Block index out of blockchain bounds !");
                 }
-                currBlock = new Block(currBlock.getPreviousBlockHash());
+                String file = currBlock.getPreviousBlockHash() + util.SUFFIX;
+                String data = util.convertJsonFileToString(file);
+                currBlock = new Block(data);
             }
             return currBlock;
         } catch (IndexOutOfBoundsException e) {
@@ -79,24 +84,26 @@ public class BlockChain {
      */
     public JSONObject getLeaderboard() throws Exception {
         JSONObject leaderboard = new JSONObject();
+
         Stack<String[]> matches = getMatchHistory();
 
         while (!matches.isEmpty()) {
+
             String[] players = matches.pop();
             for (String player: players) {
                 if (!leaderboard.has(player)) {
+                    System.out.println(player+ "a");
                     leaderboard.put(player, util.BASE_ELO);
                 }
             }
-                ELOCalculator eloCalculator = new ELOCalculator(new double[]{
-                        leaderboard.getDouble(players[0]),
-                        leaderboard.getDouble(players[1])},
-                        new boolean[]{true, false});
-                double[] newElos = eloCalculator.calculateELOs();
-                leaderboard.put(players[0], newElos[0]);
-                leaderboard.put(players[1], newElos[1]);
+            ELOCalculator eloCalculator = new ELOCalculator(new double[]{
+                    leaderboard.getDouble(players[0]),
+                    leaderboard.getDouble(players[1])},
+                    new boolean[]{true, false});
+            double[] newElos = eloCalculator.calculateELOs();
+            leaderboard.put(players[0], newElos[0]);
+            leaderboard.put(players[1], newElos[1]);
         }
-
         return leaderboard;
     }
 
@@ -108,7 +115,7 @@ public class BlockChain {
             for (BlockEntry entry: currBlock.getEntries()) {
                 matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
             }
-            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash());
+            currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + util.SUFFIX);
         }
         return matches;
     }
@@ -118,11 +125,14 @@ public class BlockChain {
      *
      * @param entries add a block
      */
-    public void addBlock(ArrayList<BlockEntry> entries) throws JSONException {
+    public void addBlock(ArrayList<BlockEntry> entries) throws JSONException, FileNotFoundException {
         JSONObject futureBlock = new JSONObject();
         int block_no = blockCount + 1;
+        System.out.println(block_no);
         // block id
         String id = "Block" + block_no;
+        System.out.println(id);
+
         futureBlock.put(JsonStrings.BLOCK_HASH, id);
         // previous_block id
         futureBlock.put(JsonStrings.PARENT_BLOCK_HASH, lastBlock.getBlockHash());
@@ -145,12 +155,22 @@ public class BlockChain {
         JSONObject updateHead = new JSONObject();
         updateHead.put(JsonStrings.LAST_BLOCK, lastBlock.getBlockHash());
         updateHead.put(JsonStrings.BLOCK_NO, blockCount);
-        String headFile = util.getPathToBlockChain() + util.BLOCKCHAIN_HEAD + util.SUFFIX;
-        try (FileWriter file = new FileWriter(headFile)) {
-            file.write(updateHead.toString());
+        String headFile = util.getPathToBlockChain() + File.separator + util.BLOCKCHAIN_HEAD + util.SUFFIX;
+        FileOutputStream fos = new FileOutputStream(headFile, false);
+        FileWriter fw;
+        File head = new File(headFile);
+        head.delete();
+        util.writeJSONFile(updateHead.toString(), headFile);
+        try  {
+            fw = new FileWriter(fos.getFD());
+            fw.write(updateHead.toString());
+            fw.flush();
+            fw.close();
         } catch (IOException e) {
+
             e.printStackTrace();
         }
+
     }
 
     public int size() {

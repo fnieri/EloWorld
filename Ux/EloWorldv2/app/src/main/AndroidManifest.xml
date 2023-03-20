@@ -61,6 +61,10 @@
             android:name=".BlocksView"
             android:exported="false"
             />
+        <activity
+            android:name=".BlockSelectionView"
+            android:exported="false"
+            />
     </application>
 
 </manifest>

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Comparator;
 
-class Block implements Serializable {
+public class Block implements Serializable {
     private final String blockHash;
     private final String previousBlockHash;
     private final List<BlockEntry> entries;

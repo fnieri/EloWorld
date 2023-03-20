@@ -21,6 +21,7 @@ import com.example.eloworld.Util;
 import com.example.eloworld.databinding.FragmentSocialBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Inflater;
@@ -63,6 +64,7 @@ public class SocialFragment extends Fragment {
 
         leaderboard = model.getLeaderboard();
         displayLeaderboard.add("EloWorld Leaderboard:");
+        Collections.reverse(leaderboard);
         for (Map.Entry<Integer, Map.Entry<String, Integer>> playerEntry: leaderboard) {
             int position = playerEntry.getKey();
             String playerUsername = playerEntry.getValue().getKey();

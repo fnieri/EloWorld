@@ -17,7 +17,7 @@
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/green"
         android:onClick="addFriend"
-        android:text="Add a friend"
+        android:text="Ajoutez"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/friend_input_layout"
         tools:ignore="MissingConstraints" />
@@ -32,7 +32,7 @@
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/red_400"
         android:onClick="removeFriend"
-        android:text="Remove a friend"
+        android:text="Supprimez"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/friend_input_layout"
         tools:ignore="MissingConstraints" />
@@ -59,7 +59,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="128dp"
         android:layout_marginEnd="16dp"
-        android:hint="Your new (or old) friend"
+        android:hint="Votre nouveau (ou ancien) ami"
         app:counterMaxLength="20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
