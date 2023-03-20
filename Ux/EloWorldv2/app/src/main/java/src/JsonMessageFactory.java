@@ -42,7 +42,7 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
-    public JSONObject onLoginSetupMessage(String username, String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore, String publicKey, String privateKey, List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard) throws JSONException {
+    public JSONObject onLoginSetupMessage(String username, String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore, String publicKey, String privateKey, JSONObject leaderboard) throws JSONException {
         JSONObject messageJson = new JSONObject();
         JSONArray friendsArray = new JSONArray();
         for (String friend: friends) {
@@ -50,20 +50,12 @@ public class JsonMessageFactory {
             friendObject.put(MessageStrings.FRIEND, friend);
             friendsArray.put(friendObject);
         }
-        JSONArray leaderboardArray = new JSONArray();
-        for (Map.Entry<Integer, Map.Entry<String, Integer>> leaderboardEntry: leaderboard) {
-            JSONObject playerEntry = new JSONObject();
-            playerEntry.put(MessageStrings.POSITION, leaderboardEntry.getKey());
-            playerEntry.put(MessageStrings.USERNAME, leaderboardEntry.getValue().getKey());
-            playerEntry.put(MessageStrings.ELO, leaderboardEntry.getValue().getValue());
-            leaderboardArray.put(playerEntry);
-        }
         messageJson.put(MessageStrings.DOMAIN, Domain.RESOURCE.serialized());
         messageJson.put(MessageStrings.ACTION, MessageStrings.RESOURCE_SETUP);
         messageJson.put(MessageStrings.MEMBER_SINCE, memberSince);
         messageJson.put(MessageStrings.USERNAME, username);
         messageJson.put(MessageStrings.FRIEND, friendsArray);
-        messageJson.put(MessageStrings.LEADERBOARD, leaderboardArray);
+        messageJson.put(MessageStrings.LEADERBOARD, leaderboard);
         messageJson.put(MessageStrings.ROLE, role.serialized());
         messageJson.put(MessageStrings.ELO, elo);
         messageJson.put(MessageStrings.REFEREE_SCORE, refereeScore);

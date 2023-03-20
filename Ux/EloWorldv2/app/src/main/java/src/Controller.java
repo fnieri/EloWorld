@@ -73,16 +73,7 @@ public class Controller {
             friendsList.add(friend);
         }
 
-        List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard = new ArrayList<>();
-        JSONArray leaderboardArray = jsonReq.getJSONArray(MessageStrings.LEADERBOARD);
-        for (int i = 0; i < leaderboardArray.length(); i++) {
-            JSONObject entry = leaderboardArray.getJSONObject(i);
-            int position = entry.getInt(MessageStrings.POSITION);
-            String leaderboardUsername = entry.getString(MessageStrings.USERNAME);
-            int ELO = entry.getInt(MessageStrings.ELO);
-            Map.Entry<Integer, Map.Entry<String, Integer>> leaderboardListEntry = Map.entry(position, Map.entry(leaderboardUsername, ELO));
-            leaderboard.add(leaderboardListEntry);
-        }
+        parseLeaderboard(jsonReq.getJSONObject(MessageStrings.LEADERBOARD););
 
         String memberSince = jsonReq.getString(MessageStrings.MEMBER_SINCE);
         int elo = jsonReq.getInt(MessageStrings.ELO);
@@ -96,7 +87,7 @@ public class Controller {
         else if (Objects.equals(serializedRole, UserRoles.REFEREE.serialized())) { role = UserRoles.REFEREE;}
         else if (Objects.equals(serializedRole, UserRoles.SUPER_USER.serialized())) { role = UserRoles.SUPER_USER;}
 
-        model.setUp(memberSince, friendsList, role, elo, refereeScore, publicKey, privateKey, leaderboard);
+        model.setUp(memberSince, friendsList, role, elo, refereeScore, publicKey, privateKey);
     }
 
     public void processServerBlockchainScoreRequest() throws JSONException {

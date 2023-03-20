@@ -1,5 +1,6 @@
 package src;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -8,11 +9,12 @@ import java.util.ArrayList;
 
 // Server class
 class Server {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JSONException {
         ServerSocket server = null;
         ArrayList<ClientHandler> connectedClients = new ArrayList<>();
         ArrayList<JSONObject> receivedBlockChains = new ArrayList<>();
         JSONObject leaderBoard = new JSONObject();
+        leaderBoard.put("Magnus Carlsen", 2852);
 
         try {
             // server is listening on port 8080

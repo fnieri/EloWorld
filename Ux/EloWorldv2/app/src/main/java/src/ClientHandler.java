@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.Driver;
 import java.util.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -150,12 +151,7 @@ public class ClientHandler extends Thread {
 
             String publicKey = Driver.getPublicKey(username);
             String privateKey = Driver.getPrivateKey(username);
-            List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard =
-                    List.of(Map.entry(1, Map.entry("emile", 1500)),
-                            Map.entry(2, Map.entry("fnieri", 1499)),
-                            Map.entry(3, Map.entry("theo", 1498)),
-                            Map.entry(4, Map.entry("elliot", 1497)));
-            JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, publicKey, privateKey, leaderboard);
+            JSONObject setUpMessage = jsonFactory.onLoginSetupMessage(username, memberDate, friends, playerRole, ELO, refereeScore, publicKey, privateKey, this.leaderBoard);
             System.out.println(setUpMessage);
             sendMessage(setUpMessage);
         }

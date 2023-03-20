@@ -59,7 +59,7 @@ public class Model extends Subject {
     }
 
 
-    public void setUp(String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore, String publicKey, String privateKey, List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard) throws JSONException, FileNotFoundException {
+    public void setUp(String memberSince, List<String> friends, UserRoles role, int elo, int refereeScore, String publicKey, String privateKey) throws JSONException, FileNotFoundException {
         setMemberSince(memberSince);
         setFriendList(friends);
         setRole(role);
@@ -68,7 +68,6 @@ public class Model extends Subject {
         setRefereeScore(refereeScore);
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
-        setLeaderboard(leaderboard);
         isLoggedIn = true;
         isSetUp = true;
     }
