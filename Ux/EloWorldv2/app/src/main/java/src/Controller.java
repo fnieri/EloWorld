@@ -23,7 +23,7 @@ public class Controller {
     }
     public Model getModel() {return model;}
 
-    public void parseRequest(String request) throws JSONException, IOException {
+    public void parseRequest(String request) throws Exception {
         JSONObject jsonReq;
         try {
             jsonReq = new JSONObject(request);
@@ -122,7 +122,6 @@ public class Controller {
             leaderboard.add(leaderboardListEntry);
         }
         model.setLeaderboard(leaderboard);
-
     }
 
 
@@ -132,11 +131,12 @@ public class Controller {
         model.createEntry(winner, loser);
     }
 
-    public void processBlock(JSONObject jsonReq) throws JSONException, IOException {
+    public void processBlock(JSONObject jsonReq) throws Exception {
         if (model.getRole() == UserRoles.REFEREE) {
             Referee referee = model.getReferee();
             referee.setBlockchain(jsonReq);
             referee.addBlock();
+            client.sendMessage(JsonMessageFactory.getInstance().sendLeaderBoardToServer(referee.getLeaderboard()));
         }
     }
 }

@@ -49,6 +49,8 @@ public class Client {
             e.printStackTrace();
         } catch (JSONException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
