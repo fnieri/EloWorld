@@ -1,19 +1,25 @@
-package src;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Driver {
     private static Connection connection;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, NoSuchAlgorithmException {
         boolean flagConnection = Driver.connection();
 
         if (flagConnection) {
             String theoDate = getMemberDate("Elliot");
             System.out.println(theoDate);
+            System.out.println(getModulus("Cartman"));
+            System.out.println(getPublicExponent("Cartman"));
         }
     }
 
@@ -99,13 +105,18 @@ public class Driver {
     public static void addUser(String username, String password, String memberDate) throws SQLException, NoSuchAlgorithmException {
         RSAKeyGenerator keysGenerator = new RSAKeyGenerator();
         List<String> keys = keysGenerator.generateKeys();
+
         String privateKey = keys.get(0);
         String publicKey = keys.get(1);
+
+        String modulus = RSAKeyGenerator.getModulus(publicKey);
+        String privateExponent = RSAKeyGenerator.getPrivateExponent(privateKey);
+        String publicExponent = RSAKeyGenerator.getPublicExponent(publicKey);
 
         if (!nameExists(username)) {
             int newId = assignId();
             Statement statement = connection.createStatement();
-            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `publicKey`, `privateKey`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql(publicKey) + stringToSql(privateKey) + ")" + ";";
+            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `modulus`, `privateExponent`, `publicExponent`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql(modulus) + "," + stringToSql(privateExponent) + "," + stringToSql(publicExponent) + ");";
             statement.executeUpdate(addUserQuery);
             addRole(newId);
         }
@@ -181,19 +192,6 @@ public class Driver {
         return resRole;
     }
 
-    public static String getPrivateKey(String username) throws SQLException {
-        String privateKey = "";
-        if (nameExists(username)){
-            Statement statement = connection.createStatement();
-            String getPrivateKeyQuery = "SELECT users.privateKey FROM heroku_76cef2360ddfe66.users WHERE username =" + stringToSql(username) + ";";
-            ResultSet key = statement.executeQuery(getPrivateKeyQuery);
-
-            if (key.next()){
-                privateKey = key.getString("publicKey");
-            }
-        }
-        return privateKey;
-    }
 
     public static String getMemberDate(String username) throws SQLException{
         String memberDate = "";
@@ -209,18 +207,34 @@ public class Driver {
         return memberDate;
     }
 
-    public static String getPublicKey(String username) throws SQLException {
-        String publicKey = "";
+    public static String getModulus(String username) throws SQLException {
+        String modulus = "";
         if (nameExists(username)){
             Statement statement = connection.createStatement();
-            String getPublicKeyQuery = "SELECT `users`.`publicKey` FROM `heroku_76cef2360ddfe66`.`users` WHERE `username` =" + stringToSql(username) + ";";
+            String getPublicKeyQuery = "SELECT `users`.`modulus` FROM `heroku_76cef2360ddfe66`.`users` WHERE `username` =" + stringToSql(username) + ";";
             ResultSet key = statement.executeQuery(getPublicKeyQuery);
 
             if (key.next()){
-                publicKey = key.getString("publicKey");
+                modulus = key.getString("modulus");
             }
         }
-        return publicKey;
+        return modulus;
+    }
+
+    public static String getPublicExponent(String username) throws SQLException {
+        String publicExponent = "";
+
+        if (nameExists(username)){
+            Statement statement = connection.createStatement();
+            String getPublicEponentQuery = "SELECT `users`.`publicExponent` FROM `heroku_76cef2360ddfe66`.`users` WHERE `username` =" + stringToSql(username) + ";";
+            ResultSet user = statement.executeQuery(getPublicEponentQuery);
+
+            if (user.next()){
+                publicExponent = user.getString("publicExponent");
+            }
+
+        }
+        return publicExponent;
     }
     public static boolean nameExists(String username) throws SQLException {
         Statement statement = connection.createStatement();
