@@ -122,6 +122,10 @@ public class Referee extends User implements Serializable {
         return blockchain.getScore();
     }
 
+    public Block getBlock(int index) throws Exception {
+        return this.blockchain.getBlock(index);
+    }
+
     /**
      * formats a JSONObject structure of the entire Blockchain, with as key the filename and as value the
      * file content, for all files composing the Blockchain.
