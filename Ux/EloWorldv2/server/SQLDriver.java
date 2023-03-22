@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -15,6 +17,7 @@ public class SQLDriver {
         boolean flagConnection = connection();
 
         if (flagConnection) {
+            removeFriend("PAPA", "nieri");
             System.out.println(getFriendsList("PAPA"));
         }
     }
@@ -104,12 +107,31 @@ public class SQLDriver {
 
     public static void removeFriend(String username, String friendName) throws SQLException {
         List<String> friendsList = getFriendsList(username);
+        String removeFriendQuery ="";
 
         if (friendsList.contains(friendName)) {
             if (nameExists(username)) {
                 String id = getId(username);
                 Statement statement = connection.createStatement();
-                String removeFriendQuery = "DELETE FROM `heroku_76cef2360ddfe66`.`friends` WHERE `iduser`=" + stringToSql(id) + ";";
+
+                if (friendsList.size() == 1){
+                    // Stay one friend -->  delete the entry in the table.
+                    removeFriendQuery = "DELETE FROM `heroku_76cef2360ddfe66`.`friends` WHERE `iduser`=" + stringToSql(id) + ";";
+                }
+
+                else{
+                    // update the value in the table.
+                    String friendsName = "";
+
+                    for (String friend : friendsList){
+                        if (!Objects.equals(friend, friendName)) {
+                            friendsName = friendsName + friend + "-";
+                        }
+                    }
+
+                    removeFriendQuery = "UPDATE `heroku_76cef2360ddfe66`.`friends` SET `friendname` =" + stringToSql(friendsName) +  "WHERE `iduser` =" + stringToSql(id) +  ";";
+
+                }
                 statement.executeUpdate(removeFriendQuery);
             }
         }
@@ -117,15 +139,45 @@ public class SQLDriver {
 
     public static void addFriend(String username, String friendName) throws SQLException{
         List<String> friendsList = getFriendsList(username);
+        String addFriendQuery = "";
 
         if (nameExists(friendName)) {
             if (!friendsList.contains(friendName)) {
+
                 String id = getId(username);
                 Statement statement = connection.createStatement();
-                String addFriendQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`friends` (`iduser`, `friendname`) VALUES (" + stringToSql(id) + "," + stringToSql(friendName) + ");";
+
+                if (!isInFriendsTable(username)) {
+
+                    addFriendQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`friends` (`iduser`, `friendname`) VALUES (" + stringToSql(id) + "," + stringToSql(friendName) + ");";
+
+                }
+                else{
+                    // username have already friends.
+                    friendsList.add(friendName);
+                    String friendsName = "";
+
+                    for (String friend : friendsList){
+                        friendsName = friendsName + friend + "-";
+                    }
+
+                    addFriendQuery = "UPDATE `heroku_76cef2360ddfe66`.`friends` SET `friendname` =" + stringToSql(friendsName) +  "WHERE `iduser` =" + stringToSql(id) +  ";";
+
+                }
                 statement.executeUpdate(addFriendQuery);
             }
         }
+    }
+
+    public static boolean isInFriendsTable(String username) throws SQLException {
+        // return True if the id of the username is already in the friends table.
+        String id = getId(username);
+        Statement statement = connection.createStatement();
+        String isInTableQuery = "SELECT * FROM heroku_76cef2360ddfe66.friends WHERE `iduser` ="+ stringToSql(id) + ";";
+        ResultSet friends = statement.executeQuery(isInTableQuery);
+
+        return friends.next();
+
     }
 
     public static List<String> getFriendsList(String username) throws SQLException{
@@ -139,9 +191,11 @@ public class SQLDriver {
             ResultSet friendsListSql = statement.executeQuery(getFriendsListQuery);
 
 
-            while (friendsListSql.next()) {
-                String friendName = friendsListSql.getString("friendname");
-                friendsList.add(friendName);
+            if (friendsListSql.next()) {
+                String friends = friendsListSql.getString("friendname");
+                final String SEPARATEUR = "-";
+                String[] splittedFiends = friends.split(SEPARATEUR);
+                friendsList = new ArrayList<>(Arrays.asList(splittedFiends));
             }
         }
         return friendsList;
