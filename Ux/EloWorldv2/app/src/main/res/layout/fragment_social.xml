@@ -7,37 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".ui.social.SocialFragment">
 
-    <ListView
-        android:id="@+id/leaderboardListView"
-        android:layout_width="413dp"
-        android:layout_height="207dp"
+    <LinearLayout
+        android:id="@+id/friends_image_ll"
+        android:layout_width="0dp"
+        android:layout_height="197dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-1dp" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/friends2" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/friendsListView"
         android:layout_width="414dp"
         android:layout_height="214dp"
-        android:layout_marginBottom="68dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
 
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leaderboardListView"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/friends_text" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_friend_btn_social"
         android:layout_width="349dp"
         android:layout_height="55dp"
 
-        android:layout_marginBottom="152dp"
+        android:layout_marginBottom="76dp"
         android:background="@drawable/rounder_corner"
-        android:backgroundTint="@color/teal_200"
+        android:backgroundTint="@color/white"
         android:onClick="addFriendSocial"
         android:text="Ajoutez ou supprimez vos amis"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,22 +53,15 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/view_blockchain"
-        android:layout_width="349dp"
-        android:layout_height="55dp"
-
-        android:layout_marginBottom="80dp"
-        android:background="@drawable/rounder_corner"
-        android:backgroundTint="@color/purple_200"
-        android:onClick="viewBlockchain"
-        android:text="Regardez la blockchain"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/friends_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Vos amis:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_block_btn_social"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" />
-
+        app:layout_constraintTop_toBottomOf="@+id/friends_image_ll" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

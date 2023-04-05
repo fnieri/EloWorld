@@ -1,11 +1,16 @@
 package com.example.eloworld.ui.profile;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,8 +39,6 @@ public class ProfileFragment extends Fragment {
     ProfileViewModel profileViewModel;
     //To be shown only to referee
     Button addMatchBtn;
-    TextView refereeRatingText;
-    TextView refereeRatingScore;
     Model model;
     Button addBlockBtn;
 
@@ -53,6 +56,7 @@ public class ProfileFragment extends Fragment {
         showClientInformation();
         removeRefereeInterface(model, root);
 
+        Util.setFragmentToFullscreen(root, this);
         return root;
     }
 
@@ -68,10 +72,6 @@ public class ProfileFragment extends Fragment {
             addBlockBtn.setVisibility(View.GONE);
             addMatchBtn = (Button) root.findViewById(R.id.AddMatch);
             addMatchBtn.setVisibility(View.GONE);
-            refereeRatingText = root.findViewById(R.id.profileRefereeText);
-            refereeRatingScore = root.findViewById(R.id.playerRefereeRating);
-            refereeRatingText.setVisibility(View.GONE);
-            refereeRatingScore.setVisibility(View.GONE);
         }
     }
 
@@ -92,6 +92,7 @@ public class ProfileFragment extends Fragment {
         final TextView ELO = binding.playerELORating;
         final TextView refereeScore = binding.playerRefereeRating;
         final TextView publicKey = binding.publicKey;
+        final TextView follows = binding.follows;
 
         String mUsername = model.getUsername();
         int mElo = model.getELO();
@@ -102,20 +103,21 @@ public class ProfileFragment extends Fragment {
         }
         String mPublicKey = model.getPublicKey();
         String mMemberSince = model.getMemberSince();
-
+        int mFollows = model.getFollowsCount();
 
         profileViewModel.setUsername(mUsername);
         profileViewModel.setRefereeELO(mRefereeScore);
         profileViewModel.setELO(mElo);
         profileViewModel.setPublicKey(mPublicKey);
         profileViewModel.setMemberSince(mMemberSince);
+        profileViewModel.setFollows(mFollows);
 
         profileViewModel.getUsername().observe(getViewLifecycleOwner(), username::setText);
         profileViewModel.getELO().observe(getViewLifecycleOwner(), ELO::setText);
         profileViewModel.getMemberSince().observe(getViewLifecycleOwner(), memberSince::setText);
         profileViewModel.getRefereeELO().observe(getViewLifecycleOwner(), refereeScore::setText);
         profileViewModel.getPublicKey().observe(getViewLifecycleOwner(), publicKey::setText);
-
+        profileViewModel.getFollows().observe(getViewLifecycleOwner(), follows::setText);
 
     }
 }

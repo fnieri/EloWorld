@@ -24,7 +24,6 @@ public class Model extends Subject {
     private String publicKey;
     private String privateKey;
 
-    private int refereeScore;
     private List<String> friends;
     //Leaderboard is an list of entries of type <Position, <Username, ELO>>
     private List<Map.Entry<Integer, Map.Entry<String, Integer>>> leaderboard;
@@ -65,7 +64,6 @@ public class Model extends Subject {
         setRole(role);
         setELO(elo);
         setReferee();
-        setRefereeScore(refereeScore);
         setPublicKey(publicKey);
         setPrivateKey(privateKey);
         isLoggedIn = true;
@@ -79,7 +77,6 @@ public class Model extends Subject {
         setUsername(null);
         setMemberSince(null);
         setELO(util.BASE_ELO);
-        setRefereeScore(0);
         referee = null;
         clearFriends();
         isLoggedIn = false;
@@ -112,11 +109,6 @@ public class Model extends Subject {
         if (role == UserRoles.REFEREE) return referee.getRefereeScore();
         else return 0;
     }
-
-    public void setRefereeScore(int newScore) {
-        refereeScore = newScore;
-    }
-
     public String getPublicKey() {return publicKey;}
     public void setPublicKey(String newPublicKey) {publicKey = newPublicKey;}
 
@@ -154,6 +146,7 @@ public class Model extends Subject {
     public UserRoles getRole() {
         return role;
     }
+    public int getFollowsCount() {return friends.size();}
 
 }
 

@@ -4,5 +4,17 @@
     <string name="title_profile">Profile</string>
     <string name="title_leaderboard">Socials</string>
     <string name="title_settings">Settings</string>
-
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="heading_one">EloWorld</string>
+    <string name="heading_two">Consultez votre profil</string>
+    <string name="heading_three">Devenez le meilleur</string>
+    <string name="heading_four">Collaborez pour la meilleure blockchain</string>
+    <string name="desc_one">EloWorld est une application pour la gestion d´un tournoi pour un jeu quelconque.  \n
+        Vous, les joueurs, etes classés par une métrique appeléé ELO. Ce score est ajusté après chaque compétition pour tenir compte des rèsultats de chacun.</string>
+    <string name="desc_two">Dans l´onglet Profil, il est possible de consulter votre ELO. \n
+        Vous retrouverez vos amis dans l´onglet Social, où vous pouvez decider de suivre ou supprimer des amis</string>
+    <string name="desc_three">Dans l´onglet Social, vous pouvez consulter le classement où vous pouvez consulter
+    les scores de tous les utilisateurs. \n Jouez des parties pour améliorer votre ELO et gravez les échelons </string>
+    <string name="desc_four">Si vous etes un.e arbitre, entrez vos match dans l\'onglet Profil et tentez à
+    avoir la meilleur blockchain! \n La blockchain est collaborative parmi tous.tes les arbitres presents localement</string>
 </resources>

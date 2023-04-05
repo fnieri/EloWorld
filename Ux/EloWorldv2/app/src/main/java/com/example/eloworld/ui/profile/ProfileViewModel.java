@@ -11,6 +11,7 @@ public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<String> username;
     private final MutableLiveData<String> memberSince;
     private final MutableLiveData<String> publicKey;
+    private final MutableLiveData<String> follows;
 
     public ProfileViewModel() {
 
@@ -19,7 +20,7 @@ public class ProfileViewModel extends ViewModel {
         username = new MutableLiveData<>();
         memberSince = new MutableLiveData<>();
         publicKey = new MutableLiveData<>();
-
+        follows = new MutableLiveData<>();
     }
 
     public LiveData<String> getELO() {
@@ -29,10 +30,12 @@ public class ProfileViewModel extends ViewModel {
     public LiveData<String> getUsername() {return username;}
     public LiveData<String> getMemberSince() {return memberSince;}
     public LiveData<String> getPublicKey() {return publicKey;}
+    public LiveData<String> getFollows() {return follows;}
 
     public void setUsername(String newUsername) {username.setValue(newUsername);}
     public void setELO(int newELO) {ELO.setValue(String.valueOf(newELO));}
     public void setRefereeELO(int newELO) {refereeELO.setValue(String.valueOf(newELO));}
     public void setMemberSince(String newMemberSince) {memberSince.setValue("Membre depuis " + newMemberSince);}
     public void setPublicKey(String newPublicKey) {publicKey.setValue(newPublicKey);}
+    public void setFollows(int newFollowsCount) {follows.setValue(String.valueOf(newFollowsCount));}
 }

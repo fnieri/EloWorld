@@ -11,31 +11,28 @@
         android:id="@+id/add_match_ref"
         android:layout_width="349dp"
         android:layout_height="55dp"
-        android:layout_marginTop="68dp"
 
+        android:layout_marginTop="12dp"
         android:background="@drawable/rounder_corner"
         android:backgroundTint="@color/red_400"
         android:onClick="addMatchRefereeScreen"
         android:text="Ajoutez le match"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loser_input_layout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/loser_input_layout" />
 
     <TextView
         android:id="@+id/AddMatchTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ajoutez un match"
-        android:textSize="30sp"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="25dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/winer_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_image_ll" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/loser_input_layout"
@@ -44,7 +41,7 @@
         android:layout_height="wrap_content"
 
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:layout_marginEnd="32dp"
         android:hint="Perdant"
         app:counterMaxLength="20"
@@ -69,14 +66,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="128dp"
         android:layout_marginEnd="32dp"
         android:hint="Gagnant"
         app:counterMaxLength="20"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AddMatchTxt"
         app:startIconDrawable="@drawable/ic_profile">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -87,5 +82,22 @@
             android:maxLength="20" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <LinearLayout
+        android:id="@+id/leaderboard_image_ll"
+        android:layout_width="408dp"
+        android:layout_height="222dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/friendsImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-2dp"
+            tools:srcCompat="@drawable/match" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

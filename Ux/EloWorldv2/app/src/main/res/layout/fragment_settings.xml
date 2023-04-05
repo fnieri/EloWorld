@@ -3,32 +3,64 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/logo2"
-        android:layout_width="108dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Logo"
+    <LinearLayout
+        android:id="@+id/leaderboard_image_ll"
+        android:layout_width="408dp"
+        android:layout_height="222dp"
+        android:weightSum="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/blocklogo_11" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/leaderboardImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/leaderboard"
+            android:contentDescription="TODO" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="333dp"
-        android:layout_height="484dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="serif"
-        android:text="EloWorld est une application pour la gestion d'un tournoi pour un jeu quelconque. Vous, les joueurs, etes classés par une métrique appeléé ELO. Ce score est ajusté après chaque compétition pour tenir compte des rèsultats de chacun : un joueur ayant eu de bonnes performances lors du tournoi gagnera des points tandis qu’un autre ayant contre-performé en perdra. Le calcul des points est laissé à notre discretion. Cette application nous permet de garder un registre partagé parmi les joueurs et les arbitres, nous permettons de décentraliser la gestion du tournoi."
-        android:textAlignment="viewStart"
-        android:textSize="18sp"
-        android:typeface="normal"
+        android:id="@+id/leaderboard_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="EloWorld: classement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo2" />
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_image_ll" />
+
+    <ListView
+        android:id="@+id/leaderboardListView"
+        android:layout_width="413dp"
+        android:layout_height="207dp"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_text"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/view_blockchain"
+        android:layout_width="349dp"
+        android:layout_height="55dp"
+
+        android:layout_marginBottom="80dp"
+        android:background="@drawable/rounder_corner"
+        android:backgroundTint="@color/white"
+        android:onClick="viewBlockchain"
+        android:text="Regardez la blockchain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboardListView"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

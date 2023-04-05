@@ -2,6 +2,12 @@ package com.example.eloworld;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+
+import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
 
@@ -12,8 +18,10 @@ public class Util {
 
     public static void changeLayout(Context caller, Class newScreen) {
         Intent intent = new Intent(caller, newScreen);
+        System.out.println(caller.toString() + "changing to " + newScreen.toString());
         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         caller.startActivity(intent);
+
     }
 
     public static void sendThreadedMessage(Client client, JSONObject message) {
@@ -32,14 +40,23 @@ public class Util {
         thread.start();
     }
 
-    public static boolean changeLayoutOnLogIn(Context caller, Client client) {
+    public static boolean changeLayoutOnAuth(Context caller, Client client, boolean isLogIn) {
         Model model = client.getModel();
-            if (model.isLoggedIn()) {
-
-                Util.changeLayout(caller, MainActivity.class);
-                return true;
-            }
+        if (model.isSetUp()) {
+            if (isLogIn) Util.changeLayout(caller, MainActivity.class);
+            else {System.out.println("called"); Util.changeLayout(caller, OnboardingPage.class); }
+            return true;
+        }
         return false;
+    }
+    public static void setFragmentToFullscreen(View root, Fragment fragment) {
+        WindowInsetsController controller = root.getWindowInsetsController();
+        if (controller != null) {
+            System.out.println("Ciao");
+            controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+
+            controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
     }
 
     private Util() {}
