@@ -1,25 +1,24 @@
-import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 
 public class SQLDriver {
     private static Connection connection;
 
     public static void main(String[] args) throws SQLException, NoSuchAlgorithmException {
-        boolean flagConnection = SQLDriver.connection();
+        boolean flagConnection = connection();
 
         if (flagConnection) {
-            String theoDate = getMemberDate("Elliot");
-            System.out.println(theoDate);
-            System.out.println(getModulus("Cartman"));
-            System.out.println(getPublicExponent("Cartman"));
+            removeFriend("PAPA", "nieri");
+            System.out.println(getFriendsList("PAPA"));
         }
     }
 
@@ -66,40 +65,23 @@ public class SQLDriver {
         statement.executeUpdate(updatePasswordQuery);
     }
 
-    public static void updateUsername(String username, int idUser) throws SQLException {
-        Statement statement = connection.createStatement();
-        String updateUsername = "UPDATE users SET username =" + stringToSql(username) + "WHERE iduser =" + idUser;
-        statement.executeUpdate(updateUsername);
-    }
-
-
-    private static int getId(String username) throws SQLException{
-        int id=-1;
+    private static String getId(String username) throws SQLException{
+        String id = "";
         Statement statement = connection.createStatement();
         String getIdQuery = "SELECT `users`.`iduser` FROM heroku_76cef2360ddfe66.users WHERE `users`.`username` =" + stringToSql(username) +";";
         ResultSet users = statement.executeQuery(getIdQuery);
 
         if (users.next()){
-            id =  Integer.parseInt(users.getString("iduser"));
+            id = users.getString("iduser");
         }
         return id;
 
     }
 
-    private static int getMaxId() throws SQLException{
-        int maxId = 0;
-        Statement statement = connection.createStatement();
-        String getMaxIdQuery = "SELECT MAX(`users`.`iduser`) FROM heroku_76cef2360ddfe66.users";
-        ResultSet users = statement.executeQuery(getMaxIdQuery);
-
-        if (users.next()){
-            maxId =  Integer.parseInt(users.getString("MAX(`users`.`iduser`)"));
-        }
-        return maxId;
-    }
-
-    private static int assignId() throws SQLException{
-        return getMaxId() + 1;
+    @Contract(" -> new")
+    private static @NotNull
+    UUID assignId(){
+        return java.util.UUID.randomUUID();
     }
 
     public static void addUser(String username, String password, String memberDate) throws SQLException, NoSuchAlgorithmException {
@@ -114,77 +96,137 @@ public class SQLDriver {
         String publicExponent = RSAKeyGenerator.getPublicExponent(publicKey);
 
         if (!nameExists(username)) {
-            int newId = assignId();
+            UUID newId = assignId();
+            System.out.println(newId);
             Statement statement = connection.createStatement();
-            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `modulus`, `privateExponent`, `publicExponent`) VALUES (" + newId + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql(modulus) + "," + stringToSql(privateExponent) + "," + stringToSql(publicExponent) + ");";
+            String addUserQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`users` (`iduser`, `username`, `password`, `memberDate`, `modulus`, `privateExponent`, `publicExponent`) VALUES (" + stringToSql(String.valueOf(newId)) + "," + stringToSql(username) + "," + stringToSql(password) + "," + stringToSql(memberDate) + "," + stringToSql(modulus) + "," + stringToSql(privateExponent) + "," + stringToSql(publicExponent) + ");";
             statement.executeUpdate(addUserQuery);
             addRole(newId);
         }
     }
 
-    public static void removeFriend(String username, String friendName) throws SQLException, SQLException {
-        if (nameExists(username)){
-            int id = getId(username);
-            Statement statement = connection.createStatement();
-            String removeFriendQuery = "DELETE FROM `heroku_76cef2360ddfe66`.`friends` WHERE `iduser`=" + id + ";";
-            statement.executeUpdate(removeFriendQuery);
+    public static void removeFriend(String username, String friendName) throws SQLException {
+        List<String> friendsList = getFriendsList(username);
+        String removeFriendQuery ="";
+
+        if (friendsList.contains(friendName)) {
+            if (nameExists(username)) {
+                String id = getId(username);
+                Statement statement = connection.createStatement();
+
+                if (friendsList.size() == 1){
+                    // Stay one friend -->  delete the entry in the table.
+                    removeFriendQuery = "DELETE FROM `heroku_76cef2360ddfe66`.`friends` WHERE `iduser`=" + stringToSql(id) + ";";
+                }
+
+                else{
+                    // update the value in the table.
+                    String friendsName = "";
+
+                    for (String friend : friendsList){
+                        if (!Objects.equals(friend, friendName)) {
+                            friendsName = friendsName + friend + "-";
+                        }
+                    }
+
+                    removeFriendQuery = "UPDATE `heroku_76cef2360ddfe66`.`friends` SET `friendname` =" + stringToSql(friendsName) +  "WHERE `iduser` =" + stringToSql(id) +  ";";
+
+                }
+                statement.executeUpdate(removeFriendQuery);
+            }
         }
     }
 
     public static void addFriend(String username, String friendName) throws SQLException{
+        List<String> friendsList = getFriendsList(username);
+        String addFriendQuery = "";
+
         if (nameExists(friendName)) {
-            int id = getId(username);
-            Statement statement = connection.createStatement();
-            String addFriendQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`friends` (`iduser`, `friendname`) VALUES (" + id + "," + stringToSql(friendName) + ");";
-            statement.executeUpdate(addFriendQuery);
+            if (!friendsList.contains(friendName)) {
+
+                String id = getId(username);
+                Statement statement = connection.createStatement();
+
+                if (!isInFriendsTable(username)) {
+
+                    addFriendQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`friends` (`iduser`, `friendname`) VALUES (" + stringToSql(id) + "," + stringToSql(friendName) + ");";
+
+                }
+                else{
+                    // username have already friends.
+                    friendsList.add(friendName);
+                    String friendsName = "";
+
+                    for (String friend : friendsList){
+                        friendsName = friendsName + friend + "-";
+                    }
+
+                    addFriendQuery = "UPDATE `heroku_76cef2360ddfe66`.`friends` SET `friendname` =" + stringToSql(friendsName) +  "WHERE `iduser` =" + stringToSql(id) +  ";";
+
+                }
+                statement.executeUpdate(addFriendQuery);
+            }
         }
     }
 
+    public static boolean isInFriendsTable(String username) throws SQLException {
+        // return True if the id of the username is already in the friends table.
+        String id = getId(username);
+        Statement statement = connection.createStatement();
+        String isInTableQuery = "SELECT * FROM heroku_76cef2360ddfe66.friends WHERE `iduser` ="+ stringToSql(id) + ";";
+        ResultSet friends = statement.executeQuery(isInTableQuery);
+
+        return friends.next();
+
+    }
+
     public static List<String> getFriendsList(String username) throws SQLException{
-        List<String> friendList = new ArrayList<>();
-        int id = getId(username);
+        List<String> friendsList = new ArrayList<>();
+        String id = getId(username);
 
         if (nameExists(username)) {
 
             Statement statement = connection.createStatement();
-            String getFriendListQuery = "SELECT `friendname` FROM heroku_76cef2360ddfe66.friends WHERE `iduser` =" + id + ";";
-            ResultSet friendListSql = statement.executeQuery(getFriendListQuery);
+            String getFriendsListQuery = "SELECT `friendname` FROM heroku_76cef2360ddfe66.friends WHERE `iduser` =" + stringToSql(id) + ";";
+            ResultSet friendsListSql = statement.executeQuery(getFriendsListQuery);
 
-            int i = 0;
 
-            while (friendListSql.next()) {
-                String friendName = friendListSql.getString("friendname");
-                friendList.add(i, friendName);
-                i++;
+            if (friendsListSql.next()) {
+                String friends = friendsListSql.getString("friendname");
+                final String SEPARATEUR = "-";
+                String[] splittedFiends = friends.split(SEPARATEUR);
+                friendsList = new ArrayList<>(Arrays.asList(splittedFiends));
             }
         }
-        return friendList;
+        return friendsList;
     }
 
-    public static void addRole(int id) throws SQLException{
+    public static void addRole(UUID id) throws SQLException{
         // set defaultRole = user
         String defaultRole = "'user'";
         Statement statement = connection.createStatement();
-        String addRoleQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`roles` (`id`, `role`) VALUES (" + id + "," + defaultRole + ");";
+        String addRoleQuery = "INSERT INTO `heroku_76cef2360ddfe66`.`roles` (`id`, `role`) VALUES (" + stringToSql(String.valueOf(id)) + "," + defaultRole + ");";
         statement.executeUpdate(addRoleQuery);
     }
 
-    public static void updateRole (int id) throws SQLException{
+    public static void updateRole (String username) throws SQLException{
         // update user -> referee
+        String id = getId(username);
         String updateRole = "'referee'";
         Statement statement = connection.createStatement();
-        String updateRoleQuery = "UPDATE `heroku_76cef2360ddfe66`.`roles` SET `role` =" + updateRole + "WHERE `id` =" + id + ";";
+        String updateRoleQuery = "UPDATE `heroku_76cef2360ddfe66`.`roles` SET `role` =" + updateRole + "WHERE `id` =" + stringToSql(id) + ";";
         statement.executeUpdate(updateRoleQuery);
     }
 
     public static String getRole(String username) throws SQLException{
-        int id = getId(username);
+        String id = getId(username);
         String resRole = "";
         if (nameExists(username)){
 
             Statement statement = connection.createStatement();
-            String getRoleQuery = "SELECT `role` FROM heroku_76cef2360ddfe66.roles WHERE `id` =" + id + ";";
+            String getRoleQuery = "SELECT `role` FROM heroku_76cef2360ddfe66.roles WHERE `id` =" + stringToSql(id) + ";";
             ResultSet role = statement.executeQuery(getRoleQuery);
+
             if(role.next()){
                 resRole = role.getString("role");
             }
