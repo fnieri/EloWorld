@@ -59,7 +59,9 @@ public class BlockParser {
                 entry.getString(JsonStrings.REFEREE_KEY),
                 entry.getInt(JsonStrings.REFEREE_SCORE),
                 entry.getString(JsonStrings.WINNER),
-                entry.getString(JsonStrings.LOSER)
+                entry.getString(JsonStrings.WINNER_KEY),
+                entry.getString(JsonStrings.LOSER),
+                entry.getString(JsonStrings.LOSER_KEY)
         );
     }
 

@@ -66,12 +66,10 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
+        Util.removeActionBar(this);
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        }
-
+        Util.removeActionBar(this);
     }
     public void onFirstStartRequestIOPermission() {
 

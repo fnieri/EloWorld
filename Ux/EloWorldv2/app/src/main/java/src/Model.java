@@ -136,9 +136,11 @@ public class Model extends Subject {
     public void setRole(UserRoles newRole) {
         role = newRole;
     }
-    public void createEntry(String winner, String loser) throws JSONException, FileNotFoundException {
-        if (role == UserRoles.REFEREE) referee.createEntry(winner, loser, getPublicKey());
+
+    public void createEntry(String winner, String winnerKey, String loser, String loserKey) throws JSONException, FileNotFoundException {
+        if (role == UserRoles.REFEREE) referee.createEntry(winner, winnerKey, loser, loserKey, getPublicKey());
     }
+
     public boolean isLoggedIn() {
         return isLoggedIn;
     }

@@ -68,6 +68,7 @@ public class SettingsFragment extends Fragment {
     public void setUpLeaderboard(ListView leaderboardListView, Model model) {
         displayLeaderboard = new ArrayList<>();
         leaderboard = model.getLeaderboard();
+
         for (Map.Entry<Integer, Map.Entry<String, Integer>> playerEntry: leaderboard) {
             int position = playerEntry.getKey();
             String playerUsername = playerEntry.getValue().getKey();
@@ -75,6 +76,7 @@ public class SettingsFragment extends Fragment {
             String playerAndElo = position + "\t" + playerUsername + "\t" + playerELO;
             displayLeaderboard.add(playerAndElo); //Add player at his position in the list to use in the listview
         }
+        Collections.reverse(displayLeaderboard);
         ArrayAdapter<String> leaderboardAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1, displayLeaderboard);
         leaderboardListView.setAdapter(leaderboardAdapter); //Code by ChatGPT
     }

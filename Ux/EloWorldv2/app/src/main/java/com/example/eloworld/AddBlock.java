@@ -1,9 +1,11 @@
 package com.example.eloworld;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +37,7 @@ public class AddBlock extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.add_block);
-
+        Util.removeActionBar(this);
         client = ((App) getApplication()).getClient();
         messageFactory = JsonMessageFactory.getInstance();
         model = client.getModel();
@@ -59,6 +61,7 @@ public class AddBlock extends AppCompatActivity {
         else Toast.makeText(getApplicationContext(), "Vous ne pouvez pas ajouter un bloc vide", Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("SetTextI18n")
     public void setUpDisplayEntries(ListView entriesListView) {
         entries = referee.getEntries();
         if (entries.size() > 0) {
@@ -70,5 +73,9 @@ public class AddBlock extends AppCompatActivity {
             ArrayAdapter<String> entriesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, displayEntries);
             entriesListView.setAdapter(entriesAdapter); //Line by ChatGPT
         }
+
+        TextView entriesCount = findViewById(R.id.entriesCount);
+
+        entriesCount.setText("Vous avez " + entries.size() + " entrées");
     }
 }

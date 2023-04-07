@@ -39,6 +39,7 @@ public class AddMatch extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+        Util.removeActionBar(this);
     }
 
     public void addMatchRefereeScreen(View view) throws JSONException {

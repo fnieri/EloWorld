@@ -30,7 +30,6 @@ public class OnboardingPage extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.onboarding);
-        System.out.println("SIAODJOSIAJDOISAJDO");
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }

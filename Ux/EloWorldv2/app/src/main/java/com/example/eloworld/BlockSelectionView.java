@@ -55,13 +55,14 @@ public class BlockSelectionView extends AppCompatActivity {
             System.out.println("---");
         }
         setUpBlock(entries, entriesListView);
+        Util.removeActionBar(this);
     }
 
     public void setUpBlock(List<BlockEntry> entries, ListView entriesView) {
         displayEntries = new ArrayList<>();
         displayEntries.add("Vos entrées:" );
         for (BlockEntry entry: entries) {
-            displayEntries.add(entry.toString());
+            displayEntries.add(entry.getBlockString());
         }
         ArrayAdapter<String> entriesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, displayEntries);
         entriesView.setAdapter(entriesAdapter);

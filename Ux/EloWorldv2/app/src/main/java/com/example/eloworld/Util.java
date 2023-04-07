@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.ui.NavigationUI;
 
 import org.json.JSONObject;
 
@@ -23,7 +25,11 @@ public class Util {
         caller.startActivity(intent);
 
     }
-
+    public static void removeActionBar(AppCompatActivity caller) {
+        if (caller.getSupportActionBar() != null) {
+            caller.getSupportActionBar().hide();
+        }
+    }
     public static void sendThreadedMessage(Client client, JSONObject message) {
         Thread thread = new Thread(new Runnable() {
 

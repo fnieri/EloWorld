@@ -16,9 +16,9 @@ public class JsonStrings {
     public static String TIMESTAMP = "timestamp";
     public static String REFEREE_KEY = "referee_key";
     public static String REFEREE_SCORE = "referee_score";
-    public static String PLAYER_1_KEY = "player_1_key";
+    public static String WINNER_KEY = "winner_key";
     public static String PLAYER_1_ELO = "player_1_elo";
-    public static String PLAYER_2_KEY = "player_2_key";
+    public static String LOSER_KEY = "loser_key";
     public static String PLAYER_2_ELO = "player_2_elo";
     public static String REFEREE_USERNAME = "referee_username";
     public static String PLAYER_1_USERNAME = "player_1_username";

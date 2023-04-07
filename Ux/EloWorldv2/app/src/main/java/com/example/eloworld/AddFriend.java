@@ -26,6 +26,7 @@ public class AddFriend extends AppCompatActivity {
         this.setContentView(R.layout.add_friend);
         client = ((App) getApplication()).getClient();
         messageFactory = JsonMessageFactory.getInstance();
+        Util.removeActionBar(this);
     }
 
     public void addFriend(View view) throws JSONException {

@@ -14,7 +14,7 @@
 
         android:layout_marginTop="12dp"
         android:background="@drawable/rounder_corner"
-        android:backgroundTint="@color/red_400"
+        android:backgroundTint="@color/white"
         android:onClick="addMatchRefereeScreen"
         android:text="Ajoutez le match"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="-2dp"
-            tools:srcCompat="@drawable/match" />
+            android:src="@drawable/match" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

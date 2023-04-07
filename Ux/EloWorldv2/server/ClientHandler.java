@@ -170,8 +170,16 @@ public class ClientHandler extends Thread {
         String loser = jsonMessage.getString(JsonStrings.LOSER);
         SQLDriver.connection();
         boolean entryOK = SQLDriver.nameExists(winner) && SQLDriver.nameExists(loser);
+
+        if (entryOK) {
+            String winnerKey = SQLDriver.getModulus(winner);
+            String loserKey = SQLDriver.getModulus(loser);
+            JSONObject serverAnswer = jsonFactory.entryServerResponse(winner, winnerKey, loser, loserKey);
+            sendMessage(serverAnswer);
+        }
+
         SQLDriver.closeConnection();
-        if (entryOK) sendMessage(jsonMessage); //Resend message as is to user
+
     }
 
     public void friendsHandler(JSONObject jsonMessage) throws JSONException, SQLException {
@@ -181,7 +189,7 @@ public class ClientHandler extends Thread {
         JSONObject messageFriend = new JSONObject();
         SQLDriver.connection();
 
-        //If SQLDriver exists and friend exists // TODO
+        //If SQLDriver exists and friend exists
         if (Objects.equals(action, FriendReqActions.REMOVE_FRIEND.serialized())) {
             SQLDriver.removeFriend(sender, receiver);
         }

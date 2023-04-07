@@ -24,6 +24,7 @@ public class App extends Application {
         super.onCreate();
         getExternalFilesDir(null);getExternalFilesDir(null);
         new Thread(() -> client.main()).start();
+
     }
 
     public Client getClient() {return client;}

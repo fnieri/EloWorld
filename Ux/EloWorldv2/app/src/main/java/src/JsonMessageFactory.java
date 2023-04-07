@@ -83,6 +83,17 @@ public class JsonMessageFactory {
         return messageJson;
     }
 
+    public JSONObject entryServerResponse(String winner, String winnerKey, String loser, String loserKey) throws JSONException {
+        JSONObject messageJson = new JSONObject();
+        messageJson.put(MessageStrings.DOMAIN, Domain.CHECK_ENTRY.serialized());
+        messageJson.put(MessageStrings.ACTION, MessageStrings.SEND_ENTRY);
+        messageJson.put(JsonStrings.WINNER, winner);
+        messageJson.put(JsonStrings.LOSER, loser);
+        messageJson.put(JsonStrings.WINNER_KEY, winnerKey);
+        messageJson.put(JsonStrings.LOSER_KEY, loserKey);
+        return messageJson;
+    }
+
     public JSONObject serverFetchBlockchainRequest() throws JSONException {
         JSONObject messageJson = new JSONObject();
         messageJson.put(MessageStrings.DOMAIN, Domain.FETCH.serialized());

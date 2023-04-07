@@ -24,6 +24,7 @@ public class SignUp extends AppCompatActivity {
     Client client;
     JsonMessageFactory messageFactory;
     List<Thread> runningThreads = new ArrayList<>();
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.sign_up);
@@ -32,7 +33,7 @@ public class SignUp extends AppCompatActivity {
         Thread checkLoginStatus = new Thread(this::changeLayoutOnSignUp);
         runningThreads.add(checkLoginStatus);
         checkLoginStatus.start();
-
+        Util.removeActionBar(this);
     }
 
     public void changeLayout_SU(View view) {

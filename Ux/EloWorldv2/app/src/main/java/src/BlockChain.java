@@ -113,7 +113,7 @@ public class BlockChain {
         Stack<String[]> matches = new Stack<>();
         while (!Objects.equals(currBlock.getPreviousBlockHash(), currBlock.getBlockHash())) {
             for (BlockEntry entry: currBlock.getEntries()) {
-                matches.push(new String[]{entry.getWinnerPublicKey(), entry.getLoserPublicKey()});
+                matches.push(new String[]{entry.getWinner(), entry.getLoser()});
             }
             currBlock = util.convertJsonFileToBlock(currBlock.getPreviousBlockHash() + util.SUFFIX);
         }

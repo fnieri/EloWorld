@@ -112,7 +112,6 @@ public class Controller {
         List<Map.Entry<String, Integer>> players = new ArrayList<>();
         for (Iterator<String> it = jsonReq.keys(); it.hasNext(); ) {
             String key = it.next();
-            System.out.println(key);
             players.add(Map.entry(key, jsonReq.getInt(key)));
             if (key.equals(model.getUsername())) {
                 model.setELO(jsonReq.getInt(key));
@@ -132,8 +131,12 @@ public class Controller {
 
     public void createEntry(JSONObject jsonReq) throws JSONException, FileNotFoundException {
         String winner = jsonReq.getString(JsonStrings.WINNER);
+        String winnerKey = jsonReq.getString(JsonStrings.WINNER_KEY);
+
         String loser = jsonReq.getString(JsonStrings.LOSER);
-        model.createEntry(winner, loser);
+        String loserKey = jsonReq.getString(JsonStrings.LOSER_KEY);
+
+        model.createEntry(winner, winnerKey, loser, loserKey);
     }
 
     public void processBlock(JSONObject jsonReq) throws Exception {

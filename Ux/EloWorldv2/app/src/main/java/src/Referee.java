@@ -36,7 +36,6 @@ public class Referee extends User implements Serializable {
         super(publicKey);
         String blockchainPath = util.getPathToBlockChain();
         File blockchainFile = new File(blockchainPath); //+ Util.BLOCKCHAIN_HEAD);
-
         if (!blockchainFile.exists()) {
             // create Blockchain directory
             blockchainFile.mkdirs();
@@ -52,7 +51,7 @@ public class Referee extends User implements Serializable {
             firstBlock.put(JsonStrings.PARENT_BLOCK_HASH, util.FIRST_BLOCK);
             firstBlock.put(JsonStrings.TIMESTAMP, LocalTime.now());
             JSONArray fakeEntriesArray = new JSONArray();
-            JSONObject fakeEntry = new BlockEntry("", "", 0, "", "").asJson();
+            JSONObject fakeEntry = new BlockEntry("", "", 0, "", "", "", "").asJson();
             fakeEntriesArray.put(fakeEntry);
             firstBlock.put(JsonStrings.ENTRIES, fakeEntriesArray);
             util.writeJSONFile(firstBlock.toString(), blockchainPath + "/" + util.FIRST_BLOCK + util.SUFFIX);
@@ -89,16 +88,23 @@ public class Referee extends User implements Serializable {
      * @param loser The loser's username
      * @param refereeKey The referee's public key
      */
-    public void createEntry(String winner, String loser, String refereeKey) throws JSONException, FileNotFoundException {
+    public void createEntry(String winner, String winnerKey, String loser, String loserKey, String refereeKey) throws JSONException, FileNotFoundException {
         JSONObject entry = new JSONObject();
 
         entry.put(JsonStrings.WINNER, winner);
+        entry.put(JsonStrings.WINNER_KEY, winnerKey);
+
         entry.put(JsonStrings.LOSER, loser);
+        entry.put(JsonStrings.LOSER_KEY, loserKey);
+
         entry.put(JsonStrings.REFEREE_KEY, refereeKey);
         entry.put(JsonStrings.REFEREE_SCORE, getRefereeScore());
+
         entry.put(JsonStrings.TIMESTAMP, String.valueOf(LocalTime.now()));
+
         String path = util.PATH_TO_ENTRIES_FOLDER + "Entry" + entries.size() + util.SUFFIX;
         String firstPath = util.getPathToBlockChain() + "/" + path ;
+
         util.writeJSONFile(entry.toString(), firstPath);
         this.entries.add(new BlockEntry(util.convertJsonFileToJSONObject(path)));
     }

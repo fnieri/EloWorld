@@ -41,7 +41,7 @@ public class BlocksView extends AppCompatActivity {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-
+        Util.removeActionBar(this);
     }
 
     @SuppressLint("SetTextI18n")
@@ -56,12 +56,13 @@ public class BlocksView extends AppCompatActivity {
 
         Button[] blocksButtons = new Button[blockChain.size()];
 
-        for (int i = blockChain.size() - 2; i > 1; i--) {
+        for (int i = 0; i > blockChain.size() - 1; i++) {
             blocksButtons[i] = new Button(getApplicationContext());
             blocksButtons[i].setId(i);
             blocksButtons[i].setTag(i);
+            blocksButtons[i].setBackgroundColor(Color.WHITE);
+            blocksButtons[i].setTextColor(Color.BLACK);
             blocksButtons[i].setText("Block " + i);
-            blocksButtons[i].setTextColor(Color.BLUE);
             blocksButtons[i].setTextSize(20);
             blocksButtons[i].setHeight(100);
             blocksButtons[i].setWidth(100);

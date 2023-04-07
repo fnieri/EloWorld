@@ -36,6 +36,7 @@ public class SignIn extends AppCompatActivity {
         Thread checkLoginStatus = new Thread(this::changeLayoutOnSignIn);
         runningThreads.add(checkLoginStatus);
         checkLoginStatus.start();
+        Util.removeActionBar(this);
     }
 
     public void changeLayout_SI(View v) {
