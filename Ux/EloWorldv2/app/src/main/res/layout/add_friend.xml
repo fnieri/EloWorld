@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://www.youtube.com/watch?v=IxhIa3eZxz8 -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_friend"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/add_friend_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Gèrez vos amitiés"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_image_ll" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_friend_btn"
+        android:layout_width="147dp"
+        android:layout_height="52dp"
+
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/rounder_corner"
+        android:backgroundTint="@color/white"
+        android:onClick="addFriend"
+        android:text="Ajoutez"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/friend_input_layout"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/remove_friend_btn"
+        android:layout_width="174dp"
+        android:layout_height="56dp"
+
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/rounder_corner"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:onClick="removeFriend"
+        android:text="Supprimez"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/friend_input_layout"
+        tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/friend_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:hint="Votre nouveau (ou ancien) ami"
+        app:counterMaxLength="20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_friend_txt"
+        app:startIconDrawable="@drawable/ic_profile">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/friend_input_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:maxLength="20"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="327dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/leaderboard_image_ll"
+        android:layout_width="408dp"
+        android:layout_height="222dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/friendsImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-2dp"
+            android:src="@drawable/friends" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
